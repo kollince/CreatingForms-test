@@ -10,7 +10,34 @@
 <body>
 <div><a href="#">Войти</a></div><div><a href="">Создать тест</a></div>
 <H1>Тесты по физике</H1>
-<p>Спосок тестов</p><br><br><br>
+<p>Список тестов</p><br><br><br>
+<p>Добавить тест</p>
+<form method="post" action="/addForm">
+    <div>
+        <label>Имя</label>
+        <input type="text" name="name" required>
+    </div>
+    <div>
+        <label>Описание</label>
+        <textarea name="question" type="text" rows="5" required></textarea>
+    </div>
+    <div>
+        <label>Вопрос</label>
+        <input type="text" name="question" required>
+    </div>
+    <div class="radio">
+        <span>На время</span>
+        <label>
+            <input type="radio" name="time" value="true">Да
+        </label>
+        <label>
+            <input type="radio" name="time" value="false" checked>Нет
+        </label>
+    </div>
+    <div>
+        <input type="submit">
+    </div>
+</form>
 
 </body>
 </html>

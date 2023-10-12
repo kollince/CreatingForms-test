@@ -45,7 +45,7 @@ public class FormsDaoJsonImpl implements FormsDao {
 
     @Override
     public void removeBook(int id) {
-
+        return;
     }
 
     @Override

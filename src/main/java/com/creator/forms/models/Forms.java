@@ -9,6 +9,7 @@ import java.util.List;
 public class Forms {
     private int id;
     private String name;
+    private String description;
     private String question;
     private boolean isForTime;
     private List<Answers> answersList;
