@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <script src="/js/bootstrap.min.js"></script>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" type="text/css" href="/css/bootstrap.min.css">
+    <title>Добавления теста по физике</title>
+</head>
+<body>
+<div th:insert="~{header :: top}"></div>
+<H1>Тесты по физике</H1>
+<p>Добавление теста по физике</p><br><br><br>
+
+<p>Добавить тест</p>
+<form method="post" action="/addForm">
+    <div>
+        <label>Наименование</label>
+        <input type="text" name="name" required>
+    </div>
+    <div>
+        <label>Описание</label>
+        <textarea name="description" type="text" rows="5" required></textarea>
+    </div>
+    <div>
+        <label>Вопрос</label>
+        <input type="text" name="question" required>
+    </div>
+    <div class="radio">
+        <span>На время</span>
+        <label>
+            <input type="radio" name="time" value="true">Да
+        </label>
+        <label>
+            <input type="radio" name="time" value="false" checked>Нет
+        </label>
+    </div>
+    <div>
+        <input type="submit">
+    </div>
+</form>
+
+</body>
+</html>

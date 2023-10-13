@@ -10,8 +10,8 @@ public class Forms {
     private int id;
     private String name;
     private String description;
-    private String question;
-    private boolean isForTime;
+    private List<Questions> questionsList;
     private List<Answers> answersList;
+    private boolean isForTime;
 
 }

@@ -5,9 +5,8 @@ import lombok.Data;
 
 @AllArgsConstructor
 @Data
-public class Answers {
+public class Questions {
     private int id;
-    private int ifForm;
-    private String answer;
-    private boolean isTrue;
+    private int idForms;
+    private String question;
 }

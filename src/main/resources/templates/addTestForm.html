@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <link th:insert="~{header :: css}">
+    <title>Создание теста</title>
+</head>
+<body>
+<div th:insert="~{header :: top}"></div>
+<form method="post" action="/addForm">
+  <div>
+    <label>Наименование теста</label>
+    <input type="text" name="name" required>
+  </div>
+  <div>
+    <label>Описание</label>
+    <textarea name="description" type="text" rows="5" required></textarea>
+  </div>
+  <div class="radio">
+    <span>На время</span>
+    <label>
+      <input type="radio" name="time" value="true">Да
+    </label>
+    <label>
+      <input type="radio" name="time" value="false" checked>Нет
+    </label>
+  </div>
+  <div>
+    <input type="submit" value="Продолжить">
+  </div>
+</form>
+</body>
+</html>

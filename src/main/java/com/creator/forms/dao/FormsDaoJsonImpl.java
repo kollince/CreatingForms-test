@@ -1,7 +1,9 @@
 package com.creator.forms.dao;
 
 import com.creator.forms.dao.interfaces.FormsDao;
+import com.creator.forms.models.Answers;
 import com.creator.forms.models.Forms;
+import com.creator.forms.models.Questions;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.stereotype.Repository;
@@ -9,11 +11,15 @@ import org.springframework.stereotype.Repository;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.List;
 @Repository
 public class FormsDaoJsonImpl implements FormsDao {
+    private final List<Forms> formsList = new ArrayList<>();
     private final ObjectMapper mapper = new ObjectMapper();
     final Path FILEPATH = Path.of("src/main/resources/data/listForms.json");
+    private int idCount = 0;
+
     private void fileExist()  {
         File file = new File(FILEPATH.toUri());
         try {
@@ -27,30 +33,74 @@ public class FormsDaoJsonImpl implements FormsDao {
     }
 
     @Override
-    public void addForm(Forms form) throws IOException {
-        fileExist();
-        mapper.writeValue(FILEPATH.toFile(), form);
+    public int addForm(Forms form) throws IOException {
+        int max = 0;
+        if (formsList.size() == 0) {
+            idCount = 1;
+            form.setId(idCount++);
+        } else {
+            for (int i = 0; i < formsList.size(); i++) {
+                max = Math.max(max, formsList.get(i).getId());
+                if (formsList.get(i).getId() > formsList.size()) {
+                    idCount = max+1;
+                }
+            }
+            form.setId(idCount++);
+        }
+        return form.getId();
+        //fileExist();
+        //mapper.writeValue(FILEPATH.toFile(), form);
+
     }
 
     @Override
     public List<Forms> listForms() throws IOException {
-        return mapper.readValue(FILEPATH.toFile(), new TypeReference<>() {
-        });
+        for (Forms forms : formsList) {
+            if (formsList.size() < idCount) {
+                idCount = formsList.size()+1;
+            }
+        }
+        return formsList;
+//        return mapper.readValue(FILEPATH.toFile(), new TypeReference<>() {
+//        });
     }
 
     @Override
-    public void updateForm(Forms form) {
-
+    public List<Forms> updateForm(int id, String name, String description, List<Questions> questionsList, List<Answers> answersList, boolean isForTime) {
+        for (int i = 0; i < formsList.size(); i++) {
+            if(formsList.get(i).getId()==id){
+                formsList.get(i).setName(name);
+                formsList.get(i).setDescription(description);
+                formsList.get(i).setQuestionsList(questionsList);
+                formsList.get(i).setForTime(isForTime);
+                formsList.get(i).setAnswersList(answersList);
+            }
+        }
+        return formsList;
     }
 
     @Override
-    public void removeBook(int id) {
-        return;
+    public List<Forms> delete(int id) {
+        for (int i = 0; i < formsList.size(); i++) {
+            if (formsList.get(i).getId()==id) {
+                formsList.remove(i);
+            }
+
+        }
+       //idCount = formsList.size()-1;
+        return formsList;
     }
 
     @Override
     public Forms getFormsById(int id) {
-        return null;
+
+        for (Forms forms : formsList) {
+            if (forms.getId() == id) {
+
+                return formsList.get(id);
+            }
+        }
+        return formsList.get(id);
     }
 
 
