@@ -15,7 +15,7 @@
     <tbody th:each="el : ${allForms}">
     <tr>
     <tr>
-        <td style="width: 50%;">Ниаменование</td>
+        <td style="width: 50%;">Наименование</td>
         <td style="width: 50%;"><div th:text="${el.name}"></div></td>
     </tr>
     </tr>
@@ -35,7 +35,7 @@
     </tr>
     <tr>
         <td colspan="4" style="text-align: center;">
-            <a th:href="'/edit'+${el.id}">Редактировать</a> |
+            <a th:href="'/edit/'+${el.id}">Редактировать</a> |
             <a th:href="'/delete/'+${el.id}">Удалить</a>
         </td>
     </tr>

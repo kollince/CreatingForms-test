@@ -9,31 +9,30 @@
 </head>
 <body>
 <div th:insert="~{header :: top}"></div>
-<H1>Тесты по физике</H1>
-<p>Добавление теста по физике</p><br><br><br>
-
-<p>Добавить тест</p>
-<form method="post" action="/addForm">
+<p>Редактирование</p>
+<form th:each="el : ${editForm}" method="post" action="/addForm">
     <div>
         <label>Наименование</label>
-        <input type="text" name="name" required>
+        <input th:value="${el.name}" type="text" name="name" required>
     </div>
     <div>
         <label>Описание</label>
-        <textarea name="description" type="text" rows="5" required></textarea>
-    </div>
-    <div>
-        <label>Вопрос</label>
-        <input type="text" name="question" required>
+        <textarea th:text="${el.description}" name="description" type="text" rows="5" required ></textarea>
     </div>
     <div class="radio">
         <span>На время</span>
+
         <label>
-            <input type="radio" name="time" value="true">Да
+            <input type="radio" name="time" th:value="${el.isForTime}==true" th:checked="${el.isForTime}==true"> Да
         </label>
         <label>
-            <input type="radio" name="time" value="false" checked>Нет
+            <input type="radio" name="time" th:value="${el.isForTime}==false" th:checked="${el.isForTime}==false"> Нет
         </label>
+    </div>
+
+    <div>
+        <label>Вопрос</label>
+        <input type="text" name="question" required>
     </div>
     <div>
         <input type="submit">

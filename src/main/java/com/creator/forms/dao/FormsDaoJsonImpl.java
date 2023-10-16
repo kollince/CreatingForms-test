@@ -4,21 +4,23 @@ import com.creator.forms.dao.interfaces.FormsDao;
 import com.creator.forms.models.Answers;
 import com.creator.forms.models.Forms;
 import com.creator.forms.models.Questions;
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.stereotype.Repository;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
-import java.util.ArrayList;
 import java.util.List;
 @Repository
 public class FormsDaoJsonImpl implements FormsDao {
-    private final List<Forms> formsList = new ArrayList<>();
+    private final List<Forms> formsList;
     private final ObjectMapper mapper = new ObjectMapper();
     final Path FILEPATH = Path.of("src/main/resources/data/listForms.json");
     private int idCount = 0;
+
+    public FormsDaoJsonImpl(List<Forms> formsList) {
+        this.formsList = formsList;
+    }
 
     private void fileExist()  {
         File file = new File(FILEPATH.toUri());
@@ -33,7 +35,7 @@ public class FormsDaoJsonImpl implements FormsDao {
     }
 
     @Override
-    public int addForm(Forms form) throws IOException {
+    public List<Forms> addForm(Forms form) throws IOException {
         int max = 0;
         if (formsList.size() == 0) {
             idCount = 1;
@@ -47,7 +49,9 @@ public class FormsDaoJsonImpl implements FormsDao {
             }
             form.setId(idCount++);
         }
-        return form.getId();
+        formsList.add(form);
+        //System.out.println(formsList);
+        return formsList;
         //fileExist();
         //mapper.writeValue(FILEPATH.toFile(), form);
 
@@ -93,14 +97,13 @@ public class FormsDaoJsonImpl implements FormsDao {
 
     @Override
     public Forms getFormsById(int id) {
-
-        for (Forms forms : formsList) {
-            if (forms.getId() == id) {
-
-                return formsList.get(id);
+        Forms element = null;
+        for (int i = 0; i < formsList.size(); i++) {
+            if (formsList.get(i).getId() == id){
+                element = formsList.get(i);
             }
         }
-        return formsList.get(id);
+        return element;
     }
 
 
