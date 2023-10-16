@@ -6,10 +6,10 @@ import com.creator.forms.models.Forms;
 import com.creator.forms.models.Questions;
 import com.creator.forms.services.interfaces.FormService;
 import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.util.Date;
 import java.util.List;
 
 
@@ -40,10 +40,18 @@ public class FormServiceImpl implements FormService {
         return formsDao.addForm(form);
        //formsList.add(form);
     }
+    @Override
+    public List<Forms> addQuestion(Forms form) {
+        //formsDao.addForm(form);
+        return null;
+        //formsList.add(form);
+    }
 
     @Override
     public List<Forms> updateForm(int id, String name, String description, List<Questions> questionsList, List<Answers> answersList, boolean isForTime) {
-        return formsDao.updateForm(id, name, description,questionsList, answersList, isForTime);
+//        System.out.println("Отправили: " +isForTime +", Время - "+ new Date());
+
+       return formsDao.updateForm(id, name, description,questionsList, answersList, isForTime);
     }
 
 

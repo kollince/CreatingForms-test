@@ -33,6 +33,27 @@ public class FormsDaoJsonImpl implements FormsDao {
         }
 
     }
+    @Override
+    public List<Forms> addQuestion(Forms form) {
+        int max = 0;
+        if (formsList.size() == 0) {
+            idCount = 1;
+            form.setId(idCount++);
+        } else {
+            for (int i = 0; i < formsList.size(); i++) {
+                max = Math.max(max, formsList.get(i).getId());
+                if (formsList.get(i).getId() > formsList.size()) {
+                    idCount = max+1;
+                }
+            }
+            form.setId(idCount++);
+        }
+        formsList.add(form);
+        return formsList;
+        //fileExist();
+        //mapper.writeValue(FILEPATH.toFile(), form);
+
+    }
 
     @Override
     public List<Forms> addForm(Forms form) throws IOException {
@@ -50,7 +71,6 @@ public class FormsDaoJsonImpl implements FormsDao {
             form.setId(idCount++);
         }
         formsList.add(form);
-        //System.out.println(formsList);
         return formsList;
         //fileExist();
         //mapper.writeValue(FILEPATH.toFile(), form);
@@ -71,10 +91,22 @@ public class FormsDaoJsonImpl implements FormsDao {
 
     @Override
     public List<Forms> updateForm(int id, String name, String description, List<Questions> questionsList, List<Answers> answersList, boolean isForTime) {
+        int maxCount = 0;
+        int count = 0;
         for (int i = 0; i < formsList.size(); i++) {
             if(formsList.get(i).getId()==id){
                 formsList.get(i).setName(name);
                 formsList.get(i).setDescription(description);
+                if (formsList.get(i).getQuestionsList().size()!=0){
+                    for (int j = 0; j < formsList.get(i).getQuestionsList().size(); j++) {
+                        maxCount = Math.max(maxCount, formsList.get(i).getQuestionsList().get(j).getId());
+                        if (formsList.get(i).getQuestionsList().get(j).getId() > formsList.size()) {
+                            count = maxCount+1;
+                            System.out.println("max: "+maxCount);
+                        }
+                        formsList.get(i).getQuestionsList().get(j).setIdForm(count);
+                    }
+                }
                 formsList.get(i).setQuestionsList(questionsList);
                 formsList.get(i).setForTime(isForTime);
                 formsList.get(i).setAnswersList(answersList);

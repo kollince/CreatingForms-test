@@ -10,6 +10,7 @@ import java.util.List;
 @Service
 public interface FormService {
     List<Forms> listForms() throws IOException;
+    List<Forms> addQuestion(Forms form);
     List<Forms> addForms(Forms form) throws IOException;
     List<Forms> updateForm(int id, String name, String description, List<Questions> questionsList, List<Answers> answersList, boolean isForTime);
     List<Forms> delete(int id);

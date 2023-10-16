@@ -7,6 +7,6 @@ import lombok.Data;
 @Data
 public class Questions {
     private int id;
-    private int idForms;
+    private int idForm;
     private String question;
 }

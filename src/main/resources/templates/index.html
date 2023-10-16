@@ -4,46 +4,13 @@
     <meta charset="UTF-8">
     <script src="/js/bootstrap.min.js"></script>
     <!-- Bootstrap CSS -->
-    <link th:insert="~{header :: css}">
+    <link th:insert="~{components/include :: css}">
     <title>Тесты по физике</title>
 </head>
 <body>
-<div th:insert="~{header :: top}"></div>
+<div th:insert="~{components/include :: top}"></div>
 <H1>Тесты по физике</H1>
-<p>Список тестов</p><br><br><br>
-<table border="1" style="border-collapse: collapse; width: 25%;">
-    <tbody th:each="el : ${allForms}">
-    <tr>
-    <tr>
-        <td style="width: 50%;">Наименование</td>
-        <td style="width: 50%;"><div th:text="${el.name}"></div></td>
-    </tr>
-    </tr>
-    <tr>
-        <td style="width: 50%;">Описание</td>
-        <td style="width: 50%;"><div th:text="${el.description}"></div></td>
-    </tr>
-    <tr>
-        <td style="width: 50%;">На время</td>
-        <td style="width: 50%;">
-            <div th:if="${el.isForTime} == true">Да</div>
-            <div th:if="${el.isForTime} == false">Нет</div>
-        </td>
-    </tr>
-    <tr style="height: 18px;">
-        <td style="width: 25%; height: 18px;" colspan="4"></td>
-    </tr>
-    <tr>
-        <td colspan="4" style="text-align: center;">
-            <a th:href="'/edit/'+${el.id}">Редактировать</a> |
-            <a th:href="'/delete/'+${el.id}">Удалить</a>
-        </td>
-    </tr>
-    <tr>
-        <td colspan="4"></td>
-    </tr>
-    </tbody>
-</table>
+<div th:insert="~{components/include :: listTest}"></div>
 
 <!--<td rowspan="4"></td>-->
 <!--<td rowspan="4">-->

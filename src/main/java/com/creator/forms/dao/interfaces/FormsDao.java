@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.util.List;
 @Repository
 public interface FormsDao {
+    public List<Forms> addQuestion(Forms form);
     public List<Forms> addForm (Forms form) throws IOException;
     public List<Forms> updateForm(int id, String name, String description, List<Questions> questionsList, List<Answers> answersList, boolean isForTime);
     public List<Forms> delete(int id);

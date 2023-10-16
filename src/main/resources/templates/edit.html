@@ -8,9 +8,18 @@
     <title>Добавления теста по физике</title>
 </head>
 <body>
-<div th:insert="~{header :: top}"></div>
+<div th:insert="~{components/include :: top}"></div>
 <p>Редактирование</p>
-<form th:each="el : ${editForm}" method="post" action="/addForm">
+<!--<div th:each="el : ${editForm}">-->
+<!--    <div>Наименование теста:-->
+<!--        <b th:text = "${el.name}"></b>-->
+<!--    </div>-->
+<!--    <div>Описание:-->
+<!--        <em th:text = "${el.description}"></em>-->
+<!--    </div>-->
+<!--</div>-->
+
+<form th:each="el : ${editForm}" method="post" th:action = "@{'/updateForm/' + ${el.id}}">
     <div>
         <label>Наименование</label>
         <input th:value="${el.name}" type="text" name="name" required>
@@ -23,21 +32,15 @@
         <span>На время</span>
 
         <label>
-            <input type="radio" name="time" th:value="${el.isForTime}==true" th:checked="${el.isForTime}==true"> Да
+            <input type="radio" name="time" value="on" th:checked="(${el.isForTime == true})"> Да
         </label>
         <label>
-            <input type="radio" name="time" th:value="${el.isForTime}==false" th:checked="${el.isForTime}==false"> Нет
+            <input type="radio" name="time" value="off" th:checked="(${el.isForTime == false})"> Нет
         </label>
     </div>
-
     <div>
-        <label>Вопрос</label>
-        <input type="text" name="question" required>
-    </div>
-    <div>
-        <input type="submit">
+        <input type="submit" value="Далее">
     </div>
 </form>
-
 </body>
 </html>

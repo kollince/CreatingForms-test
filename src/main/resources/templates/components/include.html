@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+<head>
+  <meta charset="UTF-8">
+  <script src="/js/bootstrap.min.js"></script>
+  <!-- Bootstrap CSS -->
+  <link th:fragment="css" rel="stylesheet" type="text/css" href="/css/bootstrap.min.css">
+</head>
+<body>
+<div th:fragment="top">
+  <a href="/">Главная</a> | <a href="#">Войти</a> | <a href="/addTestForm">Создать тест</a>
+</div>
+
+<div th:fragment = "listTest">
+  <p>Список тестов</p><br>
+  <table border="1" style="border-collapse: collapse; width: 25%;">
+    <tbody th:each="el : ${allForms}">
+    <tr>
+    <tr>
+      <td style="width: 50%;">Наименование</td>
+      <td style="width: 50%;"><div th:text="${el.name}"></div></td>
+    </tr>
+    </tr>
+    <tr>
+      <td style="width: 50%;">Описание</td>
+      <td style="width: 50%;"><div th:text="${el.description}"></div></td>
+    </tr>
+    <tr>
+      <td style="width: 50%;">На время</td>
+      <td style="width: 50%;">
+        <div th:if="${el.isForTime} == true">Да</div>
+        <div th:if="${el.isForTime} == false">Нет</div>
+      </td>
+    </tr>
+    <tr style="height: 18px;">
+      <td style="width: 25%; height: 18px;" colspan="4"></td>
+    </tr>
+    <tr>
+      <td colspan="4" style="text-align: center;">
+        <a th:href="'/edit/'+${el.id}">Редактировать</a> |
+        <a th:href="'/delete/'+${el.id}">Удалить</a>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="4"></td>
+    </tr>
+    </tbody>
+  </table>
+</div>
+
+</body>
+</html>
