@@ -21,12 +21,11 @@ import java.util.List;
 
 @Controller
 public class FormsCreator {
-    List<Forms> formsList = new ArrayList<>();
-    FormsDao formsDao = new FormsDaoJsonImpl(formsList);
+//    List<Forms> formsList = new ArrayList<>();
+//    List<Questions> questionsList = new ArrayList<>();
+//    List<Answers> answersList = new ArrayList<>();
+    FormsDao formsDao = new FormsDaoJsonImpl();
     FormService formService = new FormServiceImpl(formsDao);
-    private final List<Answers> answersList = new ArrayList<>();
-    private final List<Questions> questionsList = new ArrayList<>();
-
 
     @GetMapping("/")
     public String allPhysicsTests(Model model) throws IOException {
@@ -38,65 +37,60 @@ public class FormsCreator {
     public String addTestForm(){
         return "addTestForm";
     }
-
+    // Редактор теста
     @GetMapping("/edit/{id}")
     public String edit(@PathVariable(value="id") int id, Model model) {
-        //formService.updateForm(id, name, description, questionsList, answersList, time);
-        Forms fmsEdit = formService.getFormsById(id);
-        model.addAttribute("editForm", fmsEdit);
-//        System.out.println("Получили isForTime: "+formService.getFormsById(id).isForTime()+", Время - "+ new Date());
-        //System.out.println(fmsEdit.getId());
+        Forms formId = formService.getFormsById(id);
+        model.addAttribute("editForm", formId);
         return "edit";
     }
-    @GetMapping("/editQuestions/{id}")
-    public String editQuestions (@PathVariable(value="id") int id, Model model) {
-        //formService.updateForm(id, name, description, questionsList, answersList, time);
+    //Редактор Вопросов
+    @GetMapping("/addQuestions/{id}")
+    public String addQuestions ( @PathVariable(value="id") int id, Model model) {
         Forms fmsEdit = formService.getFormsById(id);
-        System.out.println(fmsEdit.getName());
-        System.out.println(fmsEdit.getId());
-        System.out.println(fmsEdit.isForTime());
-        System.out.println(fmsEdit.getQuestionsList());
-        model.addAttribute("editQuestion", fmsEdit);
-//        System.out.println("Получили isForTime: "+formService.getFormsById(id).isForTime()+", Время - "+ new Date());
-        //System.out.println(fmsEdit.getId());
-        return "editQuestions";
+        List<Questions> qstAdd = formService.listQuestionsByFormId(id);
+        model.addAttribute("editFormId", fmsEdit);
+        model.addAttribute("questionsByFormId",qstAdd);
+        return "addQuestions";
     }
+//    @PostMapping("/addQuestion")
+//    public String add(@RequestParam int idForm, @RequestParam String question ) throws IOException {
+//        Questions questions = new Questions(0, idForm, question);
+//        formService.addQuestion(questions);
+//        int lastIndex = formsList.size() - 1;
+//
+//        return "redirect:/addQuestions/"+idForm;
+//    }
     @PostMapping("/updateForm/{id}")
     public String update(@RequestParam String name, @RequestParam String description, @RequestParam boolean time,
                          @PathVariable(value="id") int id, Model model) throws IOException {
-
-        formService.updateForm(id, name, description, questionsList, answersList, time);
-        int lastIndex = formsList.size() - 1;
-        return "redirect:/editQuestions/"+formsList.get(lastIndex).getId();
+        formService.updateForm(id, name, description, time);
+        return "redirect:/addQuestions/"+id;
     }
 
 
     @PostMapping("/addForm")
     public String add(@RequestParam String name, @RequestParam String description, @RequestParam boolean time) throws IOException {
-        Forms forms = new Forms(0, name, description,questionsList, answersList,time);
-        List<Forms> formsList = formService.addForms(forms);
-        //formService.addForms(forms);
-        int lastIndex = formsList.size() - 1;
-//        for (int i = 0; i < formsList.size(); i++) {
-//            System.out.println("i - "+i+", getId - "+formsList.get(i).getId());
-//        }
-        //System.out.println(lastIndex);
-        //return "redirect:/edit";
-        return "redirect:/edit/"+formsList.get(lastIndex).getId();
+        int lastIndex;
+        Forms forms = new Forms(0, name, description, time);
+        formService.addForms(forms);
+        if (formService.listForms().size() > 0) {
+            lastIndex = formService.listForms().size()-1;
+        } else {
+            lastIndex= 0;
+        }
+        return "redirect:/edit/"+formService.listForms().get(lastIndex).getId();
     }
-    @PostMapping("/editQuestions/{id}")
+    @PostMapping("/addQuestions/{id}")
     public String addQuestion(@RequestParam String name, @RequestParam String description, @RequestParam boolean time,
-                              @RequestParam String question,
+                              @RequestParam int idForm, @RequestParam String question,
                               @PathVariable(value="id") int id, Model model) {
         Forms fmsEdit = formService.getFormsById(id);
-        fmsEdit.getQuestionsList().size();
-
         model.addAttribute("editQuestion", fmsEdit);
-        Questions questions = new Questions(1, id, question);
-        questionsList.add(questions);
-
-        List<Forms> formsList =  formService.updateForm(id, name, description, questionsList, answersList, time);
-        formService.updateForm(id,name,description,questionsList, answersList, time);
+        Questions questions = new Questions(0, idForm, question);
+        formService.addQuestion(questions);
+        List<Forms> formsList =  formService.updateForm(id, name, description,  time);
+        formService.updateForm(id,name,description, time);
         int lastIndex = formsList.size() - 1;
 
 //        for (int i = 0; i < formsList.size(); i++) {
@@ -104,7 +98,13 @@ public class FormsCreator {
 //        }
         //System.out.println(lastIndex);
         //return "redirect:/edit";
-        return "redirect:/editQuestions/"+formsList.get(lastIndex).getId();
+        return "redirect:/addQuestions/"+formsList.get(lastIndex).getId();
+    }
+    @GetMapping("/deleteQuestion/{id}")
+    public String getDeleteQuestion(@PathVariable(value="id") int id) {
+        int idForm = formService.getQuestionById(id).getIdForm();
+        formService.deleteQuestion(id);
+        return "redirect:/addQuestions/"+idForm;
     }
     @GetMapping("/edit")
     public String editNewForm() {

@@ -7,7 +7,8 @@ import lombok.Data;
 @Data
 public class Answers {
     private int id;
-    private int ifForm;
+    private int idForm;
+    private int idQuestion;
     private String answer;
     private boolean isTrue;
 }

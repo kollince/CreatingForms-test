@@ -9,10 +9,20 @@ import java.io.IOException;
 import java.util.List;
 @Service
 public interface FormService {
+    List<Answers> addAnswer(Answers answers);
+    List<Answers> listAnswers();
+    List<Answers> updateAnswers(int id, String answer, boolean isTrue);
+    List<Answers> deleteAnswers(int id);
+    Answers getAnswersById(int id);
+    List<Questions> addQuestion(Questions questions);
+    List<Questions> listQuestions();
+    List<Questions> listQuestionsByFormId(int formId);
+    List<Questions> updateQuestions(int id, int idForm, String question);
+    List<Questions> deleteQuestion(int id);
+    Questions getQuestionById(int id);
     List<Forms> listForms() throws IOException;
-    List<Forms> addQuestion(Forms form);
     List<Forms> addForms(Forms form) throws IOException;
-    List<Forms> updateForm(int id, String name, String description, List<Questions> questionsList, List<Answers> answersList, boolean isForTime);
+    List<Forms> updateForm(int id, String name, String description, boolean isForTime);
     List<Forms> delete(int id);
     Forms getFormsById(int id);
 

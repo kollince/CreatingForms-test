@@ -47,6 +47,13 @@
     </tbody>
   </table>
 </div>
+<div th:fragment = "questionsByFormId">
+  <ol>
+    <div th:each="el : ${questionsByFormId}">
+    <li th:text="${el.question}"></li><div> | <a href="#">Редактировать</a> | <a th:href="'/deleteQuestion/'+${el.id}">Удалить</a> </div>
+    </div>
+  </ol>
+</div>
 
 </body>
 </html>

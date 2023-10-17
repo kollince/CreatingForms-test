@@ -10,18 +10,25 @@ import org.springframework.stereotype.Repository;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
+
 @Repository
 public class FormsDaoJsonImpl implements FormsDao {
-    private final List<Forms> formsList;
+    private final List<Forms> formsList = new ArrayList<>();
+    private final List<Questions> questionsList = new ArrayList<>();
+    private final List<Answers> answersList = new ArrayList<>();
     private final ObjectMapper mapper = new ObjectMapper();
     final Path FILEPATH = Path.of("src/main/resources/data/listForms.json");
     private int idCount = 0;
+    private int idCountQuestion = 0;
+    private int idCountAnswer = 0;
 
-    public FormsDaoJsonImpl(List<Forms> formsList) {
-        this.formsList = formsList;
+    public FormsDaoJsonImpl() {
+
     }
-
     private void fileExist()  {
         File file = new File(FILEPATH.toUri());
         try {
@@ -31,29 +38,138 @@ public class FormsDaoJsonImpl implements FormsDao {
         } catch (Exception e){
             System.err.println("file not found");
         }
-
     }
     @Override
-    public List<Forms> addQuestion(Forms form) {
+    public List<Answers> addAnswer(Answers answers) {
         int max = 0;
-        if (formsList.size() == 0) {
-            idCount = 1;
-            form.setId(idCount++);
+        if (answersList.size() == 0) {
+            idCountAnswer = 1;
+            answers.setId(idCountAnswer++);
         } else {
-            for (int i = 0; i < formsList.size(); i++) {
-                max = Math.max(max, formsList.get(i).getId());
-                if (formsList.get(i).getId() > formsList.size()) {
-                    idCount = max+1;
+            for (int i = 0; i < answersList.size(); i++) {
+                max = Math.max(max, answersList.get(i).getId());
+                if (answersList.get(i).getId() > answersList.size()) {
+                    idCountAnswer = max+1;
                 }
             }
-            form.setId(idCount++);
+            answers.setId(idCountAnswer++);
         }
-        formsList.add(form);
-        return formsList;
-        //fileExist();
-        //mapper.writeValue(FILEPATH.toFile(), form);
-
+        answersList.add(answers);
+        return answersList;
     }
+    @Override
+    public List<Answers> listAnswers() {
+        for (Answers answer : answersList) {
+            if (answersList.size() < idCountAnswer) {
+                idCountAnswer = formsList.size()+1;
+            }
+        }
+        return answersList;
+    }
+    @Override
+    public List<Answers> updateAnswers(int id, String answer, boolean isTrue) {
+        for (Answers answers : answersList) {
+            if (answers.getId() == id) {
+                answers.setAnswer(answer);
+            }
+        }
+        return answersList;
+    }
+    @Override
+    public List<Answers> deleteAnswers(int id) {
+        for (int i = 0; i < answersList.size(); i++) {
+            if (answersList.get(i).getId()==id) {
+                answersList.remove(i);
+            }
+        }
+        return answersList;
+    }
+    @Override
+    public Answers getAnswersById(int id) {
+        Answers element = null;
+        for (Answers answers : answersList) {
+            if (answers.getId() == id) {
+                element = answers;
+            }
+        }
+        return element;
+    }
+    @Override
+    public List<Questions> addQuestion(Questions questions) {
+        int max = 0;
+        if (questionsList.size() == 0) {
+            idCountQuestion = 1;
+            questions.setId(idCountQuestion++);
+        } else {
+            for (int i = 0; i < questionsList.size(); i++) {
+                max = Math.max(max, questionsList.get(i).getId());
+                if (questionsList.get(i).getId() > questionsList.size()) {
+                    idCountQuestion = max+1;
+                }
+            }
+            questions.setId(idCountQuestion++);
+            System.out.println("max: "+max+", addQuestion: "+idCountQuestion++);
+        }
+        questionsList.add(questions);
+        return questionsList;
+    }
+
+    @Override
+    public List<Questions> listQuestionsByFormId(int formId) {
+        List<Questions> qstByFormId = questionsList.stream()
+                .filter(questions -> questions.getIdForm() == formId)
+                .collect(Collectors.toCollection(ArrayList::new));
+        for (int i = 0; i < questionsList.size(); i++) {
+            if (questionsList.size() < idCountQuestion) {
+                idCountQuestion = questionsList.size() + 1;
+                break;
+            }
+        }
+        System.out.println(idCountQuestion);
+        return qstByFormId;
+    }
+    @Override
+    public List<Questions> listQuestions() {
+        for (Questions questions : questionsList) {
+            if (questionsList.size() < idCountQuestion) {
+                idCountQuestion = questionsList.size()+1;
+            }
+        }
+        return questionsList;
+    }
+    @Override
+    public List<Questions> updateQuestions(int id, int idForm, String question) {
+
+        for (Questions questions : questionsList) {
+            if (questions.getId() == id) {
+                questions.setIdForm(idForm);
+                questions.setQuestion(question);
+            }
+        }
+        return questionsList;
+    }
+    @Override
+    public List<Questions> deleteQuestion(int id) {
+        for (int i = 0; i < questionsList.size(); i++) {
+            if (questionsList.get(i).getId()==id) {
+                questionsList.remove(i);
+            }
+
+        }
+        return questionsList;
+    }
+
+    @Override
+    public Questions getQuestionById(int id) {
+        Questions element = null;
+        for (int i = 0; i < questionsList.size(); i++) {
+            if (questionsList.get(i).getId() == id){
+                element = questionsList.get(i);
+            }
+        }
+        return element;
+    }
+
 
     @Override
     public List<Forms> addForm(Forms form) throws IOException {
@@ -90,26 +206,12 @@ public class FormsDaoJsonImpl implements FormsDao {
     }
 
     @Override
-    public List<Forms> updateForm(int id, String name, String description, List<Questions> questionsList, List<Answers> answersList, boolean isForTime) {
-        int maxCount = 0;
-        int count = 0;
-        for (int i = 0; i < formsList.size(); i++) {
-            if(formsList.get(i).getId()==id){
-                formsList.get(i).setName(name);
-                formsList.get(i).setDescription(description);
-                if (formsList.get(i).getQuestionsList().size()!=0){
-                    for (int j = 0; j < formsList.get(i).getQuestionsList().size(); j++) {
-                        maxCount = Math.max(maxCount, formsList.get(i).getQuestionsList().get(j).getId());
-                        if (formsList.get(i).getQuestionsList().get(j).getId() > formsList.size()) {
-                            count = maxCount+1;
-                            System.out.println("max: "+maxCount);
-                        }
-                        formsList.get(i).getQuestionsList().get(j).setIdForm(count);
-                    }
-                }
-                formsList.get(i).setQuestionsList(questionsList);
-                formsList.get(i).setForTime(isForTime);
-                formsList.get(i).setAnswersList(answersList);
+    public List<Forms> updateForm(int id, String name, String description, boolean isForTime) {
+        for (Forms forms : formsList) {
+            if (forms.getId() == id) {
+                forms.setName(name);
+                forms.setDescription(description);
+                forms.setForTime(isForTime);
             }
         }
         return formsList;
@@ -120,23 +222,27 @@ public class FormsDaoJsonImpl implements FormsDao {
         for (int i = 0; i < formsList.size(); i++) {
             if (formsList.get(i).getId()==id) {
                 formsList.remove(i);
+                for (int j = 0; j < questionsList.size(); j++) {
+                    if (questionsList.get(j).getIdForm() == id) {
+                        System.out.println(" "+questionsList.get(j).getQuestion());
+                        questionsList.remove(j);
+                        j--;
+                    }
+                }
             }
-
         }
-       //idCount = formsList.size()-1;
         return formsList;
     }
 
     @Override
     public Forms getFormsById(int id) {
         Forms element = null;
-        for (int i = 0; i < formsList.size(); i++) {
-            if (formsList.get(i).getId() == id){
-                element = formsList.get(i);
+        for (Forms forms : formsList) {
+            if (forms.getId() == id) {
+                element = forms;
             }
         }
         return element;
     }
-
 
 }

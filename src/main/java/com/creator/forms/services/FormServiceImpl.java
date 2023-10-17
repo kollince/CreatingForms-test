@@ -17,10 +17,8 @@ import java.util.List;
 @Service
 public class FormServiceImpl implements FormService {
     private FormsDao formsDao;
-//    private final List<Answers> answersList = new ArrayList<>();
     private int counter;
     private void initStorages() {
-
     }
 
     public FormServiceImpl(FormsDao formsDao) {
@@ -30,30 +28,71 @@ public class FormServiceImpl implements FormService {
     }
 
     @Override
+    public List<Answers> addAnswer(Answers answers) {
+        return formsDao.addAnswer(answers);
+    }
+
+    @Override
+    public List<Answers> listAnswers() {
+        return formsDao.listAnswers();
+    }
+
+    @Override
+    public List<Answers> updateAnswers(int id, String answer, boolean isTrue) {
+        return formsDao.updateAnswers(id,answer,isTrue);
+    }
+
+    @Override
+    public List<Answers> deleteAnswers(int id) {
+        return formsDao.deleteAnswers(id);
+    }
+
+    @Override
+    public Answers getAnswersById(int id) {
+        return formsDao.getAnswersById(id);
+    }
+
+    @Override
+    public List<Questions> addQuestion(Questions questions) {
+        return formsDao.addQuestion(questions);
+    }
+
+    @Override
+    public List<Questions> listQuestions() {
+        return formsDao.listQuestions();
+    }
+    @Override
+    public List<Questions> listQuestionsByFormId(int formId){
+        return formsDao.listQuestionsByFormId(formId);
+    }
+    @Override
+    public List<Questions> updateQuestions(int id, int idForm, String question) {
+        return formsDao.updateQuestions(id, idForm, question);
+    }
+
+    @Override
+    public List<Questions> deleteQuestion(int id) {
+        return formsDao.deleteQuestion(id);
+    }
+
+    @Override
+    public Questions getQuestionById(int id) {
+        return formsDao.getQuestionById(id);
+    }
+
+    @Override
     public List<Forms> listForms() throws IOException {
         return formsDao.listForms();
-//        return formsList;
     }
     @Override
     public List<Forms> addForms(Forms form) throws IOException {
-        //formsDao.addForm(form);
         return formsDao.addForm(form);
-       //formsList.add(form);
-    }
-    @Override
-    public List<Forms> addQuestion(Forms form) {
-        //formsDao.addForm(form);
-        return null;
-        //formsList.add(form);
     }
 
     @Override
-    public List<Forms> updateForm(int id, String name, String description, List<Questions> questionsList, List<Answers> answersList, boolean isForTime) {
-//        System.out.println("Отправили: " +isForTime +", Время - "+ new Date());
-
-       return formsDao.updateForm(id, name, description,questionsList, answersList, isForTime);
+    public List<Forms> updateForm(int id, String name, String description, boolean isForTime) {
+       return formsDao.updateForm(id, name, description,isForTime);
     }
-
 
     @Override
     public List<Forms> delete(int id) {
@@ -64,5 +103,4 @@ public class FormServiceImpl implements FormService {
     public Forms getFormsById(int id) {
         return formsDao.getFormsById(id);
     }
-
 }

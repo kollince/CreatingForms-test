@@ -10,14 +10,14 @@
 <body>
 <div th:insert="~{components/include :: top}"></div>
 <p>Редактирование</p>
-<div th:each="el : ${editQuestion}">
+<div th:each="el : ${editFormId}">
   <div>Наименование теста:
     <b th:text = "${el.name}"></b>
   </div>
   <div>Описание:
     <em th:text = "${el.description}"></em>
   </div>
-<form method="post" th:action = "@{'/editQuestions/' + ${el.id}}">
+<form method="post" th:action = "@{'/addQuestions/' + ${el.id}}">
   <div>
     <label>Вопрос</label>
     <textarea name="question" type="text" rows="5" required ></textarea>
@@ -29,7 +29,7 @@
   <div>
     <input type="submit" value="Добавить">
     <h2>Вопросы:</h2>
-    <div th:text="${el.questionsList}"></div>
+    <div th:insert="~{components/include :: questionsByFormId}"></div>
   </div>
 </form>
 </div>
