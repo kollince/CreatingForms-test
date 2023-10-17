@@ -8,7 +8,7 @@
 </head>
 <body>
 <div th:fragment="top">
-  <a href="/">Главная</a> | <a href="#">Войти</a> | <a href="/addTestForm">Создать тест</a>
+  <a href="/">Главная</a> | <a href="/addTestForm">Добавить тест</a> | <a href="/addQuestion">Добавить вопрос</a> | <a href="#">Добавить Ответ</a>
 </div>
 
 <div th:fragment = "listTest">
@@ -51,6 +51,20 @@
   <ol>
     <div th:each="el : ${questionsByFormId}">
     <li th:text="${el.question}"></li><div> | <a href="#">Редактировать</a> | <a th:href="'/deleteQuestion/'+${el.id}">Удалить</a> </div>
+    </div>
+  </ol>
+</div>
+<div th:fragment="questionsList">
+  <ol>
+    <div th:each="qstList : ${questionsList}">
+      <li th:text="${qstList.question}"></li>
+      <div th:each="fm : ${formList}">
+          <span th:if="${#strings.equals(fm.id, qstList.idForm)}">
+           <b th:text="${fm.name}"></b>
+        </span>
+        <span th:text="${fm.name}"></span> | fm.id <span th:text="${fm.id}"></span> | idForm <span th:text="${qstList.idForm}"></span>
+      </div>
+      <div> | <a href="#">Редактировать</a> | <a th:href="'/deleteQuestion/'+${qstList.id}">Удалить</a></div>
     </div>
   </ol>
 </div>

@@ -53,6 +53,20 @@ public class FormsCreator {
         model.addAttribute("questionsByFormId",qstAdd);
         return "addQuestions";
     }
+    @GetMapping("/addQuestion")
+    public String addQuestion (Model model) throws IOException {
+        List<Forms> formsList= formService.listForms();
+        List<Questions> questionsList = formService.listQuestions();
+        model.addAttribute("formList", formsList);
+        model.addAttribute("questionsList", questionsList);
+        return "/addQuestion";
+    }
+    @PostMapping("/addQuestion")
+    public String addQuestionN(@RequestParam int idForm, @RequestParam String question, Model model) {
+        Questions questions = new Questions(0, idForm, question);
+        formService.addQuestion(questions);
+        return "redirect:/addQuestion";
+    }
 //    @PostMapping("/addQuestion")
 //    public String add(@RequestParam int idForm, @RequestParam String question ) throws IOException {
 //        Questions questions = new Questions(0, idForm, question);
