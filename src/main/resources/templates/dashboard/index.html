@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <script src="/js/bootstrap.min.js"></script>
+    <!-- Bootstrap CSS -->
+    <link th:insert="~{components/include :: css}">
+    <title>Панель упралвения</title>
+</head>
+<body>
+<div th:insert="~{dashboard/fragments/include :: top}"></div>
+<H1>Панель управления</H1>
+<div th:insert="~{dashboard/fragments/include :: linksAddForms}"></div>
+<div th:insert="~{dashboard/fragments/include :: listTest}"></div>
+<div th:insert="~{dashboard/fragments/include :: mapForms}"></div>
+
+<!--<td rowspan="4"></td>-->
+<!--<td rowspan="4">-->
+<!--    -->
+<!--</td>-->
+<!--<p>Добавить тест</p>-->
+<!--<form method="post" action="/addForm">-->
+<!--    <div>-->
+<!--        <label>Имя</label>-->
+<!--        <input type="text" name="name" required>-->
+<!--    </div>-->
+<!--    <div>-->
+<!--        <label>Описание</label>-->
+<!--        <textarea name="description" type="text" rows="5" required></textarea>-->
+<!--    </div>-->
+<!--    <div>-->
+<!--        <label>Вопрос</label>-->
+<!--        <input type="text" name="question" required>-->
+<!--    </div>-->
+<!--    <div class="radio">-->
+<!--        <span>На время</span>-->
+<!--        <label>-->
+<!--            <input type="radio" name="time" value="true">Да-->
+<!--        </label>-->
+<!--        <label>-->
+<!--            <input type="radio" name="time" value="false" checked>Нет-->
+<!--        </label>-->
+<!--    </div>-->
+<!--    <div>-->
+<!--        <input type="submit" value="Начать">-->
+<!--    </div>-->
+<!--</form>-->
+
+</body>
+</html>

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <script src="/js/bootstrap.min.js"></script>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" type="text/css" href="/css/bootstrap.min.css">
+    <title>Добавления теста по физике</title>
+</head>
+<body>
+<div th:insert="~{dashboard/fragments/include :: top}"></div>
+<H1>Панель управления / Добавить ответ</H1>
+<div th:insert="~{dashboard/fragments/include :: linksAddForms}"></div>
+<form method="post" action="/dashboard/addAnswer">
+    <div>
+        <label>Выберите вопрос</label>
+        <select name="idQuestion" size="1">
+            <option selected value="-1">Не выбрано</option>
+            <option th:each="el : ${questionsList}" th:text="${el.question}" th:value="${el.id}"></option>
+        </select>
+    </div>
+    <div>
+        <label>Введите ответ</label>
+        <textarea name="answer" type="text" rows="5" required></textarea>
+    </div>
+    <div class="radio">
+        <span>Правильный ответ</span>
+        <label>
+            <input type="radio" name="isTrue" value="true">Да
+        </label>
+        <label>
+            <input type="radio" name="isTrue" value="false" checked>Нет
+        </label>
+    </div>
+    <div>
+        <input type="submit" value="Добавить">
+    </div>
+</form>
+</body>
+</html>

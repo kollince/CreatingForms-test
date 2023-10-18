@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <script src="/js/bootstrap.min.js"></script>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" type="text/css" href="/css/bootstrap.min.css">
+    <title>Добавления теста по физике</title>
+</head>
+<body>
+<div th:insert="~{dashboard/fragments/include :: top}"></div>
+<H1>Панель управления / Добавить вопрос</H1>
+<div th:insert="~{dashboard/fragments/include :: linksAddForms}"></div>
+<form method="post"  action="/dashboard/addQuestion">
+    <div>
+        <label>Выберите тест</label>
+        <select  name="idForm" size="1">
+            <option selected value="-1">Не выбрано</option>
+            <option th:each="el : ${formList}" th:text = "${el.name}" th:value="${el.id}"></option>
+        </select>
+    </div>
+    <div>
+        <label>Вопрос </label>
+        <textarea name="question" type="text" rows="5" required></textarea>
+    </div>
+    <div>
+        <input type="submit" value="Добавить">
+        <h2>Вопросы:</h2>
+        <div th:insert="~{components/include :: questionsList}"></div>
+    </div>
+</form>
+</body>
+</html>

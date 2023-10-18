@@ -111,6 +111,7 @@ public class FormsDaoJsonImpl implements FormsDao {
             System.out.println("max: "+max+", addQuestion: "+idCountQuestion++);
         }
         questionsList.add(questions);
+        System.out.println(questionsList);
         return questionsList;
     }
 
