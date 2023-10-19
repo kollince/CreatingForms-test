@@ -11,13 +11,15 @@ import java.util.List;
 public interface FormService {
     List<Answers> addAnswer(Answers answers);
     List<Answers> listAnswers();
+    List<Answers> listAnswersByFormId(int formId);
+    List<Answers> listAnswersByQuestionId(int questionId);
     List<Answers> updateAnswers(int id, String answer, boolean isTrue);
     List<Answers> deleteAnswers(int id);
     Answers getAnswersById(int id);
     List<Questions> addQuestion(Questions questions);
     List<Questions> listQuestions();
     List<Questions> listQuestionsByFormId(int formId);
-    List<Questions> updateQuestions(int id, int idForm, String question);
+    List<Questions> updateQuestions(int id, String question);
     List<Questions> deleteQuestion(int id);
     Questions getQuestionById(int id);
     List<Forms> listForms() throws IOException;
@@ -25,5 +27,4 @@ public interface FormService {
     List<Forms> updateForm(int id, String name, String description, boolean isForTime);
     List<Forms> delete(int id);
     Forms getFormsById(int id);
-
 }

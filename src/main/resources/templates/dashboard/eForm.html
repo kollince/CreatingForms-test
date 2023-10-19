@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <script src="/js/bootstrap.min.js"></script>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" type="text/css" href="/css/bootstrap.min.css">
+    <title>Редактор теста по физике</title>
+</head>
+<body>
+<div th:insert="~{dashboard/fragments/include :: top}"></div>
+<H1>Панель управления / Редактор теста по физике</H1>
+<div th:insert="~{dashboard/fragments/include :: linksAddForms}"></div>
+<th:block th:each="el : ${editFormId}">
+    <fieldset>
+        <legend>Редактирование наименования и описания теста</legend>
+        <form method="post" th:action="@{'/dashboard/updateForm/' + ${el.id}}">
+            <div>
+                <label>Наименование</label>
+                <input th:value="${el.name}" type="text" name="name" required>
+            </div>
+            <div>
+                <label>Описание</label>
+                <textarea th:text="${el.description}" name="description" type="text" rows="5" required></textarea>
+            </div>
+            <div class="radio">
+                <span>На время</span>
+
+                <label>
+                    <input type="radio" name="time" value="on" th:checked="(${el.isForTime == true})"> Да
+                </label>
+                <label>
+                    <input type="radio" name="time" value="off" th:checked="(${el.isForTime == false})"> Нет
+                </label>
+            </div>
+            <div>
+                <input type="submit" value="Соханить название и описание">
+            </div>
+        </form>
+    </fieldset>
+    <fieldset>
+        <legend>Добавить вопрос к тесту <th:block th:text="${editFormId.name}"></th:block>
+        </legend>
+         <form method="post" th:action="@{'/dashboard/addQuestions/' + ${editFormId.id}}">
+            <div>
+                <label>Вопрос</label>
+                <textarea name="question" type="text" rows="5" required></textarea>
+                <input type="hidden" name="idForm" th:value="${editFormId.id}">
+            </div>
+            <div>
+                <input type="submit" value="Добавить">
+            </div>
+        </form>
+    </fieldset>
+    <fieldset>
+        <legend>Вопросы:</legend>
+        <ol th:unless="${questionsByFormId.empty}">
+            <li th:each="questionsByFormId : ${questionsByFormId}">
+                <th:block th:text="${questionsByFormId.question}"></th:block> |
+                <a th:href="@{'/dashboard/eQuestion/'+${editFormId.id}+'/'+${questionsByFormId.id}}">Редактировать</a> |
+                <a th:href="@{'/dashboard/deleteQuestion/'+${editFormId.id}}">Удалить</a>
+            </li>
+        </ol>
+    </fieldset>
+</th:block>
+</body>
+</html>

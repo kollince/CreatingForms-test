@@ -66,6 +66,38 @@ public class FormsDaoJsonImpl implements FormsDao {
         }
         return answersList;
     }
+
+    @Override
+    public List<Answers> listAnswersByFormId(int formId) {
+        List<Answers> ansByFormId = answersList.stream()
+                .filter(answers -> answers.getIdForm() == formId)
+                .collect(Collectors.toCollection(ArrayList::new));
+        for (int i = 0; i < answersList.size(); i++) {
+            if (answersList.size() < idCountAnswer) {
+                idCountAnswer = answersList.size() + 1;
+                break;
+            }
+        }
+        System.out.println(idCountAnswer);
+        return ansByFormId;
+    }
+
+    @Override
+    public List<Answers> listAnswersByQuestionId(int questionId) {
+        List<Answers> ansByQuestionId = answersList.stream()
+                .filter(answers -> answers.getIdQuestion() == questionId)
+                .collect(Collectors.toCollection(ArrayList::new));
+//        for (int i = 0; i < answersList.size(); i++) {
+//            if (answersList.size() < idCountAnswer) {
+//                idCountAnswer = answersList.size() + 1;
+//                break;
+//            }
+//        }
+        System.out.println(idCountAnswer);
+        return ansByQuestionId;
+    }
+
+
     @Override
     public List<Answers> updateAnswers(int id, String answer, boolean isTrue) {
         for (Answers answers : answersList) {
@@ -139,12 +171,11 @@ public class FormsDaoJsonImpl implements FormsDao {
         return questionsList;
     }
     @Override
-    public List<Questions> updateQuestions(int id, int idForm, String question) {
+    public List<Questions> updateQuestions(int id, String question) {
 
         for (Questions questions : questionsList) {
             if (questions.getId() == id) {
-                questions.setIdForm(idForm);
-                questions.setQuestion(question);
+                  questions.setQuestion(question);
             }
         }
         return questionsList;
@@ -228,6 +259,13 @@ public class FormsDaoJsonImpl implements FormsDao {
                         System.out.println(" "+questionsList.get(j).getQuestion());
                         questionsList.remove(j);
                         j--;
+                    }
+                }
+                for (int k = 0; k < answersList.size(); k++) {
+                    if (answersList.get(k).getIdForm() == id) {
+                        System.out.println(" "+answersList.get(k).getAnswer());
+                        answersList.remove(k);
+                        k--;
                     }
                 }
             }

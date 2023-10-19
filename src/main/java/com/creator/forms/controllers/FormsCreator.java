@@ -43,27 +43,44 @@ public class FormsCreator {
         model.addAttribute("ansList", ansList);
         return "dashboard/index";
     }
-    @GetMapping("/addTestForm")
-    public String addTestForm1(){
-        return "addTestForm";
-    }
+//    @GetMapping("/addTestForm")
+//    public String addTestForm1(){
+//        return "addTestForm";
+//    }
     @GetMapping("dashboard/addTestForm")
     public String addTestForm(){
         return "dashboard/addTestForm";
     }
+    // Редактор теста
+    @GetMapping("dashboard/eForm/{id}")
+    public String edit(@PathVariable(value="id") int id, Model model) {
+        Forms formId = formService.getFormsById(id);
+        List<Questions> questionsByFormId = formService.listQuestionsByFormId(id);
+        model.addAttribute("editFormId", formId);
+        model.addAttribute("questionsByFormId",questionsByFormId);
+        return "dashboard/eForm";
+    }
     //Редактор Вопросов
-    @GetMapping("/addQuestions/{id}")
-    public String addQuestions ( @PathVariable(value="id") int id, Model model) {
-        Forms fmsEdit = formService.getFormsById(id);
-        List<Questions> qstAdd = formService.listQuestionsByFormId(id);
-        model.addAttribute("editFormId", fmsEdit);
-        model.addAttribute("questionsByFormId",qstAdd);
-        return "addQuestions";
+    @GetMapping("dashboard/eQuestion/{formId}/{questionId}")
+    public String addQuestions ( @PathVariable(value="formId") int formId,
+                                 @PathVariable(value="questionId") int questionId, Model model) {
+        Forms fmsListId = formService.getFormsById(formId);
+        List<Questions> qstListByFormId = formService.listQuestionsByFormId(formId);
+        Questions qstListId = formService.getQuestionById(questionId);
+        List<Answers> ansListByFormId = formService.listAnswersByFormId(formId);
+        List<Answers> ansListByQuestionId = formService.listAnswersByQuestionId(questionId);
+        model.addAttribute("fmsListId", fmsListId);
+        model.addAttribute("qstListByFormId",qstListByFormId);
+//        model.addAttribute("ansListByFormId",ansListByFormId);
+        model.addAttribute("ansListByQuestionId",ansListByQuestionId);
+        model.addAttribute("qstListId",qstListId);
+        return "dashboard/eQuestion";
     }
     @GetMapping("dashboard/addQuestion")
     public String addQuestion (Model model) throws IOException {
         List<Forms> formsList= formService.listForms();
         List<Questions> questionsList = formService.listQuestions();
+
         model.addAttribute("formList", formsList);
         model.addAttribute("questionsList", questionsList);
         return "dashboard/addQuestion";
@@ -79,13 +96,7 @@ public class FormsCreator {
         System.out.println(questionsList);
         return "dashboard/addAnswer";
     }
-    // Редактор теста
-    @GetMapping("/edit/{id}")
-    public String edit(@PathVariable(value="id") int id, Model model) {
-        Forms formId = formService.getFormsById(id);
-        model.addAttribute("editForm", formId);
-        return "edit";
-    }
+
     @GetMapping("/deleteQuestion/{id}")
     public String getDeleteQuestion(@PathVariable(value="id") int id) {
         int idForm = formService.getQuestionById(id).getIdForm();
@@ -134,30 +145,20 @@ public class FormsCreator {
         return "redirect:/dashboard/";
     }
     @PostMapping("/dashboard/addAnswer")
-    public String addAnswer(@RequestParam int idQuestion,  @RequestParam String answer,
+    public String addAnswer(@RequestParam int idForm, @RequestParam int idQuestion,  @RequestParam String answer,
                             @RequestParam boolean isTrue,Model model) {
-        Answers answers = new Answers(0, idQuestion, answer, isTrue);
+        Answers answers = new Answers(0, idForm,idQuestion,answer, isTrue);
         formService.addAnswer(answers);
-        return "redirect:/dashboard/";
+        return "redirect:/dashboard/eQuestion/"+idForm+"/"+idQuestion;
     }
-    @PostMapping("/addQuestions/{id}")
-    public String addQuestion(@RequestParam String name, @RequestParam String description, @RequestParam boolean time,
-                              @RequestParam int idForm, @RequestParam String question,
+    @PostMapping("/dashboard/addQuestions/{id}")
+    public String addQuestion(@RequestParam int idForm, @RequestParam String question,
                               @PathVariable(value="id") int id, Model model) {
         Forms fmsEdit = formService.getFormsById(id);
         model.addAttribute("editQuestion", fmsEdit);
         Questions questions = new Questions(0, idForm, question);
         formService.addQuestion(questions);
-        List<Forms> formsList =  formService.updateForm(id, name, description,  time);
-        formService.updateForm(id,name,description, time);
-        int lastIndex = formsList.size() - 1;
-
-//        for (int i = 0; i < formsList.size(); i++) {
-//            System.out.println("i - "+i+", getId - "+formsList.get(i).getId());
-//        }
-        //System.out.println(lastIndex);
-        //return "redirect:/edit";
-        return "redirect:/addQuestions/"+formsList.get(lastIndex).getId();
+        return "redirect:/dashboard/eForm/"+idForm;
     }
 
 
@@ -169,15 +170,24 @@ public class FormsCreator {
 //
 //        return "redirect:/addQuestions/"+idForm;
 //    }
-    @PostMapping("/updateForm/{id}")
+    @PostMapping("dashboard/updateForm/{id}")
     public String update(@RequestParam String name, @RequestParam String description, @RequestParam boolean time,
-                         @PathVariable(value="id") int id, Model model) throws IOException {
+                         @PathVariable(value="id") int id) throws IOException {
         formService.updateForm(id, name, description, time);
-        return "redirect:/addQuestions/"+id;
+        return "redirect:/dashboard/eForm/"+id;
     }
-
-
-
-
+    @PostMapping("dashboard/updateQuestion/{formId}/{questionId}")
+    public String updateQuestion(@RequestParam String question, @PathVariable(value="formId") int formId,
+                                 @PathVariable(value="questionId") int questionId) {
+        formService.updateQuestions(questionId,question);
+        return "redirect:/dashboard/eQuestion/"+formId+"/"+questionId;
+    }
+    @PostMapping("dashboard/updateAnswer/{formId}/{answerId}")
+    public String updateAnswer(@RequestParam String answer, @RequestParam int idQuestion, @RequestParam boolean isTrue,
+                               @PathVariable(value="formId") int formId,
+                               @PathVariable(value="answerId") int answerId) {
+        formService.updateAnswers(answerId,answer, isTrue);
+        return "redirect:/dashboard/eQuestion/"+formId+"/"+idQuestion;
+    }
 
 }

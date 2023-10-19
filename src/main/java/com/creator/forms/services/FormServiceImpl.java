@@ -38,6 +38,17 @@ public class FormServiceImpl implements FormService {
     }
 
     @Override
+    public List<Answers> listAnswersByFormId(int formId) {
+        return formsDao.listAnswersByFormId(formId);
+    }
+
+    @Override
+    public List<Answers> listAnswersByQuestionId(int questionId) {
+        return formsDao.listAnswersByQuestionId(questionId);
+    }
+
+
+    @Override
     public List<Answers> updateAnswers(int id, String answer, boolean isTrue) {
         return formsDao.updateAnswers(id,answer,isTrue);
     }
@@ -66,8 +77,8 @@ public class FormServiceImpl implements FormService {
         return formsDao.listQuestionsByFormId(formId);
     }
     @Override
-    public List<Questions> updateQuestions(int id, int idForm, String question) {
-        return formsDao.updateQuestions(id, idForm, question);
+    public List<Questions> updateQuestions(int id, String question) {
+        return formsDao.updateQuestions(id, question);
     }
 
     @Override
