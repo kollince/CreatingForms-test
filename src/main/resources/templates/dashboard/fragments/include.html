@@ -113,6 +113,21 @@
   <ol th:unless="${fmsList.empty}">
       <th:block th:each="fmsList : ${fmsList}">
       <li><a th:href="'/dashboard/eForm/'+${fmsList.id}" th:block th:text="${fmsList.name}"></a></li>
+        <th:block th:each="qstList : ${qstList}">
+          <th:block th:if="${#strings.equals(fmsList.id, qstList.idForm)}">
+          <th:block th:text="${qstList.question}"></th:block><br>
+            id Вопроса:<th:block th:text="${qstList.id}"></th:block>
+            FormId Вопроса:<th:block th:text="${qstList.idForm}"></th:block> <br>
+          </th:block>
+          <th:block th:each="ansList : ${ansList}">
+            <th:block th:if="${#strings.equals(ansList.idQuestion, qstList.id) && #strings.equals(fmsList.id, qstList.idForm)}">
+            <th:block th:text="${ansList.answer}"></th:block> <br>
+              id Ответа:<th:block th:text="${ansList.id}"></th:block>
+              IdForm Ответа:<th:block th:text="${ansList.idForm}"></th:block>
+              IdQuestion ОТвета:<th:block th:text="${ansList.idQuestion}"></th:block> <br>
+            </th:block>
+          </th:block>
+        </th:block>
   </th:block>
   </ol>
 </th:block>

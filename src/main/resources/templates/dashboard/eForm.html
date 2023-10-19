@@ -39,8 +39,7 @@
         </form>
     </fieldset>
     <fieldset>
-        <legend>Добавить вопрос к тесту <th:block th:text="${editFormId.name}"></th:block>
-        </legend>
+        <legend>Добавить вопрос к тесту "<th:block th:text="${editFormId.name}"></th:block>"</legend>
          <form method="post" th:action="@{'/dashboard/addQuestions/' + ${editFormId.id}}">
             <div>
                 <label>Вопрос</label>

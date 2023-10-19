@@ -67,10 +67,10 @@ public class FormsCreator {
         Forms fmsListId = formService.getFormsById(formId);
         List<Questions> qstListByFormId = formService.listQuestionsByFormId(formId);
         Questions qstListId = formService.getQuestionById(questionId);
-        List<Answers> ansListByFormId = formService.listAnswersByFormId(formId);
+//        List<Answers> ansListByFormId = formService.listAnswersByFormId(formId);
         List<Answers> ansListByQuestionId = formService.listAnswersByQuestionId(questionId);
         model.addAttribute("fmsListId", fmsListId);
-        model.addAttribute("qstListByFormId",qstListByFormId);
+//        model.addAttribute("qstListByFormId",qstListByFormId);
 //        model.addAttribute("ansListByFormId",ansListByFormId);
         model.addAttribute("ansListByQuestionId",ansListByQuestionId);
         model.addAttribute("qstListId",qstListId);
@@ -102,6 +102,13 @@ public class FormsCreator {
         int idForm = formService.getQuestionById(id).getIdForm();
         formService.deleteQuestion(id);
         return "redirect:/addQuestions/"+idForm;
+    }
+    @GetMapping("dashboard/deleteAnswer/{idAnswer}")
+    public String deleteAnswer(@PathVariable(value="idAnswer") int idAnswer) {
+        int idForm = formService.getAnswersById(idAnswer).getIdForm();
+        int idQuestion = formService.getAnswersById(idAnswer).getIdQuestion();
+        formService.deleteAnswers(idAnswer);
+        return "redirect:/dashboard/eQuestion/"+idForm+"/"+idQuestion;
     }
     @GetMapping("/delete/{id}")
     public String getDelete(@PathVariable(value="id") int id) {

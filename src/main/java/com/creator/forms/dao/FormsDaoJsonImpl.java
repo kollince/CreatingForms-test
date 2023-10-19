@@ -42,9 +42,10 @@ public class FormsDaoJsonImpl implements FormsDao {
     @Override
     public List<Answers> addAnswer(Answers answers) {
         int max = 0;
+        System.out.println("idCountAnswer в начале: "+idCountAnswer);
         if (answersList.size() == 0) {
             idCountAnswer = 1;
-            answers.setId(idCountAnswer++);
+            answers.setId(idCountAnswer);
         } else {
             for (int i = 0; i < answersList.size(); i++) {
                 max = Math.max(max, answersList.get(i).getId());
@@ -52,8 +53,13 @@ public class FormsDaoJsonImpl implements FormsDao {
                     idCountAnswer = max+1;
                 }
             }
-            answers.setId(idCountAnswer++);
+            idCountAnswer++;
+            answers.setId(idCountAnswer);
         }
+        System.out.println("size: "+ answersList.size());
+        System.out.println("Max: "+ max);
+        System.out.println("id: "+answers.getId());
+        System.out.println("idCountAnswer: "+idCountAnswer);
         answersList.add(answers);
         return answersList;
     }
@@ -72,13 +78,13 @@ public class FormsDaoJsonImpl implements FormsDao {
         List<Answers> ansByFormId = answersList.stream()
                 .filter(answers -> answers.getIdForm() == formId)
                 .collect(Collectors.toCollection(ArrayList::new));
-        for (int i = 0; i < answersList.size(); i++) {
-            if (answersList.size() < idCountAnswer) {
-                idCountAnswer = answersList.size() + 1;
-                break;
-            }
-        }
-        System.out.println(idCountAnswer);
+//        for (int i = 0; i < answersList.size(); i++) {
+//            if (answersList.size() < idCountAnswer) {
+//                idCountAnswer = answersList.size() + 1;
+//                break;
+//            }
+//        }
+//        System.out.println(idCountAnswer);
         return ansByFormId;
     }
 
@@ -93,7 +99,7 @@ public class FormsDaoJsonImpl implements FormsDao {
 //                break;
 //            }
 //        }
-        System.out.println(idCountAnswer);
+//        System.out.println(idCountAnswer);
         return ansByQuestionId;
     }
 
@@ -103,6 +109,7 @@ public class FormsDaoJsonImpl implements FormsDao {
         for (Answers answers : answersList) {
             if (answers.getId() == id) {
                 answers.setAnswer(answer);
+                answers.setTrue(isTrue);
             }
         }
         return answersList;
@@ -140,10 +147,10 @@ public class FormsDaoJsonImpl implements FormsDao {
                 }
             }
             questions.setId(idCountQuestion++);
-            System.out.println("max: "+max+", addQuestion: "+idCountQuestion++);
+//            System.out.println("max: "+max+", addQuestion: "+idCountQuestion++);
         }
         questionsList.add(questions);
-        System.out.println(questionsList);
+ //       System.out.println(questionsList);
         return questionsList;
     }
 
@@ -158,7 +165,7 @@ public class FormsDaoJsonImpl implements FormsDao {
                 break;
             }
         }
-        System.out.println(idCountQuestion);
+//        System.out.println(idCountQuestion);
         return qstByFormId;
     }
     @Override
@@ -256,14 +263,14 @@ public class FormsDaoJsonImpl implements FormsDao {
                 formsList.remove(i);
                 for (int j = 0; j < questionsList.size(); j++) {
                     if (questionsList.get(j).getIdForm() == id) {
-                        System.out.println(" "+questionsList.get(j).getQuestion());
+//                        System.out.println(" "+questionsList.get(j).getQuestion());
                         questionsList.remove(j);
                         j--;
                     }
                 }
                 for (int k = 0; k < answersList.size(); k++) {
                     if (answersList.get(k).getIdForm() == id) {
-                        System.out.println(" "+answersList.get(k).getAnswer());
+//                        System.out.println(" "+answersList.get(k).getAnswer());
                         answersList.remove(k);
                         k--;
                     }
