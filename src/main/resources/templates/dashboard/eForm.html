@@ -57,7 +57,7 @@
             <li th:each="questionsByFormId : ${questionsByFormId}">
                 <th:block th:text="${questionsByFormId.question}"></th:block> |
                 <a th:href="@{'/dashboard/eQuestion/'+${editFormId.id}+'/'+${questionsByFormId.id}}">Редактировать</a> |
-                <a th:href="@{'/dashboard/deleteQuestion/'+${editFormId.id}}">Удалить</a>
+                <a th:href="@{'/dashboard/deleteQuestion/'+${questionsByFormId.id}}">Удалить</a>
             </li>
         </ol>
     </fieldset>

@@ -42,15 +42,20 @@ public class FormsDaoJsonImpl implements FormsDao {
     @Override
     public List<Answers> addAnswer(Answers answers) {
         int max = 0;
-        System.out.println("idCountAnswer в начале: "+idCountAnswer);
+//        System.out.println("idCountAnswer в начале: "+idCountAnswer);
         if (answersList.size() == 0) {
             idCountAnswer = 1;
             answers.setId(idCountAnswer);
         } else {
             for (int i = 0; i < answersList.size(); i++) {
                 max = Math.max(max, answersList.get(i).getId());
+                System.out.println("idAnswer: "+answersList.get(i).getId());
+                System.out.println("answersList.size: "+answersList.size());
                 if (answersList.get(i).getId() > answersList.size()) {
-                    idCountAnswer = max+1;
+                    System.out.println("idAnswer_1: "+answersList.get(i).getId());
+                    System.out.println("answersList.size_1: "+answersList.size());
+                    idCountAnswer = max;
+                    System.out.println("idCountAnswer_max: "+idCountAnswer);
                 }
             }
             idCountAnswer++;
@@ -65,11 +70,14 @@ public class FormsDaoJsonImpl implements FormsDao {
     }
     @Override
     public List<Answers> listAnswers() {
+        System.out.println("idCountAnswer_list_1: "+idCountAnswer);
         for (Answers answer : answersList) {
             if (answersList.size() < idCountAnswer) {
-                idCountAnswer = formsList.size()+1;
+                idCountAnswer = answersList.size()+1;
+                break;
             }
         }
+        System.out.println("idCountAnswer_list_2: "+idCountAnswer);
         return answersList;
     }
 
@@ -116,11 +124,17 @@ public class FormsDaoJsonImpl implements FormsDao {
     }
     @Override
     public List<Answers> deleteAnswers(int id) {
+        System.out.println("idCountAnswer_delete_1: "+idCountAnswer);
         for (int i = 0; i < answersList.size(); i++) {
             if (answersList.get(i).getId()==id) {
                 answersList.remove(i);
+                idCountAnswer = idCountAnswer - 1;
+
             }
         }
+        System.out.println("idCountAnswer_delete_2: "+idCountAnswer);
+        //listAnswers();
+        //System.out.println("idCountAnswer_delete_3: "+idCountAnswer);
         return answersList;
     }
     @Override
@@ -193,7 +207,13 @@ public class FormsDaoJsonImpl implements FormsDao {
             if (questionsList.get(i).getId()==id) {
                 questionsList.remove(i);
             }
-
+        }
+        for (int k = 0; k < answersList.size(); k++) {
+            if (answersList.get(k).getIdQuestion() == id) {
+                answersList.remove(k);
+                idCountAnswer = idCountAnswer - 1;
+                k--;
+            }
         }
         return questionsList;
     }
@@ -218,13 +238,22 @@ public class FormsDaoJsonImpl implements FormsDao {
             form.setId(idCount++);
         } else {
             for (int i = 0; i < formsList.size(); i++) {
+                System.out.println("formsList: "+formsList.get(i).getId());
+                System.out.println("formsList.size: "+formsList.size());
                 max = Math.max(max, formsList.get(i).getId());
                 if (formsList.get(i).getId() > formsList.size()) {
+                    System.out.println("idForm_1: "+formsList.get(i).getId());
+                    System.out.println("formsList.size_1: "+formsList.size());
                     idCount = max+1;
+                    System.out.println("idCount_max: "+idCount);
                 }
             }
             form.setId(idCount++);
         }
+        System.out.println("size: "+ formsList.size());
+        System.out.println("Max: "+ max);
+        System.out.println("id: "+form.getId());
+        System.out.println("idCount: "+idCount);
         formsList.add(form);
         return formsList;
         //fileExist();

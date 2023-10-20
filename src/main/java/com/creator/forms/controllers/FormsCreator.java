@@ -43,10 +43,6 @@ public class FormsCreator {
         model.addAttribute("ansList", ansList);
         return "dashboard/index";
     }
-//    @GetMapping("/addTestForm")
-//    public String addTestForm1(){
-//        return "addTestForm";
-//    }
     @GetMapping("dashboard/addTestForm")
     public String addTestForm(){
         return "dashboard/addTestForm";
@@ -76,49 +72,49 @@ public class FormsCreator {
         model.addAttribute("qstListId",qstListId);
         return "dashboard/eQuestion";
     }
-    @GetMapping("dashboard/addQuestion")
-    public String addQuestion (Model model) throws IOException {
-        List<Forms> formsList= formService.listForms();
-        List<Questions> questionsList = formService.listQuestions();
-
-        model.addAttribute("formList", formsList);
-        model.addAttribute("questionsList", questionsList);
-        return "dashboard/addQuestion";
-    }
-    @GetMapping("dashboard/addAnswer")
-    public String addAnswer (Model model) throws IOException {
-        List<Forms> formsList= formService.listForms();
-        List<Questions> questionsList = formService.listQuestions();
-        List<Answers> answersList = formService.listAnswers();
-        model.addAttribute("formList", formsList);
-        model.addAttribute("questionsList", questionsList);
-        model.addAttribute("answerList", answersList);
-        System.out.println(questionsList);
-        return "dashboard/addAnswer";
-    }
-
-    @GetMapping("/deleteQuestion/{id}")
+//    @GetMapping("dashboard/addQuestion")
+//    public String addQuestion (Model model) throws IOException {
+//        List<Forms> formsList= formService.listForms();
+//        List<Questions> questionsList = formService.listQuestions();
+//
+//        model.addAttribute("formList", formsList);
+//        model.addAttribute("questionsList", questionsList);
+//        return "dashboard/addQuestion";
+//    }
+//    @GetMapping("dashboard/addAnswer")
+//    public String addAnswer (Model model) throws IOException {
+//        List<Forms> formsList= formService.listForms();
+//        List<Questions> questionsList = formService.listQuestions();
+//        List<Answers> answersList = formService.listAnswers();
+//        model.addAttribute("formList", formsList);
+//        model.addAttribute("questionsList", questionsList);
+//        model.addAttribute("answerList", answersList);
+//        System.out.println(questionsList);
+//        return "dashboard/addAnswer";
+//    }
+@GetMapping("dashboard/deleteAnswer/{idAnswer}")
+public String deleteAnswer(@PathVariable(value="idAnswer") int idAnswer) {
+    int idForm = formService.getAnswersById(idAnswer).getIdForm();
+    int idQuestion = formService.getAnswersById(idAnswer).getIdQuestion();
+    formService.deleteAnswers(idAnswer);
+    return "redirect:/dashboard/eQuestion/"+idForm+"/"+idQuestion;
+}
+    @GetMapping("dashboard/deleteQuestion/{id}")
     public String getDeleteQuestion(@PathVariable(value="id") int id) {
         int idForm = formService.getQuestionById(id).getIdForm();
         formService.deleteQuestion(id);
-        return "redirect:/addQuestions/"+idForm;
+        return "redirect:/dashboard/eForm/"+idForm;
     }
-    @GetMapping("dashboard/deleteAnswer/{idAnswer}")
-    public String deleteAnswer(@PathVariable(value="idAnswer") int idAnswer) {
-        int idForm = formService.getAnswersById(idAnswer).getIdForm();
-        int idQuestion = formService.getAnswersById(idAnswer).getIdQuestion();
-        formService.deleteAnswers(idAnswer);
-        return "redirect:/dashboard/eQuestion/"+idForm+"/"+idQuestion;
-    }
-    @GetMapping("/delete/{id}")
+
+    @GetMapping("dashboard/deleteForm/{id}")
     public String getDelete(@PathVariable(value="id") int id) {
         formService.delete(id);
-        return "redirect:/";
+        return "redirect:/dashboard/";
     }
-    @GetMapping("/edit")
-    public String editNewForm() {
-        return "edit";
-    }
+//    @GetMapping("/edit")
+//    public String editNewForm() {
+//        return "edit";
+//    }
 
 //    @PostMapping("/addForm")
 //    public String add(@RequestParam String name, @RequestParam String description, @RequestParam boolean time) throws IOException {

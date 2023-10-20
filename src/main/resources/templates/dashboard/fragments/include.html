@@ -1,92 +1,101 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
 <head>
-  <meta charset="UTF-8">
-  <script src="/js/bootstrap.min.js"></script>
-  <!-- Bootstrap CSS -->
-  <link th:fragment="css" rel="stylesheet" type="text/css" href="/css/bootstrap.min.css">
+    <meta charset="UTF-8">
+    <script src="/js/bootstrap.min.js"></script>
+    <!-- Bootstrap CSS -->
+    <link th:fragment="css" rel="stylesheet" type="text/css" href="/css/bootstrap.min.css">
 </head>
 <body>
 <th:block th:fragment="top">
-  <a href="/">Главная 2</a> <a href="/">Выйти</a>
+    <a href="/">Главная 2</a> <a href="/">Выйти</a>
 </th:block>
 <th:block th:fragment="linksAddForms">
-  <a href="/dashboard/">Панель управления</a> | <a href="/dashboard/addTestForm">Добавить тест</a> | <a href="/dashboard/addQuestion">Добавить вопрос</a> | <a href="/dashboard/addAnswer">Добавить Ответ</a>
+    <a href="/dashboard/">Панель управления</a> | <a href="/dashboard/addTestForm">Добавить тест</a>
 </th:block>
 
-<th:block th:fragment = "listTest">
-  <H3>Список тестов</H3><br>
-  <table border="1" style="border-collapse: collapse; width: 25%;">
-    <tbody th:each="el : ${allForms}">
-    <tr>
-    <tr>
-      <td style="width: 50%;">Наименование</td>
-      <td style="width: 50%;"><th:block th:text="${el.name}"></th:block></td>
-    </tr>
-    </tr>
-    <tr>
-      <td style="width: 50%;">Описание</td>
-      <td style="width: 50%;"><th:block th:text="${el.description}"></th:block></td>
-    </tr>
-    <tr>
-      <td style="width: 50%;">На время</td>
-      <td style="width: 50%;">
-        <th:block th:if="${el.isForTime} == true">Да</th:block>
-        <th:block th:if="${el.isForTime} == false">Нет</th:block>
-      </td>
-    </tr>
-    <tr style="height: 18px;">
-      <td style="width: 25%; height: 18px;" colspan="4"></td>
-    </tr>
-    <tr>
-      <td colspan="4" style="text-align: center;">
-        <a th:href="'/edit/'+${el.id}">Редактировать</a> |
-        <a th:href="'/delete/'+${el.id}">Удалить</a>
-      </td>
-    </tr>
-    <tr>
-      <td colspan="4"></td>
-    </tr>
-    </tbody>
-  </table>
+<th:block th:fragment="listTest">
+    <H3>Список тестов</H3><br>
+    <table border="1" style="border-collapse: collapse; width: 25%;">
+        <tbody th:each="el : ${allForms}">
+        <tr>
+        <tr>
+            <td style="width: 50%;">Наименование</td>
+            <td style="width: 50%;">
+                <th:block th:text="${el.name}"></th:block>
+            </td>
+        </tr>
+        </tr>
+        <tr>
+            <td style="width: 50%;">Описание</td>
+            <td style="width: 50%;">
+                <th:block th:text="${el.description}"></th:block>
+            </td>
+        </tr>
+        <tr>
+            <td style="width: 50%;">На время</td>
+            <td style="width: 50%;">
+                <th:block th:if="${el.isForTime} == true">Да</th:block>
+                <th:block th:if="${el.isForTime} == false">Нет</th:block>
+            </td>
+        </tr>
+        <tr style="height: 18px;">
+            <td style="width: 25%; height: 18px;" colspan="4"></td>
+        </tr>
+        <tr>
+            <td colspan="4" style="text-align: center;">
+                <a th:href="'/edit/'+${el.id}">Редактировать</a> |
+                <a th:href="'/delete/'+${el.id}">Удалить</a>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="4"></td>
+        </tr>
+        </tbody>
+    </table>
 </th:block>
-<th:block th:fragment = "questionsByFormId">
-  <ol th:unless="${questionsByFormId.empty}">
-    <th:block th:each="el : ${questionsByFormId}">
-      <li th:text="${el.question}"></li><div> | <a href="#">Редактировать</a> | <a th:href="'/deleteQuestion/'+${el.id}">Удалить</a> </div>
-    </th:block>
-  </ol>
+<th:block th:fragment="questionsByFormId">
+    <ol th:unless="${questionsByFormId.empty}">
+        <th:block th:each="el : ${questionsByFormId}">
+            <li th:text="${el.question}"></li>
+            <div> | <a href="#">Редактировать</a> | <a th:href="'/deleteQuestion/'+${el.id}">Удалить</a></div>
+        </th:block>
+    </ol>
 </th:block>
 <th:block th:fragment="questionsList">
-  <ol>
-    <th:block th:each="qstList : ${questionsList}">
-      <li th:text="${qstList.question}"></li>
-      <th:block th:each="fm : ${formList}">
+    <ol>
+        <th:block th:each="qstList : ${questionsList}">
+            <li th:text="${qstList.question}"></li>
+            <th:block th:each="fm : ${formList}">
           <span th:if="${#strings.equals(fm.id, qstList.idForm)}">
            <b th:text="${fm.name}"></b>
         </span>
-        <span th:text="${fm.name}"></span> | fm.id <span th:text="${fm.id}"></span> | idForm <span th:text="${qstList.idForm}"></span>
-      </th:block>
-      <th:block> | <a href="#">Редактировать</a> | <a th:href="'/deleteQuestion/'+${qstList.id}">Удалить</a></th:block>
-    </th:block>
-  </ol>
+                <span th:text="${fm.name}"></span> | fm.id <span th:text="${fm.id}"></span> | idForm <span
+                    th:text="${qstList.idForm}"></span>
+            </th:block>
+            <th:block> | <a href="#">Редактировать</a> | <a th:href="'/deleteQuestion/'+${qstList.id}">Удалить</a>
+            </th:block>
+        </th:block>
+    </ol>
 </th:block>
 
 <th:block th:fragment="answersList">
-  <ol>
-    <th:block th:each="anList : ${answerList}">
-    <th:block th:each="qstList : ${questionsList}">
-      <li th:text="${qstList.question}"></li>
-      <th:block th:each="fm : ${formList}">
+    <ol>
+        <th:block th:each="anList : ${answerList}">
+            <th:block th:each="qstList : ${questionsList}">
+                <li th:text="${qstList.question}"></li>
+                <th:block th:each="fm : ${formList}">
           <span th:if="${#strings.equals(qstList.idForm, anList.idQuestion)}">
            <b th:text="${qstList.question}"></b>
         </span>
-        <span th:text="${fm.name}"></span> | fm.id <span th:text="${fm.id}"></span> | idForm <span th:text="${qstList.idForm}"></span>
-      </th:block>
-      <th:block> | <a href="#">Редактировать</a> | <a th:href="'/deleteQuestion/'+${qstList.id}">Удалить</a></th:block>
-    </th:block>
-    </th:block>
-  </ol>
+                    <span th:text="${fm.name}"></span> | fm.id <span th:text="${fm.id}"></span> | idForm <span
+                        th:text="${qstList.idForm}"></span>
+                </th:block>
+                <th:block> | <a href="#">Редактировать</a> | <a th:href="'/deleteQuestion/'+${qstList.id}">Удалить</a>
+                </th:block>
+            </th:block>
+        </th:block>
+    </ol>
 </th:block>
 <!--<th:block th:fragment="mapForms">-->
 <!--  <ol th:unless="${fmsList.empty}">-->
@@ -109,44 +118,76 @@
 <!--  </ol>-->
 <!--</th:block>-->
 <th:block th:fragment="mapForms">
-  <br><br><h3>Список тестов</h3>
-  <ol th:unless="${fmsList.empty}">
+    <br><br>
+    <h3>Список тестов</h3>
+    <ol th:unless="${fmsList.empty}">
       <th:block th:each="fmsList : ${fmsList}">
-      <li><a th:href="'/dashboard/eForm/'+${fmsList.id}" th:block th:text="${fmsList.name}"></a></li>
-        <th:block th:each="qstList : ${qstList}">
-          <th:block th:if="${#strings.equals(fmsList.id, qstList.idForm)}">
-          <th:block th:text="${qstList.question}"></th:block><br>
-            id Вопроса:<th:block th:text="${qstList.id}"></th:block>
-            FormId Вопроса:<th:block th:text="${qstList.idForm}"></th:block> <br>
+        <li>
+          <th:block th:text="${fmsList.name}"></th:block>
+          <br>
+          <div th:text="${fmsList.description}"></div>
+          | <a th:href="@{'/dashboard/eForm/'+${fmsList.id}}">Редактировать</a> |
+          <a th:href="@{'/dashboard/deleteForm/'+${fmsList.id}}">Удалиь</a> |
+        </li>
+        <ol th:unless="${qstList.empty}">
+          <b>Вопросы:</b>
+          <th:block th:each="qstList : ${qstList}">
+              <th:block th:if="${#strings.equals(fmsList.id, qstList.idForm)}">
+                <li>
+                <th:block th:text="${qstList.question}"></th:block>
+                </li>
+                <ol th:unless="${ansList.empty}">
+                  <b>Ответы:</b>
+                  <th:block th:each="ansList : ${ansList}">
+                    <th:block th:if="${#strings.equals(ansList.idQuestion, qstList.id) && #strings.equals(fmsList.id, qstList.idForm)}">
+                      <li>
+                      <th:block th:text="${ansList.answer}"></th:block> |
+                          <th:block th:if="${ansList.isTrue == true}">
+                              (Верный ответ)
+                          </th:block>
+                          <th:block th:if="${ansList.isTrue == false}">
+                              (Неверный ответ)
+                          </th:block>
+                      </li>
+                    </th:block>
+                  </th:block>
+                </ol>
+              </th:block>
           </th:block>
-          <th:block th:each="ansList : ${ansList}">
-            <th:block th:if="${#strings.equals(ansList.idQuestion, qstList.id) && #strings.equals(fmsList.id, qstList.idForm)}">
-            <th:block th:text="${ansList.answer}"></th:block> <br>
-              id Ответа:<th:block th:text="${ansList.id}"></th:block>
-              IdForm Ответа:<th:block th:text="${ansList.idForm}"></th:block>
-              IdQuestion ОТвета:<th:block th:text="${ansList.idQuestion}"></th:block> <br>
-            </th:block>
-          </th:block>
-        </th:block>
-  </th:block>
-  </ol>
+        </ol>
+      </th:block>
+     </ol>
 </th:block>
-<!--    <li th:each="fmsList : ${fmsList}">-->
-<!--      <div th:text="${fmsList.name}"></div>-->
-<!--      <ol th:each="qstList : ${qstList}">-->
-<!--        <li th:if="${#strings.equals(fmsList.id, qstList.idForm)}">-->
-<!--           <div th:text="${qstList.question}"></div>-->
-<!--          <ol>-->
-<!--            <li th:each="ansList : ${ansList}">-->
-<!--              <span th:if="${#strings.equals(ansList.idQuestion, qstList.id) && #strings.equals(fmsList.id, qstList.idForm)}">-->
-<!--                <div th:text="${ansList.answer}"></div>-->
-<!--              </span>-->
-<!--            </li>-->
-<!--          </ol>-->
-<!--        </li>-->
-<!--      </ol>-->
-<!--    </li>-->
-<!--  </ol>-->
+<th:block th:fragment="mapElements">
+    Общий список Тестов<br>
+    <div th:each="fmsList : ${fmsList}">
+        <th:block th:text="${fmsList.id}"></th:block>
+    </div><br>
+    Общий список Вопросов<br>
+    <div th:each="qstList : ${qstList}">
+        <th:block th:text="${qstList.id}"></th:block>
+    </div><br>
+    Общий список Ответов<br>
+    <div th:each="ansList : ${ansList}">
+        <th:block th:text="${ansList.id}"></th:block>
+    </div><br>
+</th:block>
+        <!--    <li th:each="fmsList : ${fmsList}">-->
+        <!--      <div th:text="${fmsList.name}"></div>-->
+        <!--      <ol th:each="qstList : ${qstList}">-->
+        <!--        <li th:if="${#strings.equals(fmsList.id, qstList.idForm)}">-->
+        <!--           <div th:text="${qstList.question}"></div>-->
+        <!--          <ol>-->
+        <!--            <li th:each="ansList : ${ansList}">-->
+        <!--              <span th:if="${#strings.equals(ansList.idQuestion, qstList.id) && #strings.equals(fmsList.id, qstList.idForm)}">-->
+        <!--                <div th:text="${ansList.answer}"></div>-->
+        <!--              </span>-->
+        <!--            </li>-->
+        <!--          </ol>-->
+        <!--        </li>-->
+        <!--      </ol>-->
+        <!--    </li>-->
+        <!--  </ol>-->
 
 </body>
 </html>
