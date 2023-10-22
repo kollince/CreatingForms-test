@@ -10,9 +10,9 @@
 <body>
 <div th:insert="~{dashboard/fragments/include :: top}"></div>
 <H1>Панель управления / Редактор вопроса к тесту по физике</H1>
-<div th:insert="~{dashboard/fragments/include :: linksAddForms}"></div>
-
 <th:block th:each="qstListId : ${qstListId}">
+    <a th:href="@{'/dashboard/eForm/'+${qstListId.idForm}}"><< Вернуться к редактированию теста</a> |
+    <th:block th:insert="~{dashboard/fragments/include :: linksAddForms}"></th:block>
     <fieldset>
         <legend>Редактирование вопроса "<th:block th:text="${qstListId.question}"></th:block>" к тесту по физике "
             <th:block th:each="fmsListId : ${fmsListId}" th:text="${fmsListId.name}"></th:block>"
