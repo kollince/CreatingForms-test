@@ -11,7 +11,8 @@
 <div th:insert="~{dashboard/fragments/include :: top}"></div>
 <H1>Панель управления / Добавить ответ</H1>
 <div th:insert="~{dashboard/fragments/include :: linksAddForms}"></div>
-<form method="post" action="/dashboard/addAnswer">
+<form method="post" th:action="@{'/dashboard/addAnswer'}">
+
     <div>
         <label>Выберите вопрос</label>
         <select name="idQuestion" size="1">
@@ -32,6 +33,7 @@
             <input type="radio" name="isTrue" value="false" checked>Нет
         </label>
     </div>
+    <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
     <div>
         <input type="submit" value="Добавить">
     </div>

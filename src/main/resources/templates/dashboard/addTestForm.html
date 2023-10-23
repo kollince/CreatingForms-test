@@ -9,7 +9,7 @@
 <div th:insert="~{dashboard/fragments/include :: top}"></div>
 <H1>Панель управления / Добавить тест</H1>
 <div th:insert="~{dashboard/fragments/include :: linksAddForms}"></div>
-<form method="post" action="/dashboard/addForm">
+<form method="post" th:action="@{'/dashboard/addForm'}">
   <div>
     <label>Наименование теста</label>
     <input type="text" name="name" required>
@@ -26,6 +26,7 @@
     <label>
       <input type="radio" name="time" value="false" checked>Нет
     </label>
+    <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
   </div>
   <div>
     <input type="submit" value="Добавить">

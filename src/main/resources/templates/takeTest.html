@@ -5,14 +5,12 @@
     <script src="/js/bootstrap.min.js"></script>
     <!-- Bootstrap CSS -->
     <link th:insert="~{components/include :: css}">
-    <title>Панель управления</title>
+    <title>Пройти тест по физике</title>
 </head>
 <body>
-<th:block th:insert="~{dashboard/fragments/include :: top}"></th:block>
-<H1>Панель управления</H1>
-<th:block th:insert="~{dashboard/fragments/include :: linksAddForms}"></th:block>
-<th:block th:insert="~{dashboard/fragments/include :: mapForms}"></th:block>
-<th:block th:insert="~{dashboard/fragments/include :: mapElements}"></th:block>
+<th:block th:insert="~{components/include :: top}"></th:block>
+<H1>Пройти Тесты по физике</H1>
+<th:block th:insert="~{components/include :: listTest}"></th:block>
 
 <!--<td rowspan="4"></td>-->
 <!--<td rowspan="4">-->
@@ -45,5 +43,6 @@
 <!--        <input type="submit" value="Начать">-->
 <!--    </div>-->
 <!--</form>-->
+
 </body>
 </html>

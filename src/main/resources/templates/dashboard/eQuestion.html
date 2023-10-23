@@ -19,6 +19,7 @@
         </legend>
         <form method="post" th:action="@{'/dashboard/updateQuestion/' + ${qstListId.idForm}+'/'+${qstListId.id}}">
             <textarea th:text="${qstListId.question}" name="question" type="text" rows="5" required></textarea>
+            <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
             <div>
                 <input type="submit" value="Изменить">
             </div>
@@ -27,9 +28,10 @@
     <fieldset>
         <legend>Добавить ответ к вопросу "<th:block th:text="${qstListId.question}"></th:block>"
         </legend>
-        <form method="post" action="/dashboard/addAnswer">
+        <form method="post" th:action="@{'/dashboard/addAnswer'}">
             <input type="hidden" name="idForm" th:value="${qstListId.idForm}">
             <input type="hidden" name="idQuestion" th:value="${qstListId.id}">
+            <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
             <div>
                 <label>Ответ</label>
                 <textarea name="answer" type="text" rows="5" required></textarea>
@@ -71,6 +73,7 @@
                         </label>
                     </div>
                     <input type="hidden" name="idQuestion" th:value="${ansListByQuestionId.idQuestion}">
+                    <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
                     <div>
                         <input type="submit" value="Изменить">
                     </div>

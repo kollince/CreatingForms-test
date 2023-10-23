@@ -37,7 +37,7 @@
     </tr>
     <tr>
       <td colspan="4" style="text-align: center;">
-        <a th:href="'/edit/'+${el.id}">Редактировать</a> |
+        <a th:href="'/takeTest/'+${el.id}">Редактировать</a> |
         <a th:href="'/delete/'+${el.id}">Удалить</a>
       </td>
     </tr>
@@ -50,7 +50,7 @@
 <div th:fragment = "questionsByFormId">
   <ol>
     <div th:each="el : ${questionsByFormId}">
-    <li th:text="${el.question}"></li><div> | <a href="#">Редактировать</a> | <a th:href="'/deleteQuestion/'+${el.id}">Удалить</a> </div>
+    <li th:text="${el.question}"></li><div> | <a href="#">Редактировать</a> | <a th:href="'/takeTest/'+${el.id}">Удалить</a> </div>
     </div>
   </ol>
 </div>

@@ -2,6 +2,7 @@ package com.creator.forms.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.LogoutConfigurer;
@@ -33,13 +34,12 @@ public class WebSecurityConfig {
 
         http
                 .authorizeHttpRequests((requests) -> requests
-                        .requestMatchers("/dashboard/").hasRole("ADMIN")
-                        .requestMatchers("/dashboard/addForm").hasRole("ADMIN")
-                        .requestMatchers("/dashboard/eForm").hasRole("ADMIN")
+                        .requestMatchers("/dashboard/**").hasRole("ADMIN")
                         .requestMatchers("/").permitAll()
                         .anyRequest().permitAll()
                 )
                 .formLogin(withDefaults())
+                .csrf(Customizer.withDefaults())
                 .logout(LogoutConfigurer::permitAll);
 
         return http.build();
