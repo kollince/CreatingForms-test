@@ -52,32 +52,32 @@ public class FormsDaoJsonImpl implements FormsDao {
                 System.out.println("idAnswer: "+answersList.get(i).getId());
                 System.out.println("answersList.size: "+answersList.size());
                 if (answersList.get(i).getId() > answersList.size()) {
-                    System.out.println("idAnswer_1: "+answersList.get(i).getId());
-                    System.out.println("answersList.size_1: "+answersList.size());
+//                    System.out.println("idAnswer_1: "+answersList.get(i).getId());
+//                    System.out.println("answersList.size_1: "+answersList.size());
                     idCountAnswer = max;
-                    System.out.println("idCountAnswer_max: "+idCountAnswer);
+//                    System.out.println("idCountAnswer_max: "+idCountAnswer);
                 }
             }
             idCountAnswer++;
             answers.setId(idCountAnswer);
         }
-        System.out.println("size: "+ answersList.size());
-        System.out.println("Max: "+ max);
-        System.out.println("id: "+answers.getId());
-        System.out.println("idCountAnswer: "+idCountAnswer);
+//        System.out.println("size: "+ answersList.size());
+//        System.out.println("Max: "+ max);
+//        System.out.println("id: "+answers.getId());
+//        System.out.println("idCountAnswer: "+idCountAnswer);
         answersList.add(answers);
         return answersList;
     }
     @Override
     public List<Answers> listAnswers() {
-        System.out.println("idCountAnswer_list_1: "+idCountAnswer);
+//        System.out.println("idCountAnswer_list_1: "+idCountAnswer);
         for (Answers answer : answersList) {
             if (answersList.size() < idCountAnswer) {
                 idCountAnswer = answersList.size()+1;
                 break;
             }
         }
-        System.out.println("idCountAnswer_list_2: "+idCountAnswer);
+//        System.out.println("idCountAnswer_list_2: "+idCountAnswer);
         return answersList;
     }
 

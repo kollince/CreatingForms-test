@@ -15,8 +15,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @Controller
@@ -24,8 +22,8 @@ public class FormsCreator {
 //    List<Forms> formsList = new ArrayList<>();
 //    List<Questions> questionsList = new ArrayList<>();
 //    List<Answers> answersList = new ArrayList<>();
-    FormsDao formsDao = new FormsDaoJsonImpl();
-    FormService formService = new FormServiceImpl(formsDao);
+    private final FormsDao formsDao = new FormsDaoJsonImpl();
+    private final FormService formService = new FormServiceImpl(formsDao);
 
     @GetMapping("/")
     public String allPhysicsTests(Model model) throws IOException {
