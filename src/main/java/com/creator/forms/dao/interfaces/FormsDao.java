@@ -19,6 +19,7 @@ public interface FormsDao {
     Answers getAnswersById(int id);
     List<Questions> addQuestion(Questions questions);
     List<Questions> listQuestionsByFormId(int formId);
+    int listNumberForTest(int formId, int numberQst);
     List<Questions> listQuestions();
     List<Questions> updateQuestions(int id, String question);
     List<Questions> deleteQuestion(int id);
@@ -28,4 +29,5 @@ public interface FormsDao {
     List<Forms> delete(int id);
     Forms getFormsById(int id);
     List<Forms> listForms() throws IOException;
+
 }

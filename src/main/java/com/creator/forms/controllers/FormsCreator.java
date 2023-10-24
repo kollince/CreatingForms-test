@@ -32,6 +32,13 @@ public class FormsCreator {
         model.addAttribute("allForms", fmsAll);
         return "index";
     }
+    @GetMapping("/takeTest/{id}/{numberQst}")
+    public String physicsTest(@PathVariable(value="id") int id, @PathVariable(value="id") int numberQst, Model model) throws IOException {
+        Forms formsById = formService.getFormsById(id);
+        int countQstId = formService.listNumberForTest(id, numberQst);
+        model.addAttribute("formsById", formsById);
+        return "takeTest";
+    }
     @GetMapping("dashboard/")
     public String dashBoardTests(Model model) throws IOException {
         List<Forms> fmsList = formService.listForms();

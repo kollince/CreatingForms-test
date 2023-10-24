@@ -8,7 +8,7 @@
 </head>
 <body>
 <th:block th:fragment="top">
-    <a href="/">Главная</a> <a href="/logout">Выйти</a>
+    <a href="/">Главная</a> | <a href="/logout">Выйти</a>
 </th:block>
 <th:block th:fragment="linksAddForms">
     <a href="/dashboard/">Панель управления</a> | <a href="/dashboard/addTestForm">Добавить тест</a>
@@ -16,43 +16,55 @@
 
 <th:block th:fragment="listTest">
     <H3>Список тестов</H3><br>
-    <table border="1" style="border-collapse: collapse; width: 25%;">
-        <tbody th:each="el : ${allForms}">
-        <tr>
-        <tr>
-            <td style="width: 50%;">Наименование</td>
-            <td style="width: 50%;">
-                <th:block th:text="${el.name}"></th:block>
-            </td>
-        </tr>
-        </tr>
-        <tr>
-            <td style="width: 50%;">Описание</td>
-            <td style="width: 50%;">
-                <th:block th:text="${el.description}"></th:block>
-            </td>
-        </tr>
-        <tr>
-            <td style="width: 50%;">На время</td>
-            <td style="width: 50%;">
-                <th:block th:if="${el.isForTime} == true">Да</th:block>
-                <th:block th:if="${el.isForTime} == false">Нет</th:block>
-            </td>
-        </tr>
-        <tr style="height: 18px;">
-            <td style="width: 25%; height: 18px;" colspan="4"></td>
-        </tr>
-        <tr>
-            <td colspan="4" style="text-align: center;">
-                <a th:href="'/edit/'+${el.id}">Редактировать</a> |
-                <a th:href="'/delete/'+${el.id}">Удалить</a>
-            </td>
-        </tr>
-        <tr>
-            <td colspan="4"></td>
-        </tr>
-        </tbody>
-    </table>
+    <th:block th:each="el : ${allForms}">
+        <div>
+            <b><a th:block th:text="${el.name}" th:href="'/TakeTest/'+${el.id}"></a></b>
+            <div th:text="${el.description}"></div>
+            <div> На время:
+            <th:block th:if="${el.isForTime} == true">Да</th:block>
+            <th:block th:if="${el.isForTime} == false">Нет</th:block>
+            </div>
+        </div>
+    </th:block>
+
+
+<!--    <table border="1" style="border-collapse: collapse; width: 25%;">-->
+<!--        <tbody th:each="el : ${allForms}">-->
+<!--        <tr>-->
+<!--        <tr>-->
+<!--            <td style="width: 50%;">Наименование</td>-->
+<!--            <td style="width: 50%;">-->
+<!--                <th:block th:text="${el.name}"></th:block>-->
+<!--            </td>-->
+<!--        </tr>-->
+<!--        </tr>-->
+<!--        <tr>-->
+<!--            <td style="width: 50%;">Описание</td>-->
+<!--            <td style="width: 50%;">-->
+<!--                <th:block th:text="${el.description}"></th:block>-->
+<!--            </td>-->
+<!--        </tr>-->
+<!--        <tr>-->
+<!--            <td style="width: 50%;">На время</td>-->
+<!--            <td style="width: 50%;">-->
+<!--                <th:block th:if="${el.isForTime} == true">Да</th:block>-->
+<!--                <th:block th:if="${el.isForTime} == false">Нет</th:block>-->
+<!--            </td>-->
+<!--        </tr>-->
+<!--        <tr style="height: 18px;">-->
+<!--            <td style="width: 25%; height: 18px;" colspan="4"></td>-->
+<!--        </tr>-->
+<!--        <tr>-->
+<!--            <td colspan="4" style="text-align: center;">-->
+<!--                <a th:href="'/edit/'+${el.id}">Редактировать</a> |-->
+<!--                <a th:href="'/delete/'+${el.id}">Удалить</a>-->
+<!--            </td>-->
+<!--        </tr>-->
+<!--        <tr>-->
+<!--            <td colspan="4"></td>-->
+<!--        </tr>-->
+<!--        </tbody>-->
+<!--    </table>-->
 </th:block>
 <th:block th:fragment="questionsByFormId">
     <ol th:unless="${questionsByFormId.empty}">

@@ -9,7 +9,6 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.util.Date;
 import java.util.List;
 
 
@@ -75,6 +74,10 @@ public class FormServiceImpl implements FormService {
     @Override
     public List<Questions> listQuestionsByFormId(int formId){
         return formsDao.listQuestionsByFormId(formId);
+    }
+    @Override
+    public int listNumberForTest(int formId, int numberQst){
+        return formsDao.listNumberForTest(formId, numberQst);
     }
     @Override
     public List<Questions> updateQuestions(int id, String question) {

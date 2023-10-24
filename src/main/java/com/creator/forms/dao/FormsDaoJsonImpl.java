@@ -96,6 +96,7 @@ public class FormsDaoJsonImpl implements FormsDao {
         return ansByFormId;
     }
 
+
     @Override
     public List<Answers> listAnswersByQuestionId(int questionId) {
         List<Answers> ansByQuestionId = answersList.stream()
@@ -182,6 +183,19 @@ public class FormsDaoJsonImpl implements FormsDao {
 //        System.out.println(idCountQuestion);
         return qstByFormId;
     }
+
+    @Override
+    public int listNumberForTest(int formId, int numberQst) {
+        List<Integer> idQuestionsList = new ArrayList<>();
+        int numbQstFilId = 0;
+        for (int i = 0; i < questionsList.size(); i++) {
+            if (questionsList.get(i).getIdForm()==formId && i == numberQst){
+                numbQstFilId = questionsList.get(i).getId();
+            }
+        }
+        return numbQstFilId;
+    }
+
     @Override
     public List<Questions> listQuestions() {
         for (Questions questions : questionsList) {
