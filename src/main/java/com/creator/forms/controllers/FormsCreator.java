@@ -22,21 +22,24 @@ public class FormsCreator {
 //    List<Forms> formsList = new ArrayList<>();
 //    List<Questions> questionsList = new ArrayList<>();
 //    List<Answers> answersList = new ArrayList<>();
-
     private final FormsDao formsDao = new FormsDaoJsonImpl();
     private final FormService formService = new FormServiceImpl(formsDao);
 
     @GetMapping("/")
     public String allPhysicsTests(Model model) throws IOException {
         List<Forms> fmsAll = formService.listForms();
+        List<Questions> countQst = formService.countQstForTest();
+        System.out.println("111 "+countQst);
         model.addAttribute("allForms", fmsAll);
+        model.addAttribute("countQst", countQst);
         return "index";
     }
     @GetMapping("/takeTest/{id}/{numberQst}")
-    public String physicsTest(@PathVariable(value="id") int id, @PathVariable(value="id") int numberQst, Model model) throws IOException {
+    public String physicsTest(@PathVariable(value="id") int id, @PathVariable(value="numberQst") int numberQst, Model model) throws IOException {
         Forms formsById = formService.getFormsById(id);
-        int countQstId = formService.listNumberForTest(id, numberQst);
+        //int countQstId = formService.listNumberForTest(id, numberQst);
         model.addAttribute("formsById", formsById);
+        //model.addAttribute("countQstId", countQstId);
         return "takeTest";
     }
     @GetMapping("dashboard/")

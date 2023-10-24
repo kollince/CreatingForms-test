@@ -17,7 +17,10 @@
   <H3>Список тестов</H3><br>
   <th:block th:each="el : ${allForms}">
     <div>
-      <b><a th:block th:text="${el.name}" th:href="'/takeTest/'+${el.id}"></a></b>
+      <b><th:block th:text="${el.name}"></th:block></b>
+      <div th:each="countQst : ${countQst}">
+        <a th:href="@{'/takeTest/'+${el.id}+'/'+${countQst.id}}">Пройти тест</a>
+      </div>
       <div th:text="${el.description}"></div>
       <div> На время:
         <th:block th:if="${el.isForTime} == true">Да</th:block>

@@ -5,6 +5,9 @@ import com.creator.forms.models.Answers;
 import com.creator.forms.models.Forms;
 import com.creator.forms.models.Questions;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.stereotype.Repository;
 
 import java.io.File;
@@ -16,6 +19,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Repository
+@AllArgsConstructor
+@Getter
+@Setter
 public class FormsDaoJsonImpl implements FormsDao {
     private final List<Forms> formsList = new ArrayList<>();
     private final List<Questions> questionsList = new ArrayList<>();
@@ -49,8 +55,8 @@ public class FormsDaoJsonImpl implements FormsDao {
         } else {
             for (int i = 0; i < answersList.size(); i++) {
                 max = Math.max(max, answersList.get(i).getId());
-                System.out.println("idAnswer: "+answersList.get(i).getId());
-                System.out.println("answersList.size: "+answersList.size());
+//                System.out.println("idAnswer: "+answersList.get(i).getId());
+//                System.out.println("answersList.size: "+answersList.size());
                 if (answersList.get(i).getId() > answersList.size()) {
 //                    System.out.println("idAnswer_1: "+answersList.get(i).getId());
 //                    System.out.println("answersList.size_1: "+answersList.size());
@@ -125,7 +131,7 @@ public class FormsDaoJsonImpl implements FormsDao {
     }
     @Override
     public List<Answers> deleteAnswers(int id) {
-        System.out.println("idCountAnswer_delete_1: "+idCountAnswer);
+//        System.out.println("idCountAnswer_delete_1: "+idCountAnswer);
         for (int i = 0; i < answersList.size(); i++) {
             if (answersList.get(i).getId()==id) {
                 answersList.remove(i);
@@ -133,7 +139,7 @@ public class FormsDaoJsonImpl implements FormsDao {
 
             }
         }
-        System.out.println("idCountAnswer_delete_2: "+idCountAnswer);
+//        System.out.println("idCountAnswer_delete_2: "+idCountAnswer);
         //listAnswers();
         //System.out.println("idCountAnswer_delete_3: "+idCountAnswer);
         return answersList;
@@ -185,15 +191,17 @@ public class FormsDaoJsonImpl implements FormsDao {
     }
 
     @Override
-    public int listNumberForTest(int formId, int numberQst) {
-        List<Integer> idQuestionsList = new ArrayList<>();
-        int numbQstFilId = 0;
-        for (int i = 0; i < questionsList.size(); i++) {
-            if (questionsList.get(i).getIdForm()==formId && i == numberQst){
-                numbQstFilId = questionsList.get(i).getId();
-            }
+    public List<Questions> countQstForTest() {
+        List<Questions> qstByFormId = null;
+        for (int i = 0; i < formsList.size(); i++) {
+            int finalI = i;
+            qstByFormId = questionsList.stream()
+                            .filter(questions -> questions.getIdForm()==questionsList.get(finalI).getIdForm())
+                            .collect(Collectors.toCollection(ArrayList::new));
+
         }
-        return numbQstFilId;
+        System.out.println("qstByFormId"+qstByFormId);
+        return qstByFormId;
     }
 
     @Override
@@ -252,22 +260,22 @@ public class FormsDaoJsonImpl implements FormsDao {
             form.setId(idCount++);
         } else {
             for (int i = 0; i < formsList.size(); i++) {
-                System.out.println("formsList: "+formsList.get(i).getId());
-                System.out.println("formsList.size: "+formsList.size());
+//                System.out.println("formsList: "+formsList.get(i).getId());
+//                System.out.println("formsList.size: "+formsList.size());
                 max = Math.max(max, formsList.get(i).getId());
                 if (formsList.get(i).getId() > formsList.size()) {
-                    System.out.println("idForm_1: "+formsList.get(i).getId());
-                    System.out.println("formsList.size_1: "+formsList.size());
+//                    System.out.println("idForm_1: "+formsList.get(i).getId());
+//                    System.out.println("formsList.size_1: "+formsList.size());
                     idCount = max+1;
-                    System.out.println("idCount_max: "+idCount);
+//                    System.out.println("idCount_max: "+idCount);
                 }
             }
             form.setId(idCount++);
         }
-        System.out.println("size: "+ formsList.size());
-        System.out.println("Max: "+ max);
-        System.out.println("id: "+form.getId());
-        System.out.println("idCount: "+idCount);
+//        System.out.println("size: "+ formsList.size());
+//        System.out.println("Max: "+ max);
+//        System.out.println("id: "+form.getId());
+//        System.out.println("idCount: "+idCount);
         formsList.add(form);
         return formsList;
         //fileExist();

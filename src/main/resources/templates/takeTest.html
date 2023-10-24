@@ -12,15 +12,14 @@
 <th:block th:each="formsById : ${formsById}">
 <H1 >Пройти тест "<th:block th:text="${formsById.name}"></th:block>" по физике </H1>
     <div th:text="${formsById.description}"></div>
-
-    <form >
+    <th:block th:each="countQstId : ${countQstId}">
+        <div th:text="${countQstId.question}"></div>
+    </th:block>
+    <form>
         <div>
-            <input type="submit" value="Пройти тест">
+            <input type="submit" value="Далее">
         </div>
     </form>
-
-
-
 </th:block>
 </body>
 </html>

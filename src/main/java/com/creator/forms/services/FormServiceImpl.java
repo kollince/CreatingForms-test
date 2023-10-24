@@ -76,8 +76,8 @@ public class FormServiceImpl implements FormService {
         return formsDao.listQuestionsByFormId(formId);
     }
     @Override
-    public int listNumberForTest(int formId, int numberQst){
-        return formsDao.listNumberForTest(formId, numberQst);
+    public List<Questions> countQstForTest(){
+        return formsDao.countQstForTest();
     }
     @Override
     public List<Questions> updateQuestions(int id, String question) {
