@@ -139,7 +139,7 @@
           <br>
           <div th:text="${fmsList.description}"></div>
           | <a th:href="@{'/dashboard/eForm/'+${fmsList.id}}">Редактировать</a> |
-          <a th:href="@{'/dashboard/deleteForm/'+${fmsList.id}}">Удалиь</a> |
+          <a th:href="@{'/dashboard/deleteForm/'+${fmsList.id}}">Удалить</a> |
         </li>
         <ol th:unless="${qstList.empty}">
           <b>Вопросы:</b>
@@ -170,20 +170,20 @@
       </th:block>
      </ol>
 </th:block>
-<th:block th:fragment="mapElements">
-    Общий список Тестов<br>
-    <div th:each="fmsList : ${fmsList}">
-        <th:block th:text="${fmsList.id}"></th:block>
-    </div><br>
-    Общий список Вопросов<br>
-    <div th:each="qstList : ${qstList}">
-        <th:block th:text="${qstList.id}"></th:block>
-    </div><br>
-    Общий список Ответов<br>
-    <div th:each="ansList : ${ansList}">
-        <th:block th:text="${ansList.id}"></th:block>
-    </div><br>
-</th:block>
+<!--<th:block th:fragment="mapElements">-->
+<!--    Общий список Тестов<br>-->
+<!--    <div th:each="fmsList : ${fmsList}">-->
+<!--        <th:block th:text="${fmsList.id}"></th:block>-->
+<!--    </div><br>-->
+<!--    Общий список Вопросов<br>-->
+<!--    <div th:each="qstList : ${qstList}">-->
+<!--        <th:block th:text="${qstList.id}"></th:block>-->
+<!--    </div><br>-->
+<!--    Общий список Ответов<br>-->
+<!--    <div th:each="ansList : ${ansList}">-->
+<!--        <th:block th:text="${ansList.id}"></th:block>-->
+<!--    </div><br>-->
+<!--</th:block>-->
         <!--    <li th:each="fmsList : ${fmsList}">-->
         <!--      <div th:text="${fmsList.name}"></div>-->
         <!--      <ol th:each="qstList : ${qstList}">-->
