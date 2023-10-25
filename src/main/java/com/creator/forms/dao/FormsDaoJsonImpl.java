@@ -16,6 +16,7 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Repository
@@ -191,16 +192,33 @@ public class FormsDaoJsonImpl implements FormsDao {
     }
 
     @Override
-    public List<Questions> countQstForTest() {
-        List<Questions> qstByFormId = null;
-        for (int i = 0; i < formsList.size(); i++) {
-            int finalI = i;
-            qstByFormId = questionsList.stream()
-                            .filter(questions -> questions.getIdForm()==questionsList.get(finalI).getIdForm())
-                            .collect(Collectors.toCollection(ArrayList::new));
 
+    public List<Questions> countQstForTest() {
+        int min = 1;
+        int max = 0;
+        List<Questions> qstByFormId = new ArrayList<>();
+        System.out.println("Всего вопросов: "+questionsList.size());
+        for (int i = 0; i < formsList.size(); i++) {
+            for (int j = 0; j < questionsList.size(); j++) {
+                if (formsList.get(i).getId()==questionsList.get(j).getIdForm()){
+                    min = Math.min(min, j);
+                    max = Math.max(max, questionsList.get(j).getId());
+
+                    if (questionsList.get(j)!=null) {
+                        System.out.println("Тест: "+formsList.get(i).getName()+", idQuestion: "+questionsList.get(j).getId());
+                        qstByFormId.add(questionsList.get(j));
+                        System.out.println("qstByFormId"+qstByFormId);
+                        break;
+                    }
+
+                }
+            }
         }
-        System.out.println("qstByFormId"+qstByFormId);
+//        qstByFormId = questionsList.stream()
+//                .filter(questions -> questions.getIdForm()==questionsList.get(0).getId())
+//                .collect(Collectors.toCollection(ArrayList::new));
+        //qstByFormId = questionsList.get(min);
+       // System.out.println("qstByFormId"+qstByFormId);
         return qstByFormId;
     }
 

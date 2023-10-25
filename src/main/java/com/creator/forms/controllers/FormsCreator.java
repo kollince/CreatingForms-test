@@ -29,7 +29,7 @@ public class FormsCreator {
     public String allPhysicsTests(Model model) throws IOException {
         List<Forms> fmsAll = formService.listForms();
         List<Questions> countQst = formService.countQstForTest();
-        System.out.println("111 "+countQst);
+//        System.out.println("111 "+countQst);
         model.addAttribute("allForms", fmsAll);
         model.addAttribute("countQst", countQst);
         return "index";
