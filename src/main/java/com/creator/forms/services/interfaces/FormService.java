@@ -2,6 +2,7 @@ package com.creator.forms.services.interfaces;
 
 import com.creator.forms.models.Answers;
 import com.creator.forms.models.Forms;
+import com.creator.forms.models.Passing;
 import com.creator.forms.models.Questions;
 import org.springframework.stereotype.Service;
 
@@ -28,4 +29,7 @@ public interface FormService {
     List<Forms> updateForm(int id, String name, String description, boolean isForTime);
     List<Forms> delete(int id);
     Forms getFormsById(int id);
+    Questions psgListIdFrmIdQst(int idForm, int idQuestion);
+    List <Passing> listPassing();
+    Questions getQuestionOneByFormId(int formId);
 }

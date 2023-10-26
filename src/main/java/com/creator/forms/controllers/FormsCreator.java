@@ -4,6 +4,7 @@ import com.creator.forms.dao.FormsDaoJsonImpl;
 import com.creator.forms.dao.interfaces.FormsDao;
 import com.creator.forms.models.Answers;
 import com.creator.forms.models.Forms;
+import com.creator.forms.models.Passing;
 import com.creator.forms.models.Questions;
 import com.creator.forms.services.FormServiceImpl;
 import com.creator.forms.services.interfaces.FormService;
@@ -29,18 +30,34 @@ public class FormsCreator {
     public String allPhysicsTests(Model model) throws IOException {
         List<Forms> fmsAll = formService.listForms();
         List<Questions> countQst = formService.countQstForTest();
+        List<Passing> psnAll = formService.listPassing();
 //        System.out.println("111 "+countQst);
         model.addAttribute("allForms", fmsAll);
         model.addAttribute("countQst", countQst);
+        model.addAttribute("psnAll", psnAll);
         return "index";
     }
-    @GetMapping("/takeTest/{id}/{numberQst}")
-    public String physicsTest(@PathVariable(value="id") int id, @PathVariable(value="numberQst") int numberQst, Model model) throws IOException {
+    @GetMapping("/takeTest/{id}")
+    public String takeTest(@PathVariable(value="id") int id, Model model) {
         Forms formsById = formService.getFormsById(id);
-        //int countQstId = formService.listNumberForTest(id, numberQst);
+        Questions questionsOneFormId = formService.getQuestionOneByFormId(id);
+        //Questions questions = formService.psgListIdFrmIdQst(id);
+//        int countQstId = formService.listNumberForTest(id, numberQst);
         model.addAttribute("formsById", formsById);
-        //model.addAttribute("countQstId", countQstId);
+        model.addAttribute("questionsOneFormId", questionsOneFormId);
+        System.out.println("questionsOneFormId: "+questionsOneFormId);
         return "takeTest";
+    }
+    @GetMapping("/beginTakeTest/{id}/{idQuestion}")
+    public String beginTakeTest(@PathVariable(value="id") int idForm, @PathVariable(value="idQuestion") int idQuestion, Model model) {
+        Forms formsById = formService.getFormsById(idForm);
+        Questions qstIdFrmIdQst = formService.psgListIdFrmIdQst(idForm, idQuestion);
+        Questions questionsOneFormId = formService.getQuestionOneByFormId(idForm);
+        List<Answers> ansListByQuestionId = formService.listAnswersByQuestionId(idQuestion);
+        model.addAttribute("formsById", formsById);
+        model.addAttribute("qstIdFrmIdQst", qstIdFrmIdQst);
+        model.addAttribute("questionsOneFormId", questionsOneFormId);
+        return "beginTakeTest";
     }
     @GetMapping("dashboard/")
     public String dashBoardTests(Model model) throws IOException {
@@ -142,7 +159,7 @@ public String deleteAnswer(@PathVariable(value="idAnswer") int idAnswer) {
         int lastIndex;
         Forms forms = new Forms(0, name, description, time);
         formService.addForms(forms);
-        if (formService.listForms().size() > 0) {
+          if (formService.listForms().size() > 0) {
             lastIndex = formService.listForms().size()-1;
         } else {
             lastIndex= 0;

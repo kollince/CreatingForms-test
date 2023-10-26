@@ -14,13 +14,12 @@
     <div th:text="${formsById.description}"></div>
     <th:block th:each="questionsOneFormId : ${questionsOneFormId}">
         <div th:text="${questionsOneFormId.question}"></div>
-    <form method="get" th:action="@{'/beginTakeTest/'+${formsById.id}+'/'+${questionsOneFormId.id}}">
-
+    </th:block>
+    <form>
         <div>
             <input type="submit" value="Далее">
         </div>
     </form>
-    </th:block>
 </th:block>
 </body>
 </html>

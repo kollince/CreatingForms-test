@@ -2,6 +2,7 @@ package com.creator.forms.dao.interfaces;
 
 import com.creator.forms.models.Answers;
 import com.creator.forms.models.Forms;
+import com.creator.forms.models.Passing;
 import com.creator.forms.models.Questions;
 import org.springframework.stereotype.Repository;
 
@@ -29,5 +30,10 @@ public interface FormsDao {
     List<Forms> delete(int id);
     Forms getFormsById(int id);
     List<Forms> listForms() throws IOException;
+//    List<Passing> addPassing(Passing passing);
+//    List<Passing> deletePassing(int id);
+    List <Passing> listPassing();
+    Questions psgListIdFrmIdQst(int idForm, int idQuestion);
+    Questions getQuestionOneByFormId(int formId);
 
 }

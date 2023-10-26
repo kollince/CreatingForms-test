@@ -3,6 +3,7 @@ package com.creator.forms.dao;
 import com.creator.forms.dao.interfaces.FormsDao;
 import com.creator.forms.models.Answers;
 import com.creator.forms.models.Forms;
+import com.creator.forms.models.Passing;
 import com.creator.forms.models.Questions;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
@@ -14,9 +15,9 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.Collection;
+
 import java.util.List;
-import java.util.Objects;
+
 import java.util.stream.Collectors;
 
 @Repository
@@ -27,10 +28,12 @@ public class FormsDaoJsonImpl implements FormsDao {
     private final List<Forms> formsList = new ArrayList<>();
     private final List<Questions> questionsList = new ArrayList<>();
     private final List<Answers> answersList = new ArrayList<>();
+    private final List<Passing> passingsList = new ArrayList<>();
     private final ObjectMapper mapper = new ObjectMapper();
     final Path FILEPATH = Path.of("src/main/resources/data/listForms.json");
     private int idCount = 0;
     private int idCountQuestion = 0;
+    private int idCountPassing = 0;
     private int idCountAnswer = 0;
 
     public FormsDaoJsonImpl() {
@@ -49,29 +52,19 @@ public class FormsDaoJsonImpl implements FormsDao {
     @Override
     public List<Answers> addAnswer(Answers answers) {
         int max = 0;
-//        System.out.println("idCountAnswer в начале: "+idCountAnswer);
         if (answersList.size() == 0) {
             idCountAnswer = 1;
             answers.setId(idCountAnswer);
         } else {
             for (int i = 0; i < answersList.size(); i++) {
                 max = Math.max(max, answersList.get(i).getId());
-//                System.out.println("idAnswer: "+answersList.get(i).getId());
-//                System.out.println("answersList.size: "+answersList.size());
                 if (answersList.get(i).getId() > answersList.size()) {
-//                    System.out.println("idAnswer_1: "+answersList.get(i).getId());
-//                    System.out.println("answersList.size_1: "+answersList.size());
                     idCountAnswer = max;
-//                    System.out.println("idCountAnswer_max: "+idCountAnswer);
                 }
             }
             idCountAnswer++;
             answers.setId(idCountAnswer);
         }
-//        System.out.println("size: "+ answersList.size());
-//        System.out.println("Max: "+ max);
-//        System.out.println("id: "+answers.getId());
-//        System.out.println("idCountAnswer: "+idCountAnswer);
         answersList.add(answers);
         return answersList;
     }
@@ -84,7 +77,6 @@ public class FormsDaoJsonImpl implements FormsDao {
                 break;
             }
         }
-//        System.out.println("idCountAnswer_list_2: "+idCountAnswer);
         return answersList;
     }
 
@@ -93,13 +85,6 @@ public class FormsDaoJsonImpl implements FormsDao {
         List<Answers> ansByFormId = answersList.stream()
                 .filter(answers -> answers.getIdForm() == formId)
                 .collect(Collectors.toCollection(ArrayList::new));
-//        for (int i = 0; i < answersList.size(); i++) {
-//            if (answersList.size() < idCountAnswer) {
-//                idCountAnswer = answersList.size() + 1;
-//                break;
-//            }
-//        }
-//        System.out.println(idCountAnswer);
         return ansByFormId;
     }
 
@@ -109,13 +94,6 @@ public class FormsDaoJsonImpl implements FormsDao {
         List<Answers> ansByQuestionId = answersList.stream()
                 .filter(answers -> answers.getIdQuestion() == questionId)
                 .collect(Collectors.toCollection(ArrayList::new));
-//        for (int i = 0; i < answersList.size(); i++) {
-//            if (answersList.size() < idCountAnswer) {
-//                idCountAnswer = answersList.size() + 1;
-//                break;
-//            }
-//        }
-//        System.out.println(idCountAnswer);
         return ansByQuestionId;
     }
 
@@ -132,7 +110,6 @@ public class FormsDaoJsonImpl implements FormsDao {
     }
     @Override
     public List<Answers> deleteAnswers(int id) {
-//        System.out.println("idCountAnswer_delete_1: "+idCountAnswer);
         for (int i = 0; i < answersList.size(); i++) {
             if (answersList.get(i).getId()==id) {
                 answersList.remove(i);
@@ -140,9 +117,6 @@ public class FormsDaoJsonImpl implements FormsDao {
 
             }
         }
-//        System.out.println("idCountAnswer_delete_2: "+idCountAnswer);
-        //listAnswers();
-        //System.out.println("idCountAnswer_delete_3: "+idCountAnswer);
         return answersList;
     }
     @Override
@@ -161,18 +135,21 @@ public class FormsDaoJsonImpl implements FormsDao {
         if (questionsList.size() == 0) {
             idCountQuestion = 1;
             questions.setId(idCountQuestion++);
+            //updatePassing(questions.getIdForm(),1, idCountQuestion);
+            //addPassing(questions.getIdForm(),idCountQuestion,1);
         } else {
             for (int i = 0; i < questionsList.size(); i++) {
                 max = Math.max(max, questionsList.get(i).getId());
                 if (questionsList.get(i).getId() > questionsList.size()) {
                     idCountQuestion = max+1;
                 }
+
             }
             questions.setId(idCountQuestion++);
-//            System.out.println("max: "+max+", addQuestion: "+idCountQuestion++);
         }
+        addPassing(questions.getIdForm(),questions.getId());
         questionsList.add(questions);
- //       System.out.println(questionsList);
+        //updatePassing(questions.getIdForm(),questions.getId(), idCountQuestion);
         return questionsList;
     }
 
@@ -187,7 +164,6 @@ public class FormsDaoJsonImpl implements FormsDao {
                 break;
             }
         }
-//        System.out.println(idCountQuestion);
         return qstByFormId;
     }
 
@@ -214,11 +190,6 @@ public class FormsDaoJsonImpl implements FormsDao {
                 }
             }
         }
-//        qstByFormId = questionsList.stream()
-//                .filter(questions -> questions.getIdForm()==questionsList.get(0).getId())
-//                .collect(Collectors.toCollection(ArrayList::new));
-        //qstByFormId = questionsList.get(min);
-       // System.out.println("qstByFormId"+qstByFormId);
         return qstByFormId;
     }
 
@@ -248,6 +219,11 @@ public class FormsDaoJsonImpl implements FormsDao {
                 questionsList.remove(i);
             }
         }
+        for (int j = 0; j < passingsList.size(); j++) {
+            if (passingsList.get(j).getIdQuestion()==id) {
+                passingsList.remove(j);
+            }
+        }
         for (int k = 0; k < answersList.size(); k++) {
             if (answersList.get(k).getIdQuestion() == id) {
                 answersList.remove(k);
@@ -268,33 +244,38 @@ public class FormsDaoJsonImpl implements FormsDao {
         }
         return element;
     }
+    @Override
+    public Questions getQuestionOneByFormId(int formId) {
+        Questions element = null;
+        for (int i = 0; i < questionsList.size(); i++) {
+            if (questionsList.get(i).getIdForm() == formId){
+                element = questionsList.get(i);
+                break;
 
+            }
+        }
+        return element;
+    }
 
     @Override
     public List<Forms> addForm(Forms form) throws IOException {
         int max = 0;
         if (formsList.size() == 0) {
             idCount = 1;
+            //addPassing(idCount,0,1);
             form.setId(idCount++);
-        } else {
+
+         } else {
             for (int i = 0; i < formsList.size(); i++) {
-//                System.out.println("formsList: "+formsList.get(i).getId());
-//                System.out.println("formsList.size: "+formsList.size());
                 max = Math.max(max, formsList.get(i).getId());
                 if (formsList.get(i).getId() > formsList.size()) {
-//                    System.out.println("idForm_1: "+formsList.get(i).getId());
-//                    System.out.println("formsList.size_1: "+formsList.size());
                     idCount = max+1;
-//                    System.out.println("idCount_max: "+idCount);
                 }
             }
             form.setId(idCount++);
         }
-//        System.out.println("size: "+ formsList.size());
-//        System.out.println("Max: "+ max);
-//        System.out.println("id: "+form.getId());
-//        System.out.println("idCount: "+idCount);
         formsList.add(form);
+        System.out.println(formsList);
         return formsList;
         //fileExist();
         //mapper.writeValue(FILEPATH.toFile(), form);
@@ -308,6 +289,8 @@ public class FormsDaoJsonImpl implements FormsDao {
                 idCount = formsList.size()+1;
             }
         }
+        listPassing();
+        System.out.println("=================");
         return formsList;
 //        return mapper.readValue(FILEPATH.toFile(), new TypeReference<>() {
 //        });
@@ -332,14 +315,18 @@ public class FormsDaoJsonImpl implements FormsDao {
                 formsList.remove(i);
                 for (int j = 0; j < questionsList.size(); j++) {
                     if (questionsList.get(j).getIdForm() == id) {
-//                        System.out.println(" "+questionsList.get(j).getQuestion());
                         questionsList.remove(j);
+                        j--;
+                    }
+                }
+                for (int j = 0; j < passingsList.size(); j++) {
+                    if (passingsList.get(j).getIdForm() == id) {
+                        passingsList.remove(j);
                         j--;
                     }
                 }
                 for (int k = 0; k < answersList.size(); k++) {
                     if (answersList.get(k).getIdForm() == id) {
-//                        System.out.println(" "+answersList.get(k).getAnswer());
                         answersList.remove(k);
                         k--;
                     }
@@ -358,6 +345,59 @@ public class FormsDaoJsonImpl implements FormsDao {
             }
         }
         return element;
+    }
+    public void addPassing(int idForm, int idQuestion) {
+        Passing passing = new Passing(0, idForm, idQuestion);
+        int max = 0;
+        if (passingsList.size() == 0) {
+            idCountPassing = 1;
+            passing.setId(idCountPassing);
+        } else {
+            for (int i = 0; i < passingsList.size(); i++) {
+                max = Math.max(max, passingsList.get(i).getId());
+                if (passingsList.get(i).getId() > passingsList.size()) {
+                    idCountPassing = max;
+                }
+            }
+            idCountPassing++;
+            passing.setId(idCountPassing);
+        }
+        passingsList.add(passing);
+        System.out.println(passingsList);
+    }
+//    public void updatePassing(int idForm, int idQuestion, int number) {
+//        for (Passing passing : passingsList) {
+//            if (passing.getId() == idForm) {
+//                passing.setIdQuestion(idQuestion);
+//                passing.setNumber(number);
+//             }
+//        }
+//        System.out.println(passingsList);
+////        return passingsList;
+//    }
+    @Override
+    public List <Passing> listPassing() {
+        for (int i = 0; i < passingsList.size(); i++) {
+            int id = passingsList.get(i).getId();
+            int idForm = passingsList.get(i).getIdForm();
+            int idQst = passingsList.get(i).getIdQuestion();
+            System.out.println("id: "+id+", idForm: "+idForm+", idQst: "+idQst+", Размер: "+passingsList.size());
+        }
+        return passingsList;
+    }
+    @Override
+    public Questions psgListIdFrmIdQst(int idForm, int idQuestion){
+        int max = 0;
+        int min = 0;
+        Questions questions = null;
+
+        for (int i = 0; i < passingsList.size(); i++) {
+            if (passingsList.get(i).getIdForm() == idForm && passingsList.get(i).getIdQuestion()==idQuestion) {
+                min = Math.max(min, passingsList.get(i).getId());
+                questions = questionsList.get(i);
+            }
+        }
+        return questions;
     }
 
 }

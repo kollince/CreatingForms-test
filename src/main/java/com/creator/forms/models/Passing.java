@@ -7,6 +7,6 @@ import lombok.Data;
 @Data
 public class Passing {
     private int id;
+    private int idForm;
     private int idQuestion;
-    private int number;
 }
