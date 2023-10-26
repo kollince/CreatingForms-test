@@ -12,15 +12,34 @@
 <th:block th:each="formsById : ${formsById}">
 <H1 >Пройти тест "<th:block th:text="${formsById.name}"></th:block>" по физике </H1>
     <div th:text="${formsById.description}"></div>
-    <th:block th:each="questionsOneFormId : ${questionsOneFormId}">
-        <div th:text="${questionsOneFormId.question}"></div>
-    <form method="get" th:action="@{'/beginTakeTest/'+${formsById.id}+'/'+${questionsOneFormId.id}}">
-
-        <div>
-            <input type="submit" value="Далее">
-        </div>
-    </form>
+    <H5>Вопросы</H5>
+<ol th:unless="${questionsByFormId.empty}">
+    <th:block th:each="questionsByFormId : ${questionsByFormId}">
+        <li>
+            <th:block th:text="${questionsByFormId.question}"></th:block>
+            <div>Выберите правильный ответ (ответов может быть несколько).</div>
+            <ol>
+            <th:block th:each="answersByFormId : ${answersByFormId}">
+                <th:block th:if="${#strings.equals(answersByFormId.idQuestion, questionsByFormId.id)}">
+                <li>
+                    <div th:text="${answersByFormId.answer}"></div>
+                </li>
+                </th:block>
+            </th:block>
+            </ol>
+        </li>
     </th:block>
+</ol>
 </th:block>
+
+
+<!--    <form method="get" th:action="@{'/takeTest/'+${formsById.id}}">-->
+
+<!--        <div>-->
+<!--            <input type="submit" value="Далее">-->
+<!--        </div>-->
+<!--    </form>-->
+
+
 </body>
 </html>

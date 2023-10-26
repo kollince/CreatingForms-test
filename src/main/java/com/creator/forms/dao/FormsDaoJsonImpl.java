@@ -85,6 +85,7 @@ public class FormsDaoJsonImpl implements FormsDao {
         List<Answers> ansByFormId = answersList.stream()
                 .filter(answers -> answers.getIdForm() == formId)
                 .collect(Collectors.toCollection(ArrayList::new));
+        System.out.println(ansByFormId);
         return ansByFormId;
     }
 

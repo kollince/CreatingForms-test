@@ -40,12 +40,17 @@ public class FormsCreator {
     @GetMapping("/takeTest/{id}")
     public String takeTest(@PathVariable(value="id") int id, Model model) {
         Forms formsById = formService.getFormsById(id);
+        List<Questions> questionsByFormId = formService.listQuestionsByFormId(id);
+        List<Answers> answersByFormId = formService.listAnswersByFormId(id);
         Questions questionsOneFormId = formService.getQuestionOneByFormId(id);
         //Questions questions = formService.psgListIdFrmIdQst(id);
 //        int countQstId = formService.listNumberForTest(id, numberQst);
         model.addAttribute("formsById", formsById);
-        model.addAttribute("questionsOneFormId", questionsOneFormId);
-        System.out.println("questionsOneFormId: "+questionsOneFormId);
+        model.addAttribute("questionsByFormId", questionsByFormId);
+        model.addAttribute("answersByFormId", answersByFormId);
+        //model.addAttribute("questionsOneFormId", questionsOneFormId);
+
+        //System.out.println("questionsOneFormId: "+questionsOneFormId);
         return "takeTest";
     }
     @GetMapping("/beginTakeTest/{id}/{idQuestion}")
