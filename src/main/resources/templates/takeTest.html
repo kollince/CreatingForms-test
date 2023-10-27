@@ -10,36 +10,34 @@
 <body>
 <th:block th:insert="~{components/include :: top}"></th:block>
 <th:block th:each="formsById : ${formsById}">
-<H1 >Пройти тест "<th:block th:text="${formsById.name}"></th:block>" по физике </H1>
-    <div th:text="${formsById.description}"></div>
-    <H5>Вопросы</H5>
-<ol th:unless="${questionsByFormId.empty}">
-    <th:block th:each="questionsByFormId : ${questionsByFormId}">
-        <li>
-            <th:block th:text="${questionsByFormId.question}"></th:block>
-            <div>Выберите правильный ответ (ответов может быть несколько).</div>
-            <ol>
-            <th:block th:each="answersByFormId : ${answersByFormId}">
-                <th:block th:if="${#strings.equals(answersByFormId.idQuestion, questionsByFormId.id)}">
+    <H1>Пройти тест "
+        <th:block th:text="${formsById.name}"></th:block>
+        " по физике
+    </H1>
+    <form method="post" th:action="@{'/endTakeTest/'+${formsById.id}}">
+        <div th:text="${formsById.description}"></div>
+        <H5>Вопросы</H5>
+        <ol th:unless="${questionsByFormId.empty}">
+            <th:block th:each="questionsByFormId : ${questionsByFormId}">
                 <li>
-                    <div th:text="${answersByFormId.answer}"></div>
+                    <th:block th:text="${questionsByFormId.question}"></th:block>
+                    <div>Выберите правильный ответ (ответов может быть несколько).</div>
+                    <ol>
+                        <th:block th:each="answersByFormId : ${answersByFormId}">
+                            <th:block th:if="${#strings.equals(answersByFormId.idQuestion, questionsByFormId.id)}">
+                                <li><input type="checkbox" th:name="answer"
+                                           th:value="${answersByFormId.id}">
+                                    <th:block th:text="${answersByFormId.answer}"></th:block>
+                                </li>
+                            </th:block>
+                        </th:block>
+                    </ol>
                 </li>
-                </th:block>
             </th:block>
-            </ol>
-        </li>
-    </th:block>
-</ol>
+        </ol>
+        <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+        <input type="submit" value="Завершить тест">
+    </form>
 </th:block>
-
-
-<!--    <form method="get" th:action="@{'/takeTest/'+${formsById.id}}">-->
-
-<!--        <div>-->
-<!--            <input type="submit" value="Далее">-->
-<!--        </div>-->
-<!--    </form>-->
-
-
 </body>
 </html>

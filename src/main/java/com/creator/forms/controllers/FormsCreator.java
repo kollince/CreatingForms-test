@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Controller
@@ -63,6 +65,11 @@ public class FormsCreator {
         model.addAttribute("qstIdFrmIdQst", qstIdFrmIdQst);
         model.addAttribute("questionsOneFormId", questionsOneFormId);
         return "beginTakeTest";
+    }
+    @GetMapping("/endTakeTest/{id}")
+    public String endTakeTest(@PathVariable(value="id") int idForm, Model model) {
+        List<Answers> allAnswers = formService.listAnswers();
+        return "endTakeTest";
     }
     @GetMapping("dashboard/")
     public String dashBoardTests(Model model) throws IOException {
@@ -222,6 +229,42 @@ public String deleteAnswer(@PathVariable(value="idAnswer") int idAnswer) {
                                @PathVariable(value="answerId") int answerId) {
         formService.updateAnswers(answerId,answer, isTrue);
         return "redirect:/dashboard/eQuestion/"+formId+"/"+idQuestion;
+    }
+    @PostMapping("/endTakeTest/{formId}")
+    public String endTakeTest(@RequestParam("answer") List<Integer> answerList,
+                              @PathVariable(value="formId") int formId, Model model) {
+        int points=0;
+        int doubling = 0;
+        int result=0;
+        System.out.println("answer: "+answerList);
+        List<Questions> questionsFormId = formService.listQuestionsByFormId(formId);
+        List<Answers> answersByFormId = formService.listAnswersByFormId(formId);
+//        for (int i = 0; i < questionsFormId.size(); i++) {
+            for (int j = 0; j < answersByFormId.size(); j++) {
+                if(answersByFormId.get(j).isTrue()){
+
+                    System.out.println("id: " + answersByFormId.get(j).getId() + ", answer: " + answersByFormId.get(j).getAnswer() + ", "
+                            + answersByFormId.get(j).isTrue());
+                    for (int i = 0; i < answerList.size(); i++) {
+                        if (answerList.get(i)==answersByFormId.get(j).getId()){
+                            points = points+1;
+                            for (int k = 0; k < questionsFormId.size(); k++) {
+                                if (questionsFormId.get(k).getId()==answersByFormId.get(k).getIdQuestion()){
+
+                                    doubling=doubling+1;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+//        }
+        int countQst = questionsFormId.size();
+        result = points*100/countQst;
+        System.out.println("Верных ответов: "+points+", из них задвоиных: "+doubling);
+        System.out.println("Результат:"+ result);
+        System.out.println("Из "+countQst+" вопросов "+points+" верных ответов ("+result+"% из 100).");
+        return "redirect:/endTakeTest";
     }
 
 }
