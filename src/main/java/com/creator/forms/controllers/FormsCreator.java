@@ -235,35 +235,99 @@ public String deleteAnswer(@PathVariable(value="idAnswer") int idAnswer) {
                               @PathVariable(value="formId") int formId, Model model) {
         int points=0;
         int doubling = 0;
+        int unique = 0;
         int result=0;
         System.out.println("answer: "+answerList);
         List<Questions> questionsFormId = formService.listQuestionsByFormId(formId);
         List<Answers> answersByFormId = formService.listAnswersByFormId(formId);
 //        for (int i = 0; i < questionsFormId.size(); i++) {
-            for (int j = 0; j < answersByFormId.size(); j++) {
-                if(answersByFormId.get(j).isTrue()){
-
-                    System.out.println("id: " + answersByFormId.get(j).getId() + ", answer: " + answersByFormId.get(j).getAnswer() + ", "
-                            + answersByFormId.get(j).isTrue());
-                    for (int i = 0; i < answerList.size(); i++) {
-                        if (answerList.get(i)==answersByFormId.get(j).getId()){
-                            points = points+1;
-                            for (int k = 0; k < questionsFormId.size(); k++) {
-                                if (questionsFormId.get(k).getId()==answersByFormId.get(k).getIdQuestion()){
-
-                                    doubling=doubling+1;
-                                }
-                            }
-                        }
+//            for (int j = 0; j < answersByFormId.size(); j++) {
+//                if(answersByFormId.get(j).isTrue()){
+//
+//                    System.out.println("id: " + answersByFormId.get(j).getId() + ", answer: " + answersByFormId.get(j).getAnswer() + ", "
+//                            + answersByFormId.get(j).isTrue());
+//                    for (int i = 0; i < answerList.size(); i++) {
+//                        if (answerList.get(i)==answersByFormId.get(j).getId()){
+//                            points = points+1;
+// //                            for (int k = 0; k < questionsFormId.size(); k++) {
+////                                if (questionsFormId.get(k).getId()==answersByFormId.get(k).getIdQuestion()){
+////
+////                                    doubling=doubling+1;
+////                                }
+////                            }
+//                        }
+//                    }
+//                }
+//            }
+        List <Integer> list = new ArrayList<>();
+        List<Answers> newAnswers = new ArrayList<>();
+        List<Answers> correctAnswers = new ArrayList<>();
+            for (int l = 0; l < answersByFormId.size(); l++) {
+                for (int j = 0; j < answerList.size(); j++) {
+                    if (answerList.get(j) == answersByFormId.get(l).getId()) {
+                        newAnswers.add(answersByFormId.get(l));
                     }
                 }
             }
+        for (int i = 0; i < answersByFormId.size(); i++) {
+            if (answersByFormId.get(i).isTrue()){
+                correctAnswers.add(answersByFormId.get(i));
+            }
+        }
+
+
+//                    for (int g = l + 1; g < answersByFormId.size(); g++) {
+//                        if (answersByFormId.get(g).isTrue()) {
+//                            if (answersByFormId.get(l).getIdQuestion() == answersByFormId.get(g).getIdQuestion()) {
+//                                System.out.println("idSqt: "+answersByFormId.get(l).getIdQuestion()+", idAns: "+answersByFormId.get(g).getId());
+//                                doubling = doubling + 1;
+//                                for (int k = 0; k < answerList.size(); k++) {
+//                                    if (answerList.get(k)==answersByFormId.get(g).getId()){
+//                                        points = points+1;
+//                                    }
+//                                }
+//                                if (questionsFormId.get(i).getId()==answersByFormId.get(l).getIdQuestion()){
+//                                    //points=points-1;
+//                                }
+//                            }
+//                        }
+//                    }
+  //              }
+//            }
+ //       }
 //        }
+        for (int i = 0; i < newAnswers.size(); i++) {
+            System.out.println("idQst: "+newAnswers.get(i).getIdQuestion()+", Ответ: "
+                    +newAnswers.get(i).getAnswer()+", Верно? "+newAnswers.get(i).isTrue());
+
+        }
+            for (int i = 0; i < newAnswers.size(); i++) {
+                for (int j = i + 1; j < correctAnswers.size(); j++) {
+                    if (newAnswers.get(i).getIdQuestion() == correctAnswers.get(j).getIdQuestion()) {
+                        doubling = doubling + 1;
+                        System.out.println("Дубли: " + correctAnswers.get(j).getIdQuestion());
+                        //points=points+1;
+                    }
+                    if (newAnswers.get(i).getIdQuestion() != correctAnswers.get(j).getIdQuestion() && newAnswers.get(j).isTrue()) {
+                        unique = unique + 1;
+                        System.out.println("Уникальные: " + correctAnswers.get(j).getIdQuestion() + ", Вопрос: " +
+                                newAnswers.get(j).getAnswer());
+                    }
+                }
+            }
+        System.out.println("=============================");
+
+        System.out.println("=============================");
+        for (int i = 0; i < correctAnswers.size(); i++) {
+            System.out.println("idSq: "+correctAnswers.get(i).getIdQuestion()+", Ответ: "
+                    +correctAnswers.get(i).getAnswer()+", Верно? "+correctAnswers.get(i).isTrue());
+        }
+        //System.out.println("new: "+newAnswers);
         int countQst = questionsFormId.size();
-        result = points*100/countQst;
-        System.out.println("Верных ответов: "+points+", из них задвоиных: "+doubling);
+        result = doubling*100/countQst;
+        System.out.println("Верных ответов: "+ (points) +", из них дубли: "+doubling+", уникальных: "+unique);
         System.out.println("Результат:"+ result);
-        System.out.println("Из "+countQst+" вопросов "+points+" верных ответов ("+result+"% из 100).");
+        System.out.println("Из "+countQst+" вопросов "+(points)+" верных ответов ("+result+"% из 100).");
         return "redirect:/endTakeTest";
     }
 
