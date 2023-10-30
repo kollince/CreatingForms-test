@@ -37,6 +37,14 @@ public class FormsCreator {
         model.addAttribute("allForms", fmsAll);
         model.addAttribute("countQst", countQst);
         model.addAttribute("psnAll", psnAll);
+        formService.addForms(new Forms(0,"Николай","desc",true));
+        formService.addQuestion(new Questions(0,1,"Барабанов?"));
+        formService.addQuestion(new Questions(0,1,"Барабанова?"));
+        formService.addAnswer(new Answers(0,1,1,"Да", true));
+        formService.addAnswer(new Answers(0,1,1,"Нет", false));
+        formService.addAnswer(new Answers(0,1,1,"Дааа", true));
+        formService.addAnswer(new Answers(0,1,2,"Да 2", true));
+        formService.addAnswer(new Answers(0,1,2,"Нет 2", false));
         return "index";
     }
     @GetMapping("/takeTest/{id}")
@@ -232,10 +240,13 @@ public String deleteAnswer(@PathVariable(value="idAnswer") int idAnswer) {
     }
     @PostMapping("/endTakeTest/{formId}")
     public String endTakeTest(@RequestParam("answer") List<Integer> answerList,
-                              @PathVariable(value="formId") int formId, Model model) {
+                              @PathVariable(value="formId") int formId, Model model) throws IOException {
         int points=0;
         int doubling = 0;
         int unique = 0;
+        int incorrect = 0;
+        int correct = 0;
+        int correctPoint = 0;
         int result=0;
         System.out.println("answer: "+answerList);
         List<Questions> questionsFormId = formService.listQuestionsByFormId(formId);
@@ -259,56 +270,34 @@ public String deleteAnswer(@PathVariable(value="idAnswer") int idAnswer) {
                     +newAnswers.get(i).getAnswer()+", Верно? "+newAnswers.get(i).isTrue());
 
         }
-//            for (int i = 0; i < newAnswers.size(); i++) {
-//                for (int j = i + 1; j < correctAnswers.size(); j++) {
-//                    if (newAnswers.get(i).getIdQuestion() == correctAnswers.get(j).getIdQuestion()) {
-//                        doubling = doubling + 1;
-//                        System.out.println("Дубли: " + correctAnswers.get(j).getIdQuestion());
-//                        //points=points+1;
-//                    }
-//                    if (newAnswers.get(i).getIdQuestion() != correctAnswers.get(j).getIdQuestion() && newAnswers.get(j).isTrue()) {
-//                        unique = unique + 1;
-//                        System.out.println("Уникальные: " + correctAnswers.get(j).getIdQuestion() + ", Вопрос: " +
-//                                newAnswers.get(j).getAnswer());
-//                    }
-//                }
-//            }
-        System.out.println("correctAnswers: "+correctAnswers);
-        System.out.println("newAnswers: " +newAnswers);
-        System.out.println("=============================");
-        newAnswers.retainAll(correctAnswers);
-        System.out.println("list1: " + newAnswers);
-        System.out.println("=============================");
-
-        for (Answers newAnswer : newAnswers) {
-            System.out.println("newAnswer.getAnswer() "+newAnswer.getAnswer());
+        for (int i = 0; i < correctAnswers.size(); i++) {
+            System.out.println("idQst: "+correctAnswers.get(i).getIdQuestion()+", Ответ: "
+                    +correctAnswers.get(i).getAnswer()+", Верно? "+correctAnswers.get(i).isTrue());
         }
         for (int i = 0; i < correctAnswers.size(); i++) {
-            if(!correctAnswers.contains(i)){
-                System.out.println("correctAnswers.get(i).getAnswer() "+correctAnswers.get(i).getAnswer());
+            for (int j = 0; j < newAnswers.size(); j++) {
+                if (correctAnswers.equals(newAnswers)){
+                    System.out.println(correctAnswers.get(i).getId()+", Ответ верный " + correctAnswers.get(i).getAnswer());
+                } else {
+                    System.out.println(newAnswers.get(j).getId()+", Ответ не верный " + newAnswers.get(j).getAnswer());
+                }
+                //break;
             }
         }
-//        List<String> list1 = Arrays.asList("apple", "banana", "cherry");
-//        List<String> list2 = Arrays.asList("apple", "kiwi");
-//        list2.retainAll(list1);
-//
-//        for (String s : list2) {
-//            System.out.println(s); // kiwi
-//        }
-//        for (String s : list1) {
-//            if (!list2.contains(s)) {
-//                System.out.println(s); // cherry, banana
-//            }
-//        for (int i = 0; i < correctAnswers.size(); i++) {
-//            System.out.println("idSq: "+correctAnswers.get(i).getIdQuestion()+", Ответ: "
-//                    +correctAnswers.get(i).getAnswer()+", Верно? "+correctAnswers.get(i).isTrue());
-//        }
-//        System.out.println("newAnswers: "+newAnswers);
-//        System.out.println("correctAnswers: "+correctAnswers);
-        //System.out.println("new: "+newAnswers);
+        for (int j = 0; j < correctAnswers.size(); j++) {
+                if (!correctAnswers.get(j).isTrue()) {
+                    correct = correct + 1;
+                } else {
+                    correctPoint=correctPoint+1;
+            }
+        }
+
         int countQst = questionsFormId.size();
+        System.out.println(newAnswers);
+        System.out.println(correctAnswers);
+        System.out.println("Неправильных ответов"+incorrect);
         result = doubling*100/countQst;
-//        System.out.println("Верных ответов: "+ (points) +", из них дубли: "+doubling+", уникальных: "+unique);
+        System.out.println("Верных ответов: "+ (points) +", из них дубли: "+doubling+", уникальных: "+unique);
 //        System.out.println("Результат:"+ result);
 //        System.out.println("Из "+countQst+" вопросов "+(points)+" верных ответов ("+result+"% из 100).");
         return "redirect:/endTakeTest";
