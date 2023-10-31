@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 
 @Controller
@@ -243,6 +244,7 @@ public String deleteAnswer(@PathVariable(value="idAnswer") int idAnswer) {
                               @PathVariable(value="formId") int formId, Model model) throws IOException {
         int points=0;
         int doubling = 0;
+        int questions = 0;
         int unique = 0;
         int incorrect = 0;
         int correct = 0;
@@ -274,14 +276,44 @@ public String deleteAnswer(@PathVariable(value="idAnswer") int idAnswer) {
             System.out.println("idQst: "+correctAnswers.get(i).getIdQuestion()+", Ответ: "
                     +correctAnswers.get(i).getAnswer()+", Верно? "+correctAnswers.get(i).isTrue());
         }
-        for (int i = 0; i < correctAnswers.size(); i++) {
-            for (int j = 0; j < newAnswers.size(); j++) {
-                if (correctAnswers.equals(newAnswers)){
-                    System.out.println(correctAnswers.get(i).getId()+", Ответ верный " + correctAnswers.get(i).getAnswer());
-                } else {
-                    System.out.println(newAnswers.get(j).getId()+", Ответ не верный " + newAnswers.get(j).getAnswer());
+        if (new HashSet<>(correctAnswers).containsAll(newAnswers)) {
+            System.out.println("Все ответы пользователя правильные!");
+            for (int i = 0; i < newAnswers.size(); i++) {
+                if (newAnswers.get(i).isTrue()) {
+                    System.out.println("Правильные ответы " + newAnswers.get(i).getAnswer());
+                    for (int j = i+1; j < newAnswers.size(); j++) {
+                        if (newAnswers.get(j).getIdQuestion()==newAnswers.get(i).getIdQuestion()){
+                            questions++;
+                        }
+                    }
                 }
-                //break;
+            }
+        } else {
+            System.out.println("Есть неправильные ответы пользователя!");
+            for (int i = 0; i < newAnswers.size(); i++) {
+                if (!newAnswers.get(i).isTrue()){
+                    System.out.println("Неправильные ответы "+newAnswers.get(i).getAnswer());
+                    for (int j = i+1; j < newAnswers.size(); j++) {
+                        if (newAnswers.get(j).getIdQuestion()==newAnswers.get(i).getIdQuestion()){
+                            questions++;
+                            for (int k = 0; k < questionsFormId.size(); k++) {
+                                if(newAnswers.get(j).getIdQuestion()==questionsFormId.get(k).getId()){
+                                    System.out.println("Вопросы на которые не правильно: "+questionsFormId.get(k).getQuestion());
+                                }
+                            }
+                        }
+                        if (newAnswers.get(j).getIdQuestion()!=newAnswers.get(i).getIdQuestion()){
+                            for (int k = 0; k < questionsFormId.size(); k++) {
+                                if(newAnswers.get(j).getIdQuestion()==questionsFormId.get(k).getId()){
+
+                                    questions++;
+                                    System.out.println("Вопросы на которые не правильно1: "+questionsFormId.get(k).getQuestion());
+                                    continue;
+                                }
+                            }
+                        }
+                    }
+                }
             }
         }
         for (int j = 0; j < correctAnswers.size(); j++) {
@@ -295,6 +327,7 @@ public String deleteAnswer(@PathVariable(value="idAnswer") int idAnswer) {
         int countQst = questionsFormId.size();
         System.out.println(newAnswers);
         System.out.println(correctAnswers);
+        System.out.println("questions: "+questions);
         System.out.println("Неправильных ответов"+incorrect);
         result = doubling*100/countQst;
         System.out.println("Верных ответов: "+ (points) +", из них дубли: "+doubling+", уникальных: "+unique);
