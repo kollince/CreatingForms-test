@@ -242,15 +242,15 @@ public String deleteAnswer(@PathVariable(value="idAnswer") int idAnswer) {
     @PostMapping("/endTakeTest/{formId}")
     public String endTakeTest(@RequestParam("answer") List<Integer> answerList,
                               @PathVariable(value="formId") int formId, Model model) throws IOException {
-        int points=0;
+        int points = 0;
         int doubling = 0;
         int questions = 0;
         int unique = 0;
         int incorrect = 0;
         int correct = 0;
         int correctPoint = 0;
-        int result=0;
-        System.out.println("answer: "+answerList);
+        int result = 0;
+        System.out.println("answer: " + answerList);
         List<Questions> questionsFormId = formService.listQuestionsByFormId(formId);
         List<Answers> answersByFormId = formService.listAnswersByFormId(formId);
         List<Answers> newAnswers = new ArrayList<>();
@@ -263,59 +263,54 @@ public String deleteAnswer(@PathVariable(value="idAnswer") int idAnswer) {
             }
         }
         for (int i = 0; i < answersByFormId.size(); i++) {
-            if (answersByFormId.get(i).isTrue()){
+            if (answersByFormId.get(i).isTrue()) {
                 correctAnswers.add(answersByFormId.get(i));
             }
         }
         for (int i = 0; i < newAnswers.size(); i++) {
-            System.out.println("idQst: "+newAnswers.get(i).getIdQuestion()+", Ответ: "
-                    +newAnswers.get(i).getAnswer()+", Верно? "+newAnswers.get(i).isTrue());
+            System.out.println("idQst: " + newAnswers.get(i).getIdQuestion() + ", Ответ: "
+                    + newAnswers.get(i).getAnswer() + ", Верно? " + newAnswers.get(i).isTrue());
 
         }
         for (int i = 0; i < correctAnswers.size(); i++) {
-            System.out.println("idQst: "+correctAnswers.get(i).getIdQuestion()+", Ответ: "
-                    +correctAnswers.get(i).getAnswer()+", Верно? "+correctAnswers.get(i).isTrue());
+            System.out.println("idQst: " + correctAnswers.get(i).getIdQuestion() + ", Ответ: "
+                    + correctAnswers.get(i).getAnswer() + ", Верно? " + correctAnswers.get(i).isTrue());
         }
-        if (new HashSet<>(correctAnswers).containsAll(newAnswers)) {
-            System.out.println("Все ответы пользователя правильные!");
-            for (int i = 0; i < newAnswers.size(); i++) {
-                if (newAnswers.get(i).isTrue()) {
-                    System.out.println("Правильные ответы " + newAnswers.get(i).getAnswer());
-                    for (int j = i+1; j < newAnswers.size(); j++) {
-                        if (newAnswers.get(j).getIdQuestion()==newAnswers.get(i).getIdQuestion()){
-                            questions++;
-                        }
-                    }
+//        for (int i = 0, n = 1; i < questionsFormId.size(); i++, n++) {
+//            for (int j = 0; j < newAnswers.size(); j++) {
+//                if(questionsFormId.get(i).getId()==newAnswers.get(j).getIdQuestion()){
+//
+//                    System.out.println("Вопрос: "+questionsFormId.get(i).getQuestion()+", Ответ: "
+//                            +newAnswers.get(j).getAnswer()+", j: "+j+", "+questions);
+//                }
+//            }
+//        }
+        for (Answers answer : newAnswers) {
+            if (correctAnswers.contains(answer)) {
+                System.out.println("верный ответ: "+answer.getAnswer()+", idQst: "+answer.getIdQuestion());
+                correct++;
+            } else {
+                System.out.println("неверный ответ: "+answer.getAnswer()+", idQst: "+answer.getIdQuestion());
+                incorrect++;
+            }
+        }
+        for (Questions value : questionsFormId) {
+            for (int j = 0; j < newAnswers.size(); j++) {
+                if (value.getId() == newAnswers.get(j).getIdQuestion()) {
+                    System.out.println("Ответы пользователя: "+ newAnswers.get(j).getAnswer()
+                            + ", "+newAnswers.get(j).getIdQuestion());
                 }
             }
-        } else {
-            System.out.println("Есть неправильные ответы пользователя!");
-            for (int i = 0; i < newAnswers.size(); i++) {
-                if (!newAnswers.get(i).isTrue()){
-                    System.out.println("Неправильные ответы "+newAnswers.get(i).getAnswer());
-                    for (int j = i+1; j < newAnswers.size(); j++) {
-                        if (newAnswers.get(j).getIdQuestion()==newAnswers.get(i).getIdQuestion()){
-                            questions++;
-                            for (int k = 0; k < questionsFormId.size(); k++) {
-                                if(newAnswers.get(j).getIdQuestion()==questionsFormId.get(k).getId()){
-                                    System.out.println("Вопросы на которые не правильно: "+questionsFormId.get(k).getQuestion());
-                                }
-                            }
-                        }
-                        if (newAnswers.get(j).getIdQuestion()!=newAnswers.get(i).getIdQuestion()){
-                            for (int k = 0; k < questionsFormId.size(); k++) {
-                                if(newAnswers.get(j).getIdQuestion()==questionsFormId.get(k).getId()){
+        }
 
-                                    questions++;
-                                    System.out.println("Вопросы на которые не правильно1: "+questionsFormId.get(k).getQuestion());
-                                    continue;
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
+
+        System.out.println("Количество правильных ответов: "+correct);
+        System.out.println("Количество неправильных ответов: "+incorrect);
+//        if (new HashSet<>(correctAnswers).containsAll(newAnswers)) {
+//            System.out.println("Все ответы пользователя правильные!");
+//        } else {
+//            System.out.println("Есть неправильные ответы пользователя!");
+//        }
         for (int j = 0; j < correctAnswers.size(); j++) {
                 if (!correctAnswers.get(j).isTrue()) {
                     correct = correct + 1;
