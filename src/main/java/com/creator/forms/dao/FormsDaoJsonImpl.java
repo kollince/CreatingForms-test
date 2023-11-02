@@ -3,7 +3,7 @@ package com.creator.forms.dao;
 import com.creator.forms.dao.interfaces.FormsDao;
 import com.creator.forms.models.Answers;
 import com.creator.forms.models.Forms;
-import com.creator.forms.models.Passing;
+import com.creator.forms.models.CorrectQuestions;
 import com.creator.forms.models.Questions;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
@@ -28,7 +28,7 @@ public class FormsDaoJsonImpl implements FormsDao {
     private final List<Forms> formsList = new ArrayList<>();
     private final List<Questions> questionsList = new ArrayList<>();
     private final List<Answers> answersList = new ArrayList<>();
-    private final List<Passing> passingsList = new ArrayList<>();
+    private final List<CorrectQuestions> passingsList = new ArrayList<>();
     private final ObjectMapper mapper = new ObjectMapper();
     final Path FILEPATH = Path.of("src/main/resources/data/listForms.json");
     private int idCount = 0;
@@ -148,7 +148,6 @@ public class FormsDaoJsonImpl implements FormsDao {
             }
             questions.setId(idCountQuestion++);
         }
-        addPassing(questions.getIdForm(),questions.getId());
         questionsList.add(questions);
         //updatePassing(questions.getIdForm(),questions.getId(), idCountQuestion);
         return questionsList;
@@ -220,11 +219,6 @@ public class FormsDaoJsonImpl implements FormsDao {
                 questionsList.remove(i);
             }
         }
-        for (int j = 0; j < passingsList.size(); j++) {
-            if (passingsList.get(j).getIdQuestion()==id) {
-                passingsList.remove(j);
-            }
-        }
         for (int k = 0; k < answersList.size(); k++) {
             if (answersList.get(k).getIdQuestion() == id) {
                 answersList.remove(k);
@@ -290,7 +284,6 @@ public class FormsDaoJsonImpl implements FormsDao {
                 idCount = formsList.size()+1;
             }
         }
-        listPassing();
         System.out.println("=================");
         return formsList;
 //        return mapper.readValue(FILEPATH.toFile(), new TypeReference<>() {
@@ -320,12 +313,6 @@ public class FormsDaoJsonImpl implements FormsDao {
                         j--;
                     }
                 }
-                for (int j = 0; j < passingsList.size(); j++) {
-                    if (passingsList.get(j).getIdForm() == id) {
-                        passingsList.remove(j);
-                        j--;
-                    }
-                }
                 for (int k = 0; k < answersList.size(); k++) {
                     if (answersList.get(k).getIdForm() == id) {
                         answersList.remove(k);
@@ -347,25 +334,7 @@ public class FormsDaoJsonImpl implements FormsDao {
         }
         return element;
     }
-    public void addPassing(int idForm, int idQuestion) {
-        Passing passing = new Passing(0, idForm, idQuestion);
-        int max = 0;
-        if (passingsList.size() == 0) {
-            idCountPassing = 1;
-            passing.setId(idCountPassing);
-        } else {
-            for (int i = 0; i < passingsList.size(); i++) {
-                max = Math.max(max, passingsList.get(i).getId());
-                if (passingsList.get(i).getId() > passingsList.size()) {
-                    idCountPassing = max;
-                }
-            }
-            idCountPassing++;
-            passing.setId(idCountPassing);
-        }
-        passingsList.add(passing);
-        System.out.println(passingsList);
-    }
+
 //    public void updatePassing(int idForm, int idQuestion, int number) {
 //        for (Passing passing : passingsList) {
 //            if (passing.getId() == idForm) {
@@ -376,29 +345,5 @@ public class FormsDaoJsonImpl implements FormsDao {
 //        System.out.println(passingsList);
 ////        return passingsList;
 //    }
-    @Override
-    public List <Passing> listPassing() {
-        for (int i = 0; i < passingsList.size(); i++) {
-            int id = passingsList.get(i).getId();
-            int idForm = passingsList.get(i).getIdForm();
-            int idQst = passingsList.get(i).getIdQuestion();
-            System.out.println("id: "+id+", idForm: "+idForm+", idQst: "+idQst+", Размер: "+passingsList.size());
-        }
-        return passingsList;
-    }
-    @Override
-    public Questions psgListIdFrmIdQst(int idForm, int idQuestion){
-        int max = 0;
-        int min = 0;
-        Questions questions = null;
-
-        for (int i = 0; i < passingsList.size(); i++) {
-            if (passingsList.get(i).getIdForm() == idForm && passingsList.get(i).getIdQuestion()==idQuestion) {
-                min = Math.max(min, passingsList.get(i).getId());
-                questions = questionsList.get(i);
-            }
-        }
-        return questions;
-    }
 
 }

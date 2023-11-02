@@ -3,7 +3,7 @@ package com.creator.forms.services;
 import com.creator.forms.dao.interfaces.FormsDao;
 import com.creator.forms.models.Answers;
 import com.creator.forms.models.Forms;
-import com.creator.forms.models.Passing;
+import com.creator.forms.models.CorrectQuestions;
 import com.creator.forms.models.Questions;
 import com.creator.forms.services.interfaces.FormService;
 import lombok.AllArgsConstructor;
@@ -118,15 +118,7 @@ public class FormServiceImpl implements FormService {
     public Forms getFormsById(int id) {
         return formsDao.getFormsById(id);
     }
-    @Override
-    public Questions psgListIdFrmIdQst(int idForm, int idQuestion){
-        return formsDao.psgListIdFrmIdQst(idForm,idQuestion);
-    }
 
-    @Override
-    public List<Passing> listPassing() {
-        return formsDao.listPassing();
-    }
     @Override
     public Questions getQuestionOneByFormId(int formId){
         return formsDao.getQuestionOneByFormId(formId);

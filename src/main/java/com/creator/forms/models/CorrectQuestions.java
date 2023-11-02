@@ -5,8 +5,9 @@ import lombok.Data;
 
 @AllArgsConstructor
 @Data
-public class Passing {
+public class CorrectQuestions {
     private int id;
     private int idForm;
-    private int idQuestion;
+    private CorrectAnswer correctAnswer;
+
 }

@@ -4,7 +4,7 @@ import com.creator.forms.dao.FormsDaoJsonImpl;
 import com.creator.forms.dao.interfaces.FormsDao;
 import com.creator.forms.models.Answers;
 import com.creator.forms.models.Forms;
-import com.creator.forms.models.Passing;
+import com.creator.forms.models.CorrectQuestions;
 import com.creator.forms.models.Questions;
 import com.creator.forms.services.FormServiceImpl;
 import com.creator.forms.services.interfaces.FormService;
@@ -17,8 +17,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
 
 @Controller
@@ -33,11 +31,10 @@ public class FormsCreator {
     public String allPhysicsTests(Model model) throws IOException {
         List<Forms> fmsAll = formService.listForms();
         List<Questions> countQst = formService.countQstForTest();
-        List<Passing> psnAll = formService.listPassing();
 //        System.out.println("111 "+countQst);
         model.addAttribute("allForms", fmsAll);
         model.addAttribute("countQst", countQst);
-        model.addAttribute("psnAll", psnAll);
+//        model.addAttribute("psnAll", psnAll);
         formService.addForms(new Forms(0,"Николай","desc",true));
         formService.addQuestion(new Questions(0,1,"Барабанов?"));
         formService.addQuestion(new Questions(0,1,"Барабанова?"));
@@ -67,11 +64,11 @@ public class FormsCreator {
     @GetMapping("/beginTakeTest/{id}/{idQuestion}")
     public String beginTakeTest(@PathVariable(value="id") int idForm, @PathVariable(value="idQuestion") int idQuestion, Model model) {
         Forms formsById = formService.getFormsById(idForm);
-        Questions qstIdFrmIdQst = formService.psgListIdFrmIdQst(idForm, idQuestion);
+        //Questions qstIdFrmIdQst = formService.psgListIdFrmIdQst(idForm, idQuestion);
         Questions questionsOneFormId = formService.getQuestionOneByFormId(idForm);
         List<Answers> ansListByQuestionId = formService.listAnswersByQuestionId(idQuestion);
         model.addAttribute("formsById", formsById);
-        model.addAttribute("qstIdFrmIdQst", qstIdFrmIdQst);
+//        model.addAttribute("qstIdFrmIdQst", qstIdFrmIdQst);
         model.addAttribute("questionsOneFormId", questionsOneFormId);
         return "beginTakeTest";
     }
@@ -244,7 +241,6 @@ public String deleteAnswer(@PathVariable(value="idAnswer") int idAnswer) {
                               @PathVariable(value="formId") int formId, Model model) throws IOException {
         int points = 0;
         int doubling = 0;
-        int questions = 0;
         int unique = 0;
         int incorrect = 0;
         int correct = 0;
@@ -267,24 +263,7 @@ public String deleteAnswer(@PathVariable(value="idAnswer") int idAnswer) {
                 correctAnswers.add(answersByFormId.get(i));
             }
         }
-        for (int i = 0; i < newAnswers.size(); i++) {
-            System.out.println("idQst: " + newAnswers.get(i).getIdQuestion() + ", Ответ: "
-                    + newAnswers.get(i).getAnswer() + ", Верно? " + newAnswers.get(i).isTrue());
 
-        }
-        for (int i = 0; i < correctAnswers.size(); i++) {
-            System.out.println("idQst: " + correctAnswers.get(i).getIdQuestion() + ", Ответ: "
-                    + correctAnswers.get(i).getAnswer() + ", Верно? " + correctAnswers.get(i).isTrue());
-        }
-//        for (int i = 0, n = 1; i < questionsFormId.size(); i++, n++) {
-//            for (int j = 0; j < newAnswers.size(); j++) {
-//                if(questionsFormId.get(i).getId()==newAnswers.get(j).getIdQuestion()){
-//
-//                    System.out.println("Вопрос: "+questionsFormId.get(i).getQuestion()+", Ответ: "
-//                            +newAnswers.get(j).getAnswer()+", j: "+j+", "+questions);
-//                }
-//            }
-//        }
         for (Answers answer : newAnswers) {
             if (correctAnswers.contains(answer)) {
                 System.out.println("верный ответ: "+answer.getAnswer()+", idQst: "+answer.getIdQuestion());
@@ -294,68 +273,6 @@ public String deleteAnswer(@PathVariable(value="idAnswer") int idAnswer) {
                 incorrect++;
             }
         }
-        for (Questions value : questionsFormId) {
-            for (int j = 0; j < newAnswers.size(); j++) {
-                if (value.getId() == newAnswers.get(j).getIdQuestion()) {
-                    System.out.println("Ответы пользователя: "+ newAnswers.get(j).getAnswer()
-                            + ", "+newAnswers.get(j).getIdQuestion());
-                }
-            }
-        }
-        int count=0;
-
-        for (int i = 0,j = 1; i < questionsFormId.size(); i++, j++) {
-            for (int q = 0; q < correctAnswers.size(); q++) {
-                if (correctAnswers.get(q).getIdQuestion()==questionsFormId.get(i).getId()) {
-                    count = j;
-                }
-            }
-        }
-        int newCount=0;
-        int correctCount=0;
-        int incorrectCount=0;
-        int countTrue = 0;
-        int countFalse = 0;
-        for (int i = 0; i < questionsFormId.size(); i++) {
-            for (int k = 0; k < newAnswers.size(); k++) {
-                if(newAnswers.get(k).getIdQuestion()==questionsFormId.get(i).getId()){
-                    if (newAnswers.get(k).isTrue()){
-                         countTrue++;
-
-                        System.out.println("countTrue "+countTrue);
-                    } else {
-                        countFalse++;
-
-                        System.out.println("countFalse "+countFalse);
-                    }
-                }
-                countFalse=0;
-                countTrue=0;
-            }
-            System.out.println("Вопрос: "+i+", countTrue: "+ countTrue+", countFalse: "+ countFalse );
-        }
-        for (int i = 0,j = 1, inc = 1,cor=1; i < questionsFormId.size(); i++, j++, inc++,cor++) {
-            for (int q = 0; q < newAnswers.size(); q++) {
-                if (newAnswers.get(q).getIdQuestion()==questionsFormId.get(i).getId()) {
-                    newCount = j;
-                    if (!newAnswers.get(q).isTrue()){
-                        incorrectCount=inc;
-                        System.out.println("444");
-                    }
-                    if (newAnswers.get(q).isTrue()){
-                        correctCount=cor;
-
-                        System.out.println("555");
-                    }
-                    System.out.println("тест "+newAnswers);
-                }
-            }
-        }
-        System.out.println("Вопросов всего : "+count);
-        System.out.println("Вопросы, отвеченные пользоватлем : "+newCount
-                +", из них "+ incorrectCount+ " отмечено не правильно. "+ correctCount + " всего отмечено правильно.");
-
-
         System.out.println("Количество правильных ответов: "+correct);
         System.out.println("Количество неправильных ответов: "+incorrect);
 //        if (new HashSet<>(correctAnswers).containsAll(newAnswers)) {
@@ -363,23 +280,10 @@ public String deleteAnswer(@PathVariable(value="idAnswer") int idAnswer) {
 //        } else {
 //            System.out.println("Есть неправильные ответы пользователя!");
 //        }
-        for (int j = 0; j < correctAnswers.size(); j++) {
-                if (!correctAnswers.get(j).isTrue()) {
-                    correct = correct + 1;
-                } else {
-                    correctPoint=correctPoint+1;
-            }
-        }
-
-        int countQst = questionsFormId.size();
         System.out.println(newAnswers);
         System.out.println(correctAnswers);
-        System.out.println("questions: "+questions);
         System.out.println("Неправильных ответов"+incorrect);
-        result = doubling*100/countQst;
-        System.out.println("Верных ответов: "+ (points) +", из них дубли: "+doubling+", уникальных: "+unique);
-//        System.out.println("Результат:"+ result);
-//        System.out.println("Из "+countQst+" вопросов "+(points)+" верных ответов ("+result+"% из 100).");
+//        result = doubling*100/countQst;
         return "redirect:/endTakeTest";
     }
 
