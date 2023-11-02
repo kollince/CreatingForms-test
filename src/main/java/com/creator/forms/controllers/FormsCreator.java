@@ -302,6 +302,58 @@ public String deleteAnswer(@PathVariable(value="idAnswer") int idAnswer) {
                 }
             }
         }
+        int count=0;
+
+        for (int i = 0,j = 1; i < questionsFormId.size(); i++, j++) {
+            for (int q = 0; q < correctAnswers.size(); q++) {
+                if (correctAnswers.get(q).getIdQuestion()==questionsFormId.get(i).getId()) {
+                    count = j;
+                }
+            }
+        }
+        int newCount=0;
+        int correctCount=0;
+        int incorrectCount=0;
+        int countTrue = 0;
+        int countFalse = 0;
+        for (int i = 0; i < questionsFormId.size(); i++) {
+            for (int k = 0; k < newAnswers.size(); k++) {
+                if(newAnswers.get(k).getIdQuestion()==questionsFormId.get(i).getId()){
+                    if (newAnswers.get(k).isTrue()){
+                         countTrue++;
+
+                        System.out.println("countTrue "+countTrue);
+                    } else {
+                        countFalse++;
+
+                        System.out.println("countFalse "+countFalse);
+                    }
+                }
+                countFalse=0;
+                countTrue=0;
+            }
+            System.out.println("Вопрос: "+i+", countTrue: "+ countTrue+", countFalse: "+ countFalse );
+        }
+        for (int i = 0,j = 1, inc = 1,cor=1; i < questionsFormId.size(); i++, j++, inc++,cor++) {
+            for (int q = 0; q < newAnswers.size(); q++) {
+                if (newAnswers.get(q).getIdQuestion()==questionsFormId.get(i).getId()) {
+                    newCount = j;
+                    if (!newAnswers.get(q).isTrue()){
+                        incorrectCount=inc;
+                        System.out.println("444");
+                    }
+                    if (newAnswers.get(q).isTrue()){
+                        correctCount=cor;
+
+                        System.out.println("555");
+                    }
+                    System.out.println("тест "+newAnswers);
+                }
+            }
+        }
+        System.out.println("Вопросов всего : "+count);
+        System.out.println("Вопросы, отвеченные пользоватлем : "+newCount
+                +", из них "+ incorrectCount+ " отмечено не правильно. "+ correctCount + " всего отмечено правильно.");
 
 
         System.out.println("Количество правильных ответов: "+correct);
