@@ -8,6 +8,6 @@ import lombok.Data;
 public class CorrectQuestions {
     private int id;
     private int idForm;
-    private CorrectAnswer correctAnswer;
+    private Answers answers;
 
 }

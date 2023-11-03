@@ -72,6 +72,9 @@ public class FormServiceImpl implements FormService {
     public List<Questions> listQuestions() {
         return formsDao.listQuestions();
     }
+    public List<Questions> listFormQuestions(){
+        return formsDao.listFormQuestions();
+    }
     @Override
     public List<Questions> listQuestionsByFormId(int formId){
         return formsDao.listQuestionsByFormId(formId);

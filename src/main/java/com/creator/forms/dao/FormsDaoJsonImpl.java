@@ -203,6 +203,17 @@ public class FormsDaoJsonImpl implements FormsDao {
         return questionsList;
     }
     @Override
+    public List<Questions> listFormQuestions() {
+        for (int i = 0; i < formsList.size(); i++) {
+            for (int j = 0; j < questionsList.size(); j++) {
+                if (questionsList.get(j).getIdForm()==formsList.get(i).getId()){
+
+                }
+            }
+        }
+        return null;
+    }
+    @Override
     public List<Questions> updateQuestions(int id, String question) {
 
         for (Questions questions : questionsList) {

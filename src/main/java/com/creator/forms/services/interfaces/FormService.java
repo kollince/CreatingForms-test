@@ -19,6 +19,7 @@ public interface FormService {
     Answers getAnswersById(int id);
     List<Questions> addQuestion(Questions questions);
     List<Questions> listQuestions();
+    List<Questions> listFormQuestions();
     List<Questions> listQuestionsByFormId(int formId);
     List<Questions> countQstForTest();
     List<Questions> updateQuestions(int id, String question);

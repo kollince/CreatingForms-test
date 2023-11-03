@@ -31,6 +31,7 @@ public class FormsCreator {
     public String allPhysicsTests(Model model) throws IOException {
         List<Forms> fmsAll = formService.listForms();
         List<Questions> countQst = formService.countQstForTest();
+
 //        System.out.println("111 "+countQst);
         model.addAttribute("allForms", fmsAll);
         model.addAttribute("countQst", countQst);
@@ -43,6 +44,9 @@ public class FormsCreator {
         formService.addAnswer(new Answers(0,1,1,"Дааа", true));
         formService.addAnswer(new Answers(0,1,2,"Да 2", true));
         formService.addAnswer(new Answers(0,1,2,"Нет 2", false));
+        List<Questions> oneIdQuestion = formService.listFormQuestions();
+        model.addAttribute("oneIdQuestion", oneIdQuestion);
+        System.out.println("oneIdQuestion "+oneIdQuestion);
         return "index";
     }
     @GetMapping("/takeTest/{id}")
