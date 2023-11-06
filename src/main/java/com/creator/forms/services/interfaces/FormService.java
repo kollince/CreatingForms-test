@@ -1,8 +1,8 @@
 package com.creator.forms.services.interfaces;
 
 import com.creator.forms.models.Answers;
-import com.creator.forms.models.Forms;
 import com.creator.forms.models.CorrectQuestions;
+import com.creator.forms.models.Forms;
 import com.creator.forms.models.Questions;
 import org.springframework.stereotype.Service;
 
@@ -19,7 +19,6 @@ public interface FormService {
     Answers getAnswersById(int id);
     List<Questions> addQuestion(Questions questions);
     List<Questions> listQuestions();
-    List<Questions> listFormQuestions();
     List<Questions> listQuestionsByFormId(int formId);
     List<Questions> countQstForTest();
     List<Questions> updateQuestions(int id, String question);
@@ -31,4 +30,7 @@ public interface FormService {
     List<Forms> delete(int id);
     Forms getFormsById(int id);
     Questions getQuestionOneByFormId(int formId);
+    List<CorrectQuestions> addCorrectQuestions(int idForm, int idQuestion, String answer, boolean isTrue);
+    List<CorrectQuestions> updateCorrectQuestions(int idQuestion, int id, int idForm, String answer, boolean isTrue);
+    List<CorrectQuestions> listCorrectQuestions();
 }

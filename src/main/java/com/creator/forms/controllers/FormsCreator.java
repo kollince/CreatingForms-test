@@ -3,8 +3,8 @@ package com.creator.forms.controllers;
 import com.creator.forms.dao.FormsDaoJsonImpl;
 import com.creator.forms.dao.interfaces.FormsDao;
 import com.creator.forms.models.Answers;
-import com.creator.forms.models.Forms;
 import com.creator.forms.models.CorrectQuestions;
+import com.creator.forms.models.Forms;
 import com.creator.forms.models.Questions;
 import com.creator.forms.services.FormServiceImpl;
 import com.creator.forms.services.interfaces.FormService;
@@ -26,27 +26,38 @@ public class FormsCreator {
 //    List<Answers> answersList = new ArrayList<>();
     private final FormsDao formsDao = new FormsDaoJsonImpl();
     private final FormService formService = new FormServiceImpl(formsDao);
+    List<Answers> ansList = new ArrayList<>();
 
     @GetMapping("/")
     public String allPhysicsTests(Model model) throws IOException {
         List<Forms> fmsAll = formService.listForms();
         List<Questions> countQst = formService.countQstForTest();
 
+
 //        System.out.println("111 "+countQst);
         model.addAttribute("allForms", fmsAll);
         model.addAttribute("countQst", countQst);
 //        model.addAttribute("psnAll", psnAll);
-        formService.addForms(new Forms(0,"Николай","desc",true));
-        formService.addQuestion(new Questions(0,1,"Барабанов?"));
-        formService.addQuestion(new Questions(0,1,"Барабанова?"));
-        formService.addAnswer(new Answers(0,1,1,"Да", true));
-        formService.addAnswer(new Answers(0,1,1,"Нет", false));
-        formService.addAnswer(new Answers(0,1,1,"Дааа", true));
-        formService.addAnswer(new Answers(0,1,2,"Да 2", true));
-        formService.addAnswer(new Answers(0,1,2,"Нет 2", false));
-        List<Questions> oneIdQuestion = formService.listFormQuestions();
-        model.addAttribute("oneIdQuestion", oneIdQuestion);
-        System.out.println("oneIdQuestion "+oneIdQuestion);
+//        formService.addForms(new Forms(0,"Николай","desc",true));
+//        formService.addQuestion(new Questions(0,1,"Барабанов?"));
+//        Answers answers = new Answers(0,1,1,"Да", true);
+//        Answers answers1 = new Answers(0,1,1,"Нет", false);
+//        Answers answers2 = new Answers(0,1,1,"Даа", true);
+//        ansList.add(answers);
+//        ansList.add(answers1);
+//        ansList.add(answers2);
+//        formService.addCorrectQuestions();
+//        formService.addQuestion(new Questions(0,1,"Барабанова?"));
+//        formService.addAnswer(new Answers(0,1,1,"Да", true));
+//        formService.addAnswer(new Answers(0,1,1,"Нет", false));
+//        formService.addAnswer(new Answers(0,1,1,"Дааа", true));
+//        formService.addAnswer(new Answers(0,1,2,"Да 2", true));
+//        formService.addAnswer(new Answers(0,1,2,"Нет 2", false));
+        List<CorrectQuestions> cqs = formService.listCorrectQuestions();
+        System.out.println("CorrectQuestions "+cqs);
+//        CorrectQuestions oneIdQuestion = formService.listFormQuestions();
+//        model.addAttribute("oneIdQuestion", oneIdQuestion);
+//        System.out.println("oneIdQuestion "+oneIdQuestion);
         return "index";
     }
     @GetMapping("/takeTest/{id}")
@@ -189,17 +200,22 @@ public String deleteAnswer(@PathVariable(value="idAnswer") int idAnswer) {
         return "redirect:/dashboard/";
     }
 
-    @PostMapping("/dashboard/addQuestion")
-    public String addQuestionN(@RequestParam int idForm, @RequestParam String question, Model model) {
-        Questions questions = new Questions(0, idForm, question);
-        formService.addQuestion(questions);
-        return "redirect:/dashboard/";
-    }
+//    @PostMapping("/dashboard/addQuestion")
+//    public String addQuestionN(@RequestParam int idForm, @RequestParam String question, Model model) {
+//        Questions questions = new Questions(0, idForm, question);
+//        Answers answers = new Answers(0,0,0," ",false);
+//        ansList.add(answers);
+//        formService.addQuestion(questions);
+//        formService.addCorrectQuestions();
+//        return "redirect:/dashboard/";
+//    }
     @PostMapping("/dashboard/addAnswer")
     public String addAnswer(@RequestParam int idForm, @RequestParam int idQuestion,  @RequestParam String answer,
                             @RequestParam boolean isTrue,Model model) {
         Answers answers = new Answers(0, idForm,idQuestion,answer, isTrue);
         formService.addAnswer(answers);
+        formService.addCorrectQuestions(idForm, idQuestion, answer, isTrue);
+        //formService.updateCorrectQuestions(idQuestion,0, idForm, answer, isTrue);
         return "redirect:/dashboard/eQuestion/"+idForm+"/"+idQuestion;
     }
     @PostMapping("/dashboard/addQuestions/{id}")
@@ -209,6 +225,7 @@ public String deleteAnswer(@PathVariable(value="idAnswer") int idAnswer) {
         model.addAttribute("editQuestion", fmsEdit);
         Questions questions = new Questions(0, idForm, question);
         formService.addQuestion(questions);
+
         return "redirect:/dashboard/eForm/"+idForm;
     }
 

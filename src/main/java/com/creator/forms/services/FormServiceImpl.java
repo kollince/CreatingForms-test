@@ -2,8 +2,8 @@ package com.creator.forms.services;
 
 import com.creator.forms.dao.interfaces.FormsDao;
 import com.creator.forms.models.Answers;
-import com.creator.forms.models.Forms;
 import com.creator.forms.models.CorrectQuestions;
+import com.creator.forms.models.Forms;
 import com.creator.forms.models.Questions;
 import com.creator.forms.services.interfaces.FormService;
 import lombok.AllArgsConstructor;
@@ -72,9 +72,6 @@ public class FormServiceImpl implements FormService {
     public List<Questions> listQuestions() {
         return formsDao.listQuestions();
     }
-    public List<Questions> listFormQuestions(){
-        return formsDao.listFormQuestions();
-    }
     @Override
     public List<Questions> listQuestionsByFormId(int formId){
         return formsDao.listQuestionsByFormId(formId);
@@ -125,6 +122,18 @@ public class FormServiceImpl implements FormService {
     @Override
     public Questions getQuestionOneByFormId(int formId){
         return formsDao.getQuestionOneByFormId(formId);
+    }
+    @Override
+    public List<CorrectQuestions> addCorrectQuestions(int idForm, int idQuestion, String answer, boolean isTrue){
+        return formsDao.addCorrectQuestions(idForm, idQuestion, answer, isTrue);
+    }
+    @Override
+    public List<CorrectQuestions> listCorrectQuestions(){
+        return formsDao.listCorrectQuestions();
+    }
+    public List<CorrectQuestions> updateCorrectQuestions(int idQuestion, int id, int idForm,
+                                                         String answer, boolean isTrue){
+        return formsDao.updateCorrectQuestions(idQuestion, id, idForm, answer, isTrue);
     }
 
 }

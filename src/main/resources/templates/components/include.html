@@ -18,16 +18,14 @@
   <th:block th:each="el : ${allForms}">
     <div>
       <b><th:block th:text="${el.name}"></th:block></b>
-      <th:block th:each="oneIdQuestion : ${oneIdQuestion}">
 <!--      <div th:each="countQst : ${countQst}">-->
-        <a th:href="@{'/takeTest/'+${el.id}+'/'+${oneIdQuestion.id}}">Пройти тест</a>
+        <a th:href="@{'/takeTest/'+${el.id}}">Пройти тест</a>
 <!--      </div>-->
       <div th:text="${el.description}"></div>
       <div> На время:
         <th:block th:if="${el.isForTime} == true">Да</th:block>
         <th:block th:if="${el.isForTime} == false">Нет</th:block>
       </div>
-      </th:block>
     </div>
   </th:block>
 </th:block>

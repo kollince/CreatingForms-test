@@ -1,8 +1,8 @@
 package com.creator.forms.dao.interfaces;
 
 import com.creator.forms.models.Answers;
-import com.creator.forms.models.Forms;
 import com.creator.forms.models.CorrectQuestions;
+import com.creator.forms.models.Forms;
 import com.creator.forms.models.Questions;
 import org.springframework.stereotype.Repository;
 
@@ -22,7 +22,6 @@ public interface FormsDao {
     List<Questions> listQuestionsByFormId(int formId);
     List<Questions> countQstForTest();
     List<Questions> listQuestions();
-    List<Questions> listFormQuestions();
     List<Questions> updateQuestions(int id, String question);
     List<Questions> deleteQuestion(int id);
     Questions getQuestionById(int id);
@@ -34,5 +33,7 @@ public interface FormsDao {
 //    List<Passing> addPassing(Passing passing);
 //    List<Passing> deletePassing(int id);
     Questions getQuestionOneByFormId(int formId);
-
+    List<CorrectQuestions> addCorrectQuestions(int idForm, int idQuestion, String answer, boolean isTrue);
+    List<CorrectQuestions> updateCorrectQuestions(int idQuestion, int id, int idForm, String answer, boolean isTrue);
+    List<CorrectQuestions> listCorrectQuestions();
 }

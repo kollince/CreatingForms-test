@@ -2,8 +2,8 @@ package com.creator.forms.dao;
 
 import com.creator.forms.dao.interfaces.FormsDao;
 import com.creator.forms.models.Answers;
-import com.creator.forms.models.Forms;
 import com.creator.forms.models.CorrectQuestions;
+import com.creator.forms.models.Forms;
 import com.creator.forms.models.Questions;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.ArrayList;
 
+import java.util.Arrays;
 import java.util.List;
 
 import java.util.stream.Collectors;
@@ -28,13 +29,14 @@ public class FormsDaoJsonImpl implements FormsDao {
     private final List<Forms> formsList = new ArrayList<>();
     private final List<Questions> questionsList = new ArrayList<>();
     private final List<Answers> answersList = new ArrayList<>();
-    private final List<CorrectQuestions> passingsList = new ArrayList<>();
+    private final List<CorrectQuestions> correctQuestionsList = new ArrayList<>();
     private final ObjectMapper mapper = new ObjectMapper();
     final Path FILEPATH = Path.of("src/main/resources/data/listForms.json");
     private int idCount = 0;
     private int idCountQuestion = 0;
     private int idCountPassing = 0;
     private int idCountAnswer = 0;
+    private int idAnswer = 0;
 
     public FormsDaoJsonImpl() {
 
@@ -203,17 +205,6 @@ public class FormsDaoJsonImpl implements FormsDao {
         return questionsList;
     }
     @Override
-    public List<Questions> listFormQuestions() {
-        for (int i = 0; i < formsList.size(); i++) {
-            for (int j = 0; j < questionsList.size(); j++) {
-                if (questionsList.get(j).getIdForm()==formsList.get(i).getId()){
-
-                }
-            }
-        }
-        return null;
-    }
-    @Override
     public List<Questions> updateQuestions(int id, String question) {
 
         for (Questions questions : questionsList) {
@@ -268,6 +259,10 @@ public class FormsDaoJsonImpl implements FormsDao {
         int max = 0;
         if (formsList.size() == 0) {
             idCount = 1;
+//            Forms forms = new Forms("","","","");
+//            Questions questions = new Questions("","","");
+//            CorrectQuestions formAndQuestion = new CorrectQuestions(form, questions);
+//            formAndQuestionList.add(formAndQuestion);
             //addPassing(idCount,0,1);
             form.setId(idCount++);
 
@@ -345,16 +340,56 @@ public class FormsDaoJsonImpl implements FormsDao {
         }
         return element;
     }
+    @Override
+    public List<CorrectQuestions> addCorrectQuestions(int idForm, int idQuestion, String answer, boolean isTrue){
+        if (idCountAnswer == 0) {
+            idAnswer++;
+        } else {
+            idAnswer = idCountAnswer;
+        }
+        CorrectQuestions cq = null;
+        //List<Answers> answers = new ArrayList<>();
+        for (int i = 0; i < questionsList.size(); i++) {
+            for (int j = 0; j < answersList.size(); j++) {
+                if (idQuestion==answersList.get(j).getIdQuestion()){
+                    cq = new CorrectQuestions(idQuestion, answersList);
+                }
+            }
 
-//    public void updatePassing(int idForm, int idQuestion, int number) {
-//        for (Passing passing : passingsList) {
-//            if (passing.getId() == idForm) {
-//                passing.setIdQuestion(idQuestion);
-//                passing.setNumber(number);
-//             }
-//        }
-//        System.out.println(passingsList);
-////        return passingsList;
-//    }
+        }
+        correctQuestionsList.add(cq);
+//        CorrectQuestions correctQuestions = new CorrectQuestions(idCountQuestion, Arrays.asList(
+//                new Answers(idAnswer, idForm, idQuestion, answer, isTrue)
+//        ));
+//        correctQuestions.setIdQuestion(idCountQuestion-1);
+//        correctQuestionsList.add(correctQuestions);
+        System.out.println("idCountAnswer "+idCountAnswer+", idAnswer "+idAnswer);
+        System.out.println(correctQuestionsList);
+        return correctQuestionsList;
+    }
 
+
+    @Override
+    public List<CorrectQuestions> updateCorrectQuestions(int idQuestion, int id, int idForm, String answer, boolean isTrue) {
+        System.out.println("idCountAnswer "+idCountAnswer);
+        for (CorrectQuestions correctQuestions : correctQuestionsList) {
+            if (correctQuestions.getIdQuestion() == idQuestion) {
+                correctQuestions.setIdQuestion(idQuestion);
+//                for (int j = 0; j < correctQuestions.getAnsList().size(); j++) {
+//                    //if (correctQuestions.getAnsList().get(j).getId() == idCountAnswer) {
+////                        correctQuestions.getAnsList().get(j).setIdQuestion(idQuestion);
+////                        correctQuestions.getAnsList().get(j).setIdForm(idForm);
+////                        correctQuestions.getAnsList().get(j).setAnswer(answer);
+////                        correctQuestions.getAnsList().get(j).setTrue(isTrue);
+//                        //correctQuestions.getAnsList().get(j).setId(id);
+//                    //}
+//                }
+            }
+        }
+        return correctQuestionsList;
+    }
+    @Override
+    public List<CorrectQuestions> listCorrectQuestions(){
+         return correctQuestionsList;
+    }
 }
