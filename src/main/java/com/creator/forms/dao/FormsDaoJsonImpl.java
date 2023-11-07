@@ -349,22 +349,64 @@ public class FormsDaoJsonImpl implements FormsDao {
         }
         CorrectQuestions cq = null;
         //List<Answers> answers = new ArrayList<>();
+        List<Answers> ans = new ArrayList<>();
+//        for (int i = 0; i < questionsList.size(); i++) {
+//            for (int j = 0; j < answersList.size(); j++) {
+//                if (idQuestion==answersList.get(j).getIdQuestion()){
+////                    cq = new CorrectQuestions(idQuestion, answersList);
+//
+//                    System.out.println(answersList.get(j).getIdQuestion());
+//                }
+//            }
+//        }
+        List<Answers> target = new ArrayList<>();
+        target.addAll(answersList);
+        ans = target.stream()
+                .filter(answers -> answers.getIdQuestion() == idQuestion)
+                .collect(Collectors.toCollection(ArrayList::new));
+        System.out.println("ans "+ans);
+        System.out.println("idQuestion "+idQuestion);
+        CorrectQuestions correctQuestions = new CorrectQuestions(idCountQuestion, ans);
+        correctQuestions.setIdQuestion(idQuestion);
+        //System.out.println("correctQuestions "+correctQuestions);
         for (int i = 0; i < questionsList.size(); i++) {
-            for (int j = 0; j < answersList.size(); j++) {
-                if (idQuestion==answersList.get(j).getIdQuestion()){
-                    cq = new CorrectQuestions(idQuestion, answersList);
+            if (correctQuestionsList.size()>0){
+                for (int j = 0; j < correctQuestionsList.size(); j++) {
+                     if (correctQuestionsList.get(j).getIdQuestion()==idQuestion){
+                         correctQuestionsList.get(j).setAnsList(ans);
+                         //System.out.println("getAnsList() "+correctQuestionsList.get(j).getAnsList());
+//                         correctQuestionsList.set(j, correctQuestions);
+                         correctQuestionsList.add(j, correctQuestions);
+                         System.out.println(j+", "+ correctQuestions);
+                     } else {
+                         correctQuestionsList.get(j).setAnsList(ans);
+                         correctQuestionsList.add(correctQuestionsList.size(),correctQuestions);
+                         System.out.println("correctQuestionsList.size() "+correctQuestionsList.size()+", "+correctQuestions);
+                     }
                 }
+            } else {
+                correctQuestionsList.add(correctQuestions);
             }
-
         }
-        correctQuestionsList.add(cq);
+
+
+//        for (int i = 0; i < questionsList.size(); i++) {
+//            List<Answers> ans = answersList.stream()
+//                    .filter(answers -> answers.getIdQuestion() == idQuestion)
+//                    .collect(Collectors.toCollection(ArrayList::new));
+//            correctQuestionsList.get(i).setAnsList(ans);
+//            System.out.println("answersList "+answersList);
+//            //correctQuestionsList.add(idQuestion,ans);
+//        }
+        //correctQuestionsList.add(idQuestion,);
 //        CorrectQuestions correctQuestions = new CorrectQuestions(idCountQuestion, Arrays.asList(
 //                new Answers(idAnswer, idForm, idQuestion, answer, isTrue)
 //        ));
 //        correctQuestions.setIdQuestion(idCountQuestion-1);
 //        correctQuestionsList.add(correctQuestions);
-        System.out.println("idCountAnswer "+idCountAnswer+", idAnswer "+idAnswer);
-        System.out.println(correctQuestionsList);
+
+        //System.out.println("idCountAnswer "+idCountAnswer+", idAnswer "+idAnswer);
+        //System.out.println(correctQuestionsList);
         return correctQuestionsList;
     }
 
