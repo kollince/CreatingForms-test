@@ -364,30 +364,32 @@ public class FormsDaoJsonImpl implements FormsDao {
         ans = target.stream()
                 .filter(answers -> answers.getIdQuestion() == idQuestion)
                 .collect(Collectors.toCollection(ArrayList::new));
-        System.out.println("ans "+ans);
-        System.out.println("idQuestion "+idQuestion);
+//        System.out.println("ans "+ans);
+//        System.out.println("idQuestion "+idQuestion);
         CorrectQuestions correctQuestions = new CorrectQuestions(idCountQuestion, ans);
         correctQuestions.setIdQuestion(idQuestion);
         //System.out.println("correctQuestions "+correctQuestions);
-        for (int i = 0; i < questionsList.size(); i++) {
+ //       for (int i = 0; i < questionsList.size(); i++) {
             if (correctQuestionsList.size()>0){
                 for (int j = 0; j < correctQuestionsList.size(); j++) {
                      if (correctQuestionsList.get(j).getIdQuestion()==idQuestion){
                          correctQuestionsList.get(j).setAnsList(ans);
                          //System.out.println("getAnsList() "+correctQuestionsList.get(j).getAnsList());
-//                         correctQuestionsList.set(j, correctQuestions);
-                         correctQuestionsList.add(j, correctQuestions);
-                         System.out.println(j+", "+ correctQuestions);
+                         correctQuestionsList.set(j, correctQuestions);
+//                         correctQuestionsList.add(j, correctQuestions);
+                         System.out.println("idQ "+idQuestion+", "+j+", "+ correctQuestions);
                      } else {
-                         correctQuestionsList.get(j).setAnsList(ans);
-                         correctQuestionsList.add(correctQuestionsList.size(),correctQuestions);
+                         //correctQuestionsList.get(j).setAnsList(ans);
+                         correctQuestionsList.add(correctQuestions);
                          System.out.println("correctQuestionsList.size() "+correctQuestionsList.size()+", "+correctQuestions);
                      }
                 }
             } else {
                 correctQuestionsList.add(correctQuestions);
+                System.out.println("correctQuestionsList "+correctQuestionsList);
+
             }
-        }
+ //       }
 
 
 //        for (int i = 0; i < questionsList.size(); i++) {
