@@ -362,21 +362,28 @@ public class FormsDaoJsonImpl implements FormsDao {
 
     @Override
     public Map<Questions, List<Answers>> updateCorrectQuestions(int id) {
-        System.out.println("idCountAnswer "+idCountAnswer);
-        for (CorrectQuestions correctQuestions : correctQuestionsList) {
-            if (correctQuestions.getIdQuestion() == id) {
-                correctQuestions.setIdQuestion(id);
-//                for (int j = 0; j < correctQuestions.getAnsList().size(); j++) {
-//                    //if (correctQuestions.getAnsList().get(j).getId() == idCountAnswer) {
-////                        correctQuestions.getAnsList().get(j).setIdQuestion(idQuestion);
-////                        correctQuestions.getAnsList().get(j).setIdForm(idForm);
-////                        correctQuestions.getAnsList().get(j).setAnswer(answer);
-////                        correctQuestions.getAnsList().get(j).setTrue(isTrue);
-//                        //correctQuestions.getAnsList().get(j).setId(id);
-//                    //}
-//                }
+//        List<Answers> ans = new ArrayList<>();
+        Questions qst = null;
+//        for (Questions questions : questionsList){
+//            ans = answersList.stream()
+//                    .filter(answers -> answers.getIdQuestion() == id)
+//                    .collect(Collectors.toCollection(ArrayList::new));
+//            if (questions.getId() == id) {
+//                qst = questions;
+//            }
+//        }
+
+//        questionsAndAnswers.put(qst,ans);
+            for (Questions questions : questionsList){
+            if (questions.getId() == id) {
+                qst = questions;
             }
         }
+//        questionsAndAnswers.put("oldKey", Arrays.asList("value1", "value2"));
+//
+//        map.put("newKey", map.get("oldKey"));
+//        map.remove("oldKey");
+
         return questionsAndAnswers;
     }
     @Override
