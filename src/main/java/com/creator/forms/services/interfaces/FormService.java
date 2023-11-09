@@ -8,6 +8,8 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
+
 @Service
 public interface FormService {
     List<Answers> addAnswer(Answers answers);
@@ -30,7 +32,8 @@ public interface FormService {
     List<Forms> delete(int id);
     Forms getFormsById(int id);
     Questions getQuestionOneByFormId(int formId);
-    List<CorrectQuestions> addCorrectQuestions(int idForm, int idQuestion, String answer, boolean isTrue);
+    Map<Questions, List<Answers>> addCorrectQuestions(Answers answer, int idQuestion);
     List<CorrectQuestions> updateCorrectQuestions(int idQuestion, int id, int idForm, String answer, boolean isTrue);
-    List<CorrectQuestions> listCorrectQuestions();
+    Map<Questions, List<Answers>> listCorrectQuestions();
+    Map<Questions, List<Answers>> deleteQuestionsAns(int id);
 }

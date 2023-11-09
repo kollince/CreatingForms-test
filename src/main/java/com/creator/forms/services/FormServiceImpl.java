@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 
 @AllArgsConstructor
@@ -124,16 +125,20 @@ public class FormServiceImpl implements FormService {
         return formsDao.getQuestionOneByFormId(formId);
     }
     @Override
-    public List<CorrectQuestions> addCorrectQuestions(int idForm, int idQuestion, String answer, boolean isTrue){
-        return formsDao.addCorrectQuestions(idForm, idQuestion, answer, isTrue);
+    public Map<Questions, List<Answers>> addCorrectQuestions(Answers answer, int idQuestion){
+        return formsDao.addCorrectQuestions(answer, idQuestion);
     }
     @Override
-    public List<CorrectQuestions> listCorrectQuestions(){
+    public Map<Questions, List<Answers>> listCorrectQuestions(){
         return formsDao.listCorrectQuestions();
     }
     public List<CorrectQuestions> updateCorrectQuestions(int idQuestion, int id, int idForm,
                                                          String answer, boolean isTrue){
         return formsDao.updateCorrectQuestions(idQuestion, id, idForm, answer, isTrue);
+    }
+    @Override
+    public Map<Questions, List<Answers>> deleteQuestionsAns(int id){
+        return formsDao.deleteQuestionsAns(id);
     }
 
 }

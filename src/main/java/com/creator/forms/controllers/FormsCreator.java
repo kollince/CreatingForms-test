@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 public class FormsCreator {
@@ -53,7 +54,7 @@ public class FormsCreator {
 //        formService.addAnswer(new Answers(0,1,1,"Дааа", true));
 //        formService.addAnswer(new Answers(0,1,2,"Да 2", true));
 //        formService.addAnswer(new Answers(0,1,2,"Нет 2", false));
-        List<CorrectQuestions> cqs = formService.listCorrectQuestions();
+        Map<Questions, List<Answers>> cqs = formService.listCorrectQuestions();
         System.out.println("CorrectQuestions "+cqs);
 //        CorrectQuestions oneIdQuestion = formService.listFormQuestions();
 //        model.addAttribute("oneIdQuestion", oneIdQuestion);
@@ -162,6 +163,7 @@ public String deleteAnswer(@PathVariable(value="idAnswer") int idAnswer) {
     public String getDeleteQuestion(@PathVariable(value="id") int id) {
         int idForm = formService.getQuestionById(id).getIdForm();
         formService.deleteQuestion(id);
+        formService.deleteQuestionsAns(id);
         return "redirect:/dashboard/eForm/"+idForm;
     }
 
@@ -214,7 +216,7 @@ public String deleteAnswer(@PathVariable(value="idAnswer") int idAnswer) {
                             @RequestParam boolean isTrue,Model model) {
         Answers answers = new Answers(0, idForm,idQuestion,answer, isTrue);
         formService.addAnswer(answers);
-        formService.addCorrectQuestions(idForm, idQuestion, answer, isTrue);
+        formService.addCorrectQuestions(answers, idQuestion);
         //formService.updateCorrectQuestions(idQuestion,0, idForm, answer, isTrue);
         return "redirect:/dashboard/eQuestion/"+idForm+"/"+idQuestion;
     }

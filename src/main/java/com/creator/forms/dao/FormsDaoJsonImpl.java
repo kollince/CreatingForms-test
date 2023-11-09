@@ -14,10 +14,7 @@ import org.springframework.stereotype.Repository;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
-import java.util.ArrayList;
-
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 import java.util.stream.Collectors;
 
@@ -30,6 +27,7 @@ public class FormsDaoJsonImpl implements FormsDao {
     private final List<Questions> questionsList = new ArrayList<>();
     private final List<Answers> answersList = new ArrayList<>();
     private final List<CorrectQuestions> correctQuestionsList = new ArrayList<>();
+    Map<Questions, List<Answers>> questionsAndAnswers = new HashMap<>();
     private final ObjectMapper mapper = new ObjectMapper();
     final Path FILEPATH = Path.of("src/main/resources/data/listForms.json");
     private int idCount = 0;
@@ -341,77 +339,26 @@ public class FormsDaoJsonImpl implements FormsDao {
         return element;
     }
     @Override
-    public List<CorrectQuestions> addCorrectQuestions(int idForm, int idQuestion, String answer, boolean isTrue){
+    public Map<Questions, List<Answers>> addCorrectQuestions(Answers answer, int idQuestion){
         if (idCountAnswer == 0) {
             idAnswer++;
         } else {
             idAnswer = idCountAnswer;
         }
-        CorrectQuestions cq = null;
-        //List<Answers> answers = new ArrayList<>();
         List<Answers> ans = new ArrayList<>();
-//        for (int i = 0; i < questionsList.size(); i++) {
-//            for (int j = 0; j < answersList.size(); j++) {
-//                if (idQuestion==answersList.get(j).getIdQuestion()){
-////                    cq = new CorrectQuestions(idQuestion, answersList);
-//
-//                    System.out.println(answersList.get(j).getIdQuestion());
-//                }
-//            }
-//        }
-        List<Answers> target = new ArrayList<>();
-        target.addAll(answersList);
-        ans = target.stream()
-                .filter(answers -> answers.getIdQuestion() == idQuestion)
-                .collect(Collectors.toCollection(ArrayList::new));
-//        System.out.println("ans "+ans);
-//        System.out.println("idQuestion "+idQuestion);
-        CorrectQuestions correctQuestions = new CorrectQuestions(idCountQuestion, ans);
-        correctQuestions.setIdQuestion(idQuestion);
-        //System.out.println("correctQuestions "+correctQuestions);
- //       for (int i = 0; i < questionsList.size(); i++) {
-            if (correctQuestionsList.size()>0){
-                for (int j = 0; j < correctQuestionsList.size(); j++) {
-                     if (correctQuestionsList.get(j).getIdQuestion()==idQuestion){
-                         correctQuestionsList.get(j).setAnsList(ans);
-                         //System.out.println("getAnsList() "+correctQuestionsList.get(j).getAnsList());
-                         correctQuestionsList.set(j, correctQuestions);
-//                         correctQuestionsList.add(j, correctQuestions);
-                         System.out.println("idQ "+idQuestion+", "+j+", "+ correctQuestions);
-                     } else {
-                         //correctQuestionsList.get(j).setAnsList(ans);
-                         correctQuestionsList.add(correctQuestions);
-                         System.out.println("correctQuestionsList.size() "+correctQuestionsList.size()+", "+correctQuestions);
-                     }
-                }
-            } else {
-                correctQuestionsList.add(correctQuestions);
-                System.out.println("correctQuestionsList "+correctQuestionsList);
-
+        Questions qst = null;
+        for (Questions questions : questionsList) {
+            ans = answersList.stream()
+                    .filter(answers -> answers.getIdQuestion() == idQuestion)
+                    .collect(Collectors.toCollection(ArrayList::new));
+            if (questions.getId() == idQuestion) {
+                qst = questions;
             }
- //       }
-
-
-//        for (int i = 0; i < questionsList.size(); i++) {
-//            List<Answers> ans = answersList.stream()
-//                    .filter(answers -> answers.getIdQuestion() == idQuestion)
-//                    .collect(Collectors.toCollection(ArrayList::new));
-//            correctQuestionsList.get(i).setAnsList(ans);
-//            System.out.println("answersList "+answersList);
-//            //correctQuestionsList.add(idQuestion,ans);
-//        }
-        //correctQuestionsList.add(idQuestion,);
-//        CorrectQuestions correctQuestions = new CorrectQuestions(idCountQuestion, Arrays.asList(
-//                new Answers(idAnswer, idForm, idQuestion, answer, isTrue)
-//        ));
-//        correctQuestions.setIdQuestion(idCountQuestion-1);
-//        correctQuestionsList.add(correctQuestions);
-
-        //System.out.println("idCountAnswer "+idCountAnswer+", idAnswer "+idAnswer);
-        //System.out.println(correctQuestionsList);
-        return correctQuestionsList;
+        }
+        questionsAndAnswers.put(qst, ans);
+        System.out.println(questionsAndAnswers);
+        return questionsAndAnswers;
     }
-
 
     @Override
     public List<CorrectQuestions> updateCorrectQuestions(int idQuestion, int id, int idForm, String answer, boolean isTrue) {
@@ -433,7 +380,50 @@ public class FormsDaoJsonImpl implements FormsDao {
         return correctQuestionsList;
     }
     @Override
-    public List<CorrectQuestions> listCorrectQuestions(){
-         return correctQuestionsList;
+    public Map<Questions, List<Answers>> listCorrectQuestions(){
+         return questionsAndAnswers;
+    }
+    @Override
+    public Map<Questions, List<Answers>> deleteQuestionsAns(int id) {
+        Map<Questions, List<Answers>> newMap = new HashMap<>(questionsAndAnswers);
+        for (Map.Entry<Questions, List<Answers>> entry : questionsAndAnswers.entrySet()) {
+            if (entry.getKey().getId()==id) {
+                newMap.remove(entry.getKey());
+            }
+        }
+//        newMap.entrySet().removeIf(entry -> entry.getKey().getId().equals(id));
+        questionsAndAnswers = newMap;
+        return questionsAndAnswers;
+    }
+    public Map<Questions, List<Answers>> deleteAnswersAns(int id) {
+        Map<Questions, List<Answers>> newMap = new HashMap<>(questionsAndAnswers);
+        for (Map.Entry<Questions, List<Answers>> entry : newMap.entrySet()) {
+            for (Answers answer : entry.getValue()) {
+                if (answer.getId()==(id)) {
+                    entry.getValue().remove(answer);
+                    break; // Если ответ найден, то больше не нужно искать его в других вопросах
+                }
+            }
+        }
+        // Вспомогательный метод для удаления элемента из списка
+//        private static void removeElementById(List<Answer> list, int id) {
+//            for (int i = 0; i < list.size(); i++) {
+//                Answer answer = list.get(i);
+//                if (Integer.parseInt(answer.getId()) == id) {
+//                    list.remove(i); // Удаляем элемент из списка
+//                    return;
+//                }
+//            }
+//        }
+// Метод удаления элемента
+//        private static void deleteAnswer(Map<Question, List<Answer>> map, int id){
+//            for(List<Answer> answers : map.values()){
+//                removeElementById(answers, id);
+//            }
+//        }
+//
+//        deleteAnswer(newMap, 42); // 42 - id элемента который необходимо удалить
+//        Этот код удалит все элементы answer с id равным 42 из всех списков ответов карты newMap.
+        return null;
     }
 }
