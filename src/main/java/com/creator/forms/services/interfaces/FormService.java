@@ -33,7 +33,9 @@ public interface FormService {
     Forms getFormsById(int id);
     Questions getQuestionOneByFormId(int formId);
     Map<Questions, List<Answers>> addCorrectQuestions(Answers answer, int idQuestion);
-    List<CorrectQuestions> updateCorrectQuestions(int idQuestion, int id, int idForm, String answer, boolean isTrue);
+    Map<Questions, List<Answers>> updateCorrectQuestions(int id);
     Map<Questions, List<Answers>> listCorrectQuestions();
     Map<Questions, List<Answers>> deleteQuestionsAns(int id);
+    Map<Questions, List<Answers>> deleteAnswersAns(int id);
+    Map<Questions, List<Answers>> deleteQuestionsByFormId(int id);
 }

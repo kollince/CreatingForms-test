@@ -132,13 +132,20 @@ public class FormServiceImpl implements FormService {
     public Map<Questions, List<Answers>> listCorrectQuestions(){
         return formsDao.listCorrectQuestions();
     }
-    public List<CorrectQuestions> updateCorrectQuestions(int idQuestion, int id, int idForm,
-                                                         String answer, boolean isTrue){
-        return formsDao.updateCorrectQuestions(idQuestion, id, idForm, answer, isTrue);
+    public Map<Questions, List<Answers>> updateCorrectQuestions(int id){
+        return formsDao.updateCorrectQuestions(id);
     }
     @Override
     public Map<Questions, List<Answers>> deleteQuestionsAns(int id){
         return formsDao.deleteQuestionsAns(id);
+    }
+    @Override
+    public Map<Questions, List<Answers>> deleteAnswersAns(int id){
+        return formsDao.deleteAnswersAns(id);
+    }
+    @Override
+    public Map<Questions, List<Answers>> deleteQuestionsByFormId(int id){
+        return formsDao.deleteQuestionsByFormId(id);
     }
 
 }

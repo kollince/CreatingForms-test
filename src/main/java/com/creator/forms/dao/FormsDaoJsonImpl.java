@@ -361,11 +361,11 @@ public class FormsDaoJsonImpl implements FormsDao {
     }
 
     @Override
-    public List<CorrectQuestions> updateCorrectQuestions(int idQuestion, int id, int idForm, String answer, boolean isTrue) {
+    public Map<Questions, List<Answers>> updateCorrectQuestions(int id) {
         System.out.println("idCountAnswer "+idCountAnswer);
         for (CorrectQuestions correctQuestions : correctQuestionsList) {
-            if (correctQuestions.getIdQuestion() == idQuestion) {
-                correctQuestions.setIdQuestion(idQuestion);
+            if (correctQuestions.getIdQuestion() == id) {
+                correctQuestions.setIdQuestion(id);
 //                for (int j = 0; j < correctQuestions.getAnsList().size(); j++) {
 //                    //if (correctQuestions.getAnsList().get(j).getId() == idCountAnswer) {
 ////                        correctQuestions.getAnsList().get(j).setIdQuestion(idQuestion);
@@ -377,7 +377,7 @@ public class FormsDaoJsonImpl implements FormsDao {
 //                }
             }
         }
-        return correctQuestionsList;
+        return questionsAndAnswers;
     }
     @Override
     public Map<Questions, List<Answers>> listCorrectQuestions(){
@@ -395,35 +395,28 @@ public class FormsDaoJsonImpl implements FormsDao {
         questionsAndAnswers = newMap;
         return questionsAndAnswers;
     }
+    @Override
     public Map<Questions, List<Answers>> deleteAnswersAns(int id) {
         Map<Questions, List<Answers>> newMap = new HashMap<>(questionsAndAnswers);
         for (Map.Entry<Questions, List<Answers>> entry : newMap.entrySet()) {
             for (Answers answer : entry.getValue()) {
                 if (answer.getId()==(id)) {
                     entry.getValue().remove(answer);
-                    break; // Если ответ найден, то больше не нужно искать его в других вопросах
+                    break;
                 }
             }
         }
-        // Вспомогательный метод для удаления элемента из списка
-//        private static void removeElementById(List<Answer> list, int id) {
-//            for (int i = 0; i < list.size(); i++) {
-//                Answer answer = list.get(i);
-//                if (Integer.parseInt(answer.getId()) == id) {
-//                    list.remove(i); // Удаляем элемент из списка
-//                    return;
-//                }
-//            }
-//        }
-// Метод удаления элемента
-//        private static void deleteAnswer(Map<Question, List<Answer>> map, int id){
-//            for(List<Answer> answers : map.values()){
-//                removeElementById(answers, id);
-//            }
-//        }
-//
-//        deleteAnswer(newMap, 42); // 42 - id элемента который необходимо удалить
-//        Этот код удалит все элементы answer с id равным 42 из всех списков ответов карты newMap.
-        return null;
+        return questionsAndAnswers;
+    }
+    @Override
+    public Map<Questions, List<Answers>> deleteQuestionsByFormId(int id) {
+        Map<Questions, List<Answers>> newMap = new HashMap<>(questionsAndAnswers);
+        for (Map.Entry<Questions, List<Answers>> entry : questionsAndAnswers.entrySet()) {
+            if (entry.getKey().getIdForm()==id) {
+                newMap.remove(entry.getKey());
+            }
+        }
+        questionsAndAnswers = newMap;
+        return questionsAndAnswers;
     }
 }

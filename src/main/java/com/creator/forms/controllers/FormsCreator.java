@@ -157,6 +157,7 @@ public String deleteAnswer(@PathVariable(value="idAnswer") int idAnswer) {
     int idForm = formService.getAnswersById(idAnswer).getIdForm();
     int idQuestion = formService.getAnswersById(idAnswer).getIdQuestion();
     formService.deleteAnswers(idAnswer);
+    formService.deleteAnswersAns(idAnswer);
     return "redirect:/dashboard/eQuestion/"+idForm+"/"+idQuestion;
 }
     @GetMapping("dashboard/deleteQuestion/{id}")
@@ -170,6 +171,7 @@ public String deleteAnswer(@PathVariable(value="idAnswer") int idAnswer) {
     @GetMapping("dashboard/deleteForm/{id}")
     public String getDelete(@PathVariable(value="id") int id) {
         formService.delete(id);
+        formService.deleteQuestionsByFormId(id);
         return "redirect:/dashboard/";
     }
 //    @GetMapping("/edit")
@@ -250,6 +252,7 @@ public String deleteAnswer(@PathVariable(value="idAnswer") int idAnswer) {
     public String updateQuestion(@RequestParam String question, @PathVariable(value="formId") int formId,
                                  @PathVariable(value="questionId") int questionId) {
         formService.updateQuestions(questionId,question);
+        formService.updateCorrectQuestions(questionId);
         return "redirect:/dashboard/eQuestion/"+formId+"/"+questionId;
     }
     @PostMapping("dashboard/updateAnswer/{formId}/{answerId}")
