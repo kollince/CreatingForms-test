@@ -362,23 +362,26 @@ public class FormsDaoJsonImpl implements FormsDao {
 
     @Override
     public Map<Questions, List<Answers>> updateCorrectQuestions(int id) {
-//        List<Answers> ans = new ArrayList<>();
+        List<Answers> ans = new ArrayList<>();
         Questions qst = null;
-//        for (Questions questions : questionsList){
-//            ans = answersList.stream()
-//                    .filter(answers -> answers.getIdQuestion() == id)
-//                    .collect(Collectors.toCollection(ArrayList::new));
-//            if (questions.getId() == id) {
-//                qst = questions;
-//            }
-//        }
-
-//        questionsAndAnswers.put(qst,ans);
-            for (Questions questions : questionsList){
+        for (Questions questions : questionsList){
+            ans = answersList.stream()
+                    .filter(answers -> answers.getIdQuestion() == id)
+                    .collect(Collectors.toCollection(ArrayList::new));
             if (questions.getId() == id) {
                 qst = questions;
+                break;
             }
         }
+        System.out.println("Обновление "+qst+", "+ans);
+        for (Questions questions : questionsList){
+            if(questions.getId()==id){
+                System.out.println("Удаление "+questions);
+            }
+        }
+        questionsAndAnswers.put(qst,ans);
+        questionsAndAnswers.remove(qst);
+
 //        questionsAndAnswers.put("oldKey", Arrays.asList("value1", "value2"));
 //
 //        map.put("newKey", map.get("oldKey"));
