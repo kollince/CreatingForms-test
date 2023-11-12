@@ -2,7 +2,6 @@ package com.creator.forms.services;
 
 import com.creator.forms.dao.interfaces.FormsDao;
 import com.creator.forms.models.Answers;
-import com.creator.forms.models.CorrectQuestions;
 import com.creator.forms.models.Forms;
 import com.creator.forms.models.Questions;
 import com.creator.forms.services.interfaces.FormService;
@@ -147,5 +146,11 @@ public class FormServiceImpl implements FormService {
     public Map<Questions, List<Answers>> deleteQuestionsByFormId(int id){
         return formsDao.deleteQuestionsByFormId(id);
     }
+
+    @Override
+    public Map<Questions, List<Answers>> userQuestionsAndAnswers(List<Integer> answerList, int formId) {
+        return formsDao.userQuestionsAndAnswers(answerList, formId);
+    }
+
 
 }

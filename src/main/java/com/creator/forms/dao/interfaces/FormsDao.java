@@ -1,7 +1,6 @@
 package com.creator.forms.dao.interfaces;
 
 import com.creator.forms.models.Answers;
-import com.creator.forms.models.CorrectQuestions;
 import com.creator.forms.models.Forms;
 import com.creator.forms.models.Questions;
 import org.springframework.stereotype.Repository;
@@ -41,4 +40,5 @@ public interface FormsDao {
     Map<Questions, List<Answers>> deleteQuestionsAns(int id);
     Map<Questions, List<Answers>> deleteAnswersAns(int id);
     Map<Questions, List<Answers>> deleteQuestionsByFormId(int id);
+    Map<Questions, List<Answers>> userQuestionsAndAnswers(List<Integer> answerList, int formId);
 }

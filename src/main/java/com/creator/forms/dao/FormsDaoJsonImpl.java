@@ -1,8 +1,8 @@
 package com.creator.forms.dao;
 
+import ch.qos.logback.classic.util.LogbackMDCAdapter;
 import com.creator.forms.dao.interfaces.FormsDao;
 import com.creator.forms.models.Answers;
-import com.creator.forms.models.CorrectQuestions;
 import com.creator.forms.models.Forms;
 import com.creator.forms.models.Questions;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -26,8 +26,9 @@ public class FormsDaoJsonImpl implements FormsDao {
     private final List<Forms> formsList = new ArrayList<>();
     private final List<Questions> questionsList = new ArrayList<>();
     private final List<Answers> answersList = new ArrayList<>();
-    private final List<CorrectQuestions> correctQuestionsList = new ArrayList<>();
+
     Map<Questions, List<Answers>> questionsAndAnswers = new HashMap<>();
+    Map<Questions, List<Answers>> userQuestionsAndAnswers = new HashMap<>();
     private final ObjectMapper mapper = new ObjectMapper();
     final Path FILEPATH = Path.of("src/main/resources/data/listForms.json");
     private int idCount = 0;
@@ -35,6 +36,7 @@ public class FormsDaoJsonImpl implements FormsDao {
     private int idCountPassing = 0;
     private int idCountAnswer = 0;
     private int idAnswer = 0;
+    private int idCountUserAnswer = 0;
 
     public FormsDaoJsonImpl() {
 
@@ -70,7 +72,6 @@ public class FormsDaoJsonImpl implements FormsDao {
     }
     @Override
     public List<Answers> listAnswers() {
-//        System.out.println("idCountAnswer_list_1: "+idCountAnswer);
         for (Answers answer : answersList) {
             if (answersList.size() < idCountAnswer) {
                 idCountAnswer = answersList.size()+1;
@@ -85,7 +86,6 @@ public class FormsDaoJsonImpl implements FormsDao {
         List<Answers> ansByFormId = answersList.stream()
                 .filter(answers -> answers.getIdForm() == formId)
                 .collect(Collectors.toCollection(ArrayList::new));
-        System.out.println(ansByFormId);
         return ansByFormId;
     }
 
@@ -168,7 +168,6 @@ public class FormsDaoJsonImpl implements FormsDao {
     }
 
     @Override
-
     public List<Questions> countQstForTest() {
         int min = 1;
         int max = 0;
@@ -274,7 +273,6 @@ public class FormsDaoJsonImpl implements FormsDao {
             form.setId(idCount++);
         }
         formsList.add(form);
-        System.out.println(formsList);
         return formsList;
         //fileExist();
         //mapper.writeValue(FILEPATH.toFile(), form);
@@ -288,7 +286,6 @@ public class FormsDaoJsonImpl implements FormsDao {
                 idCount = formsList.size()+1;
             }
         }
-        System.out.println("=================");
         return formsList;
 //        return mapper.readValue(FILEPATH.toFile(), new TypeReference<>() {
 //        });
@@ -356,7 +353,6 @@ public class FormsDaoJsonImpl implements FormsDao {
             }
         }
         questionsAndAnswers.put(qst, ans);
-        System.out.println(questionsAndAnswers);
         return questionsAndAnswers;
     }
 
@@ -428,5 +424,32 @@ public class FormsDaoJsonImpl implements FormsDao {
         }
         questionsAndAnswers = newMap;
         return questionsAndAnswers;
+    }
+
+    @Override
+    public Map<Questions, List<Answers>> userQuestionsAndAnswers(List<Integer> answer, int formId) {
+        List<Answers> newAnswers = new ArrayList<>();
+        for (Integer integer : answer) {
+            for (Answers answers : answersList) {
+                if (integer == answers.getId()) {
+                        newAnswers.add(answers);
+                }
+            }
+        }
+        System.out.println("newAnswers "+newAnswers);
+        List<Answers> ans;
+        for (int i = 0; i < newAnswers.size(); i++) {
+            for (int j = 0; j < questionsList.size(); j++) {
+                if (questionsList.get(j).getId()==newAnswers.get(i).getIdQuestion()){
+                    int finalI = j;
+                    ans = newAnswers.stream()
+                            .filter(answers -> answers.getIdQuestion() == questionsList.get(finalI).getId())
+                            .collect(Collectors.toCollection(ArrayList::new));
+                    userQuestionsAndAnswers.put(questionsList.get(j),ans);
+                }
+            }
+        }
+        System.out.println("elementsWithThisId "+userQuestionsAndAnswers);
+        return userQuestionsAndAnswers;
     }
 }
