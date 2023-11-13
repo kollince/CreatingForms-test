@@ -245,7 +245,7 @@ public String deleteAnswer(@PathVariable(value="idAnswer") int idAnswer) {
         int correct = 0;
         int correctPoint = 0;
         int result = 0;
-        System.out.println("answer: " + answerList);
+//        System.out.println("answer: " + answerList);
         formService.userQuestionsAndAnswers(answerList, formId);
         List<Questions> questionsFormId = formService.listQuestionsByFormId(formId);
         List<Answers> answersByFormId = formService.listAnswersByFormId(formId);
@@ -264,25 +264,25 @@ public String deleteAnswer(@PathVariable(value="idAnswer") int idAnswer) {
             }
         }
 
-        for (Answers answer : newAnswers) {
-            if (correctAnswers.contains(answer)) {
-                System.out.println("верный ответ: "+answer.getAnswer()+", idQst: "+answer.getIdQuestion());
-                correct++;
-            } else {
-                System.out.println("неверный ответ: "+answer.getAnswer()+", idQst: "+answer.getIdQuestion());
-                incorrect++;
-            }
-        }
-        System.out.println("Количество правильных ответов: "+correct);
-        System.out.println("Количество неправильных ответов: "+incorrect);
+//        for (Answers answer : newAnswers) {
+//            if (correctAnswers.contains(answer)) {
+//                System.out.println("верный ответ: "+answer.getAnswer()+", idQst: "+answer.getIdQuestion());
+//                correct++;
+//            } else {
+//                System.out.println("неверный ответ: "+answer.getAnswer()+", idQst: "+answer.getIdQuestion());
+//                incorrect++;
+//            }
+//        }
+//        System.out.println("Количество правильных ответов: "+correct);
+//        System.out.println("Количество неправильных ответов: "+incorrect);
 //        if (new HashSet<>(correctAnswers).containsAll(newAnswers)) {
 //            System.out.println("Все ответы пользователя правильные!");
 //        } else {
 //            System.out.println("Есть неправильные ответы пользователя!");
 //        }
-        System.out.println(newAnswers);
-        System.out.println(correctAnswers);
-        System.out.println("Неправильных ответов"+incorrect);
+//        System.out.println(newAnswers);
+//        System.out.println(correctAnswers);
+//        System.out.println("Неправильных ответов"+incorrect);
 //        result = doubling*100/countQst;
         return "redirect:/endTakeTest";
     }

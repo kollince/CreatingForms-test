@@ -346,7 +346,7 @@ public class FormsDaoJsonImpl implements FormsDao {
         Questions qst = null;
         for (Questions questions : questionsList) {
             ans = answersList.stream()
-                    .filter(answers -> answers.getIdQuestion() == idQuestion)
+                    .filter(answers -> answers.getIdQuestion() == idQuestion && answers.isTrue())
                     .collect(Collectors.toCollection(ArrayList::new));
             if (questions.getId() == idQuestion) {
                 qst = questions;
@@ -362,7 +362,7 @@ public class FormsDaoJsonImpl implements FormsDao {
         Questions qst = null;
         for (Questions questions : questionsList){
             ans = answersList.stream()
-                    .filter(answers -> answers.getIdQuestion() == id)
+                    .filter(answers -> answers.getIdQuestion() == id && answers.isTrue())
                     .collect(Collectors.toCollection(ArrayList::new));
             if (questions.getId() == id) {
                 qst = questions;
@@ -449,6 +449,36 @@ public class FormsDaoJsonImpl implements FormsDao {
                 }
             }
         }
+        int countUserAnswer = 0;
+        int result = 0;
+        int countQst = questionsList.size();
+        for (Map.Entry<Questions, List<Answers>> entry : questionsAndAnswers.entrySet()) {
+            Questions question = entry.getKey();
+            List<Answers> correctAnswers = entry.getValue();
+            for (Map.Entry<Questions, List<Answers>> otherEntry : userQuestionsAndAnswers.entrySet()) {
+                Questions otherQuestion = otherEntry.getKey();
+                List<Answers> userAnswers = otherEntry.getValue();
+                if (question.equals(otherQuestion)) {
+                    if (correctAnswers.equals(userAnswers)) {
+                        countUserAnswer++;
+                        result = countUserAnswer*100/countQst;
+                        System.out.println(result+", "+ countUserAnswer+" Ответы правильные " + question.getQuestion() + " :: " + userAnswers);
+                        //System.out.println("P " + otherQuestion.getQuestion() + " :: " + correctAnswers);
+                    } else {
+                        System.out.println("Ответы не правильные " + question.getQuestion() + " :::: " + userAnswers);
+                        //System.out.println("P " + otherQuestion.getQuestion() + " :::: " + correctAnswers);
+                    }
+                }
+//                    }else {
+//                    System.out.println("U "+question.getQuestion()+" :::: "+userAnswers);
+//                    System.out.println("P "+otherQuestion.getQuestion()+" :::: "+correctAnswers);
+////                    }
+//                }                    //System.out.println("Правильные ответы на вопрсы: "+question +", " + correctAnswers);
+                    //System.out.println("ответы пользователя: "+otherQuestion +", " + userAnswers);
+
+            }
+        }
+        System.out.println("questionsAndAnswers"+questionsAndAnswers);
         System.out.println("elementsWithThisId "+userQuestionsAndAnswers);
         return userQuestionsAndAnswers;
     }
