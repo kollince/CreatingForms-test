@@ -131,6 +131,9 @@ public class FormServiceImpl implements FormService {
     public Map<Questions, List<Answers>> listCorrectQuestions(){
         return formsDao.listCorrectQuestions();
     }
+    public Map<Questions, List<Answers>> updateCorrectAnswers(int id){
+        return formsDao.updateCorrectAnswers(id);
+    }
     public Map<Questions, List<Answers>> updateCorrectQuestions(int id){
         return formsDao.updateCorrectQuestions(id);
     }
@@ -151,6 +154,16 @@ public class FormServiceImpl implements FormService {
     public Map<Questions, List<Answers>> userQuestionsAndAnswers(List<Integer> answerList, int formId) {
         return formsDao.userQuestionsAndAnswers(answerList, formId);
     }
-
-
+    @Override
+    public int getResult() {
+        return formsDao.getResult();
+    }
+    @Override
+    public int getCountUserAnswer() {
+        return formsDao.getCountUserAnswer();
+    }
+    @Override
+    public int getSizeQuestion() {
+        return formsDao.getSizeQuestion();
+    }
 }

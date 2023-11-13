@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -63,7 +62,14 @@ public class FormsCreator {
     }
     @GetMapping("/endTakeTest/{id}")
     public String endTakeTest(@PathVariable(value="id") int idForm, Model model) {
-        List<Answers> allAnswers = formService.listAnswers();
+        int countUserAnswer = formService.getCountUserAnswer();
+        int getSizeQuestions = formService.getSizeQuestion();
+        model.addAttribute("countUserAnswer", countUserAnswer);
+        model.addAttribute("getSizeQuestion", getSizeQuestions);
+        Forms form = formService.getFormsById(idForm);
+        int result = formService.getResult();
+        model.addAttribute("form", form);
+        model.addAttribute("result", result);
         return "endTakeTest";
     }
     @GetMapping("dashboard/")
@@ -80,7 +86,6 @@ public class FormsCreator {
     public String addTestForm(){
         return "dashboard/addTestForm";
     }
-    // Редактор теста
     @GetMapping("dashboard/eForm/{id}")
     public String edit(@PathVariable(value="id") int id, Model model) {
         Forms formId = formService.getFormsById(id);
@@ -233,58 +238,14 @@ public String deleteAnswer(@PathVariable(value="idAnswer") int idAnswer) {
                                @PathVariable(value="formId") int formId,
                                @PathVariable(value="answerId") int answerId) {
         formService.updateAnswers(answerId,answer, isTrue);
+        formService.updateCorrectAnswers(answerId);
         return "redirect:/dashboard/eQuestion/"+formId+"/"+idQuestion;
     }
     @PostMapping("/endTakeTest/{formId}")
     public String endTakeTest(@RequestParam("answer") List<Integer> answerList,
                               @PathVariable(value="formId") int formId, Model model) throws IOException {
-        int points = 0;
-        int doubling = 0;
-        int unique = 0;
-        int incorrect = 0;
-        int correct = 0;
-        int correctPoint = 0;
-        int result = 0;
-//        System.out.println("answer: " + answerList);
         formService.userQuestionsAndAnswers(answerList, formId);
-        List<Questions> questionsFormId = formService.listQuestionsByFormId(formId);
-        List<Answers> answersByFormId = formService.listAnswersByFormId(formId);
-        List<Answers> newAnswers = new ArrayList<>();
-        List<Answers> correctAnswers = new ArrayList<>();
-        for (int l = 0; l < answersByFormId.size(); l++) {
-            for (int j = 0; j < answerList.size(); j++) {
-                if (answerList.get(j) == answersByFormId.get(l).getId()) {
-                    newAnswers.add(answersByFormId.get(l));
-                }
-            }
-        }
-        for (int i = 0; i < answersByFormId.size(); i++) {
-            if (answersByFormId.get(i).isTrue()) {
-                correctAnswers.add(answersByFormId.get(i));
-            }
-        }
-
-//        for (Answers answer : newAnswers) {
-//            if (correctAnswers.contains(answer)) {
-//                System.out.println("верный ответ: "+answer.getAnswer()+", idQst: "+answer.getIdQuestion());
-//                correct++;
-//            } else {
-//                System.out.println("неверный ответ: "+answer.getAnswer()+", idQst: "+answer.getIdQuestion());
-//                incorrect++;
-//            }
-//        }
-//        System.out.println("Количество правильных ответов: "+correct);
-//        System.out.println("Количество неправильных ответов: "+incorrect);
-//        if (new HashSet<>(correctAnswers).containsAll(newAnswers)) {
-//            System.out.println("Все ответы пользователя правильные!");
-//        } else {
-//            System.out.println("Есть неправильные ответы пользователя!");
-//        }
-//        System.out.println(newAnswers);
-//        System.out.println(correctAnswers);
-//        System.out.println("Неправильных ответов"+incorrect);
-//        result = doubling*100/countQst;
-        return "redirect:/endTakeTest";
+        return "redirect:/endTakeTest/"+formId;
     }
 
 }

@@ -37,6 +37,9 @@ public class FormsDaoJsonImpl implements FormsDao {
     private int idCountAnswer = 0;
     private int idAnswer = 0;
     private int idCountUserAnswer = 0;
+    private int countUserAnswer = 0;
+    private int result = 0;
+    private int countQst;
 
     public FormsDaoJsonImpl() {
 
@@ -172,17 +175,13 @@ public class FormsDaoJsonImpl implements FormsDao {
         int min = 1;
         int max = 0;
         List<Questions> qstByFormId = new ArrayList<>();
-        System.out.println("Всего вопросов: "+questionsList.size());
         for (int i = 0; i < formsList.size(); i++) {
             for (int j = 0; j < questionsList.size(); j++) {
                 if (formsList.get(i).getId()==questionsList.get(j).getIdForm()){
                     min = Math.min(min, j);
                     max = Math.max(max, questionsList.get(j).getId());
-
                     if (questionsList.get(j)!=null) {
-                        System.out.println("Тест: "+formsList.get(i).getName()+", idQuestion: "+questionsList.get(j).getId());
                         qstByFormId.add(questionsList.get(j));
-                        System.out.println("qstByFormId"+qstByFormId);
                         break;
                     }
 
@@ -203,7 +202,6 @@ public class FormsDaoJsonImpl implements FormsDao {
     }
     @Override
     public List<Questions> updateQuestions(int id, String question) {
-
         for (Questions questions : questionsList) {
             if (questions.getId() == id) {
                   questions.setQuestion(question);
@@ -256,11 +254,6 @@ public class FormsDaoJsonImpl implements FormsDao {
         int max = 0;
         if (formsList.size() == 0) {
             idCount = 1;
-//            Forms forms = new Forms("","","","");
-//            Questions questions = new Questions("","","");
-//            CorrectQuestions formAndQuestion = new CorrectQuestions(form, questions);
-//            formAndQuestionList.add(formAndQuestion);
-            //addPassing(idCount,0,1);
             form.setId(idCount++);
 
          } else {
@@ -355,7 +348,25 @@ public class FormsDaoJsonImpl implements FormsDao {
         questionsAndAnswers.put(qst, ans);
         return questionsAndAnswers;
     }
-
+    @Override
+    public Map<Questions, List<Answers>> updateCorrectAnswers(int id) {
+        Questions qst = null;
+        List<Answers> ans;
+        ans = answersList.stream()
+                    .filter(answers -> answers.getId() == id && answers.isTrue())
+                    .collect(Collectors.toCollection(ArrayList::new));
+        System.out.println("ans "+ans);
+        int idQuestion = ans.get(0).getIdQuestion();
+        for (int i = 0; i < questionsList.size(); i++) {
+            if (questionsList.get(i).getId()==idQuestion){
+                qst = questionsList.get(i);
+            }
+        }
+        System.out.println("::"+questionsAndAnswers);
+        questionsAndAnswers.put(qst,ans);
+        //questionsAndAnswers.remove(qst);
+        return questionsAndAnswers;
+    }
     @Override
     public Map<Questions, List<Answers>> updateCorrectQuestions(int id) {
         List<Answers> ans = new ArrayList<>();
@@ -377,12 +388,6 @@ public class FormsDaoJsonImpl implements FormsDao {
         }
         questionsAndAnswers.put(qst,ans);
         questionsAndAnswers.remove(qst);
-
-//        questionsAndAnswers.put("oldKey", Arrays.asList("value1", "value2"));
-//
-//        map.put("newKey", map.get("oldKey"));
-//        map.remove("oldKey");
-
         return questionsAndAnswers;
     }
     @Override
@@ -397,7 +402,6 @@ public class FormsDaoJsonImpl implements FormsDao {
                 newMap.remove(entry.getKey());
             }
         }
-//        newMap.entrySet().removeIf(entry -> entry.getKey().getId().equals(id));
         questionsAndAnswers = newMap;
         return questionsAndAnswers;
     }
@@ -436,7 +440,6 @@ public class FormsDaoJsonImpl implements FormsDao {
                 }
             }
         }
-        System.out.println("newAnswers "+newAnswers);
         List<Answers> ans;
         for (int i = 0; i < newAnswers.size(); i++) {
             for (int j = 0; j < questionsList.size(); j++) {
@@ -449,9 +452,7 @@ public class FormsDaoJsonImpl implements FormsDao {
                 }
             }
         }
-        int countUserAnswer = 0;
-        int result = 0;
-        int countQst = questionsList.size();
+        countQst = questionsList.size();
         for (Map.Entry<Questions, List<Answers>> entry : questionsAndAnswers.entrySet()) {
             Questions question = entry.getKey();
             List<Answers> correctAnswers = entry.getValue();
@@ -463,23 +464,27 @@ public class FormsDaoJsonImpl implements FormsDao {
                         countUserAnswer++;
                         result = countUserAnswer*100/countQst;
                         System.out.println(result+", "+ countUserAnswer+" Ответы правильные " + question.getQuestion() + " :: " + userAnswers);
-                        //System.out.println("P " + otherQuestion.getQuestion() + " :: " + correctAnswers);
                     } else {
                         System.out.println("Ответы не правильные " + question.getQuestion() + " :::: " + userAnswers);
-                        //System.out.println("P " + otherQuestion.getQuestion() + " :::: " + correctAnswers);
                     }
                 }
-//                    }else {
-//                    System.out.println("U "+question.getQuestion()+" :::: "+userAnswers);
-//                    System.out.println("P "+otherQuestion.getQuestion()+" :::: "+correctAnswers);
-////                    }
-//                }                    //System.out.println("Правильные ответы на вопрсы: "+question +", " + correctAnswers);
-                    //System.out.println("ответы пользователя: "+otherQuestion +", " + userAnswers);
-
             }
         }
-        System.out.println("questionsAndAnswers"+questionsAndAnswers);
-        System.out.println("elementsWithThisId "+userQuestionsAndAnswers);
         return userQuestionsAndAnswers;
+    }
+    @Override
+    public int getResult(){
+        int res = result;
+        if (result>0) result=0;
+        if (countUserAnswer>0)countUserAnswer=0;
+        return res;
+    }
+    @Override
+    public int getCountUserAnswer() {
+        return countUserAnswer;
+    }
+    @Override
+    public int getSizeQuestion(){
+        return questionsList.size();
     }
 }

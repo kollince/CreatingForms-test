@@ -35,10 +35,14 @@ public interface FormsDao {
 //    List<Passing> deletePassing(int id);
     Questions getQuestionOneByFormId(int formId);
     Map<Questions, List<Answers>> addCorrectQuestions(Answers answer, int idQuestion);
+    Map<Questions, List<Answers>> updateCorrectAnswers(int id);
     Map<Questions, List<Answers>> updateCorrectQuestions(int id);
     Map<Questions, List<Answers>> listCorrectQuestions();
     Map<Questions, List<Answers>> deleteQuestionsAns(int id);
     Map<Questions, List<Answers>> deleteAnswersAns(int id);
     Map<Questions, List<Answers>> deleteQuestionsByFormId(int id);
     Map<Questions, List<Answers>> userQuestionsAndAnswers(List<Integer> answerList, int formId);
+    int getResult();
+    int getCountUserAnswer();
+    int getSizeQuestion();
 }
