@@ -7,6 +7,9 @@ import com.creator.forms.models.Forms;
 import com.creator.forms.models.Questions;
 import com.creator.forms.services.FormServiceImpl;
 import com.creator.forms.services.interfaces.FormService;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,12 +27,24 @@ public class FormsCreator {
     private final FormService formService = new FormServiceImpl(formsDao);
 
     @GetMapping("/")
-    public String allPhysicsTests(Model model) throws IOException {
+    public String allPhysicsTests(HttpServletRequest request, HttpServletResponse response, Model model) throws IOException {
         List<Forms> fmsAll = formService.listForms();
         List<Questions> countQst = formService.countQstForTest();
         model.addAttribute("allForms", fmsAll);
         model.addAttribute("countQst", countQst);
         Map<Questions, List<Answers>> cqs = formService.listCorrectQuestions();
+        Cookie cook = new Cookie("bond", "007");
+        response.addCookie(cook);
+        Cookie[] cookies = request.getCookies();
+        if (cookies != null) {
+            for(Cookie cookie : cookies){
+                if(cookie.getName()!=null){
+                    System.out.println("cookie.getUser "+ cookie.getName());
+                } else {
+                    System.out.println("no");
+                }
+            }
+        }
         System.out.println("CorrectQuestions "+cqs);
         return "index";
     }
