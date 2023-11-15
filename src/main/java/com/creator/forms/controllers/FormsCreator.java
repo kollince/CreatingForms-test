@@ -16,8 +16,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.view.RedirectView;
 
 import java.io.IOException;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
 
@@ -34,8 +38,7 @@ public class FormsCreator {
             for(Cookie cookie : cookies){
                 if(cookie.getName()!=null){
                     if(cookie.getName().equals("useForms")) {
-                        user = cookie.getValue();
-                        //return "redirect:/addUser";
+                        user = URLDecoder.decode(cookie.getValue(), StandardCharsets.UTF_8);
                     }
                 } else {
                     System.out.println("no");
@@ -267,7 +270,7 @@ public String deleteAnswer(@PathVariable(value="idAnswer") int idAnswer) {
     }
     @PostMapping("/addUser")
     public String addUserCookies(@RequestParam String user, HttpServletResponse response, Model model) throws IOException {
-        Cookie cookieUserForms = new Cookie("useForms", user);
+        Cookie cookieUserForms = new Cookie( "useForms", URLEncoder.encode( user, StandardCharsets.UTF_8) );
         cookieUserForms.setMaxAge(24*14*60*60);
         cookieUserForms.setPath("/");
         //cookieUserForms.setSameSite("Strict");
@@ -276,4 +279,5 @@ public String deleteAnswer(@PathVariable(value="idAnswer") int idAnswer) {
         response.addCookie(cookieUserForms);
         return "redirect:/";
     }
+
 }

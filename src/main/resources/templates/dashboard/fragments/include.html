@@ -9,6 +9,7 @@
 <body>
 <th:block th:fragment="top">
     <a href="/">Главная</a> | <a href="/logout">Выйти</a>
+    <th:block sec:authorize="isAuthenticated()"><h5>Добро пожаловать <th:block sec:authentication="name"></th:block>!</h5></th:block>
 </th:block>
 <th:block th:fragment="linksAddForms">
     <a href="/dashboard/">Панель управления</a> | <a href="/dashboard/addTestForm">Добавить тест</a>
