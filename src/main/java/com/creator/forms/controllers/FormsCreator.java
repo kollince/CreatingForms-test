@@ -27,24 +27,27 @@ public class FormsCreator {
     private final FormService formService = new FormServiceImpl(formsDao);
 
     @GetMapping("/")
-    public String allPhysicsTests(HttpServletRequest request, HttpServletResponse response, Model model) throws IOException {
-        List<Forms> fmsAll = formService.listForms();
-        List<Questions> countQst = formService.countQstForTest();
-        model.addAttribute("allForms", fmsAll);
-        model.addAttribute("countQst", countQst);
-        Map<Questions, List<Answers>> cqs = formService.listCorrectQuestions();
-        Cookie cook = new Cookie("bond", "007");
-        response.addCookie(cook);
+    public String allPhysicsTests(HttpServletRequest request, Model model) throws IOException {
+        String user = "Гость";
         Cookie[] cookies = request.getCookies();
         if (cookies != null) {
             for(Cookie cookie : cookies){
                 if(cookie.getName()!=null){
-                    System.out.println("cookie.getUser "+ cookie.getName());
+                    if(cookie.getName().equals("useForms")) {
+                        user = cookie.getValue();
+                        //return "redirect:/addUser";
+                    }
                 } else {
                     System.out.println("no");
                 }
             }
         }
+        List<Forms> fmsAll = formService.listForms();
+        List<Questions> countQst = formService.countQstForTest();
+        model.addAttribute("allForms", fmsAll);
+        model.addAttribute("countQst", countQst);
+        model.addAttribute("userName", user);
+        Map<Questions, List<Answers>> cqs = formService.listCorrectQuestions();
         System.out.println("CorrectQuestions "+cqs);
         return "index";
     }
@@ -262,5 +265,15 @@ public String deleteAnswer(@PathVariable(value="idAnswer") int idAnswer) {
         formService.userQuestionsAndAnswers(answerList, formId);
         return "redirect:/endTakeTest/"+formId;
     }
-
+    @PostMapping("/addUser")
+    public String addUserCookies(@RequestParam String user, HttpServletResponse response, Model model) throws IOException {
+        Cookie cookieUserForms = new Cookie("useForms", user);
+        cookieUserForms.setMaxAge(24*14*60*60);
+        cookieUserForms.setPath("/");
+        //cookieUserForms.setSameSite("Strict");
+        cookieUserForms.setSecure(false);
+        cookieUserForms.setHttpOnly(true);
+        response.addCookie(cookieUserForms);
+        return "redirect:/";
+    }
 }

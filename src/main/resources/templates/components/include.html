@@ -8,11 +8,26 @@
 </head>
 <body>
 <div th:fragment="top">
-  <a href="/">Главная</a> | <a href="/dashboard/">Панель управления</a> | <th:block sec:authorize="hasAnyRole('ROLE_ADMIN')">
+  <a href="/">Главная</a> | <th:block sec:authorize="!isAuthenticated()"><a href="/login">Войти</a></th:block>
+  <th:block sec:authorize="isAuthenticated()"><a href="/dashboard/">Панель управления</a></th:block> |
+  <th:block sec:authorize="hasAnyRole('ROLE_ADMIN')">
   <a th:text="Выйти" th:href="'/logout'"></a>
 </th:block>
-</div>
+  <H6>Добро пожаловать <th:block th:text="${userName}"></th:block>!</H6>
+  <th:block th:if="${userName == 'Гость'}">
+    <form method="post" th:action="@{'/addUser'}">
 
+      <div>
+        <label>Введите свою Фамилию и Имя</label>
+        <input type="text" name="user" required>
+      </div>
+      <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+      <div>
+        <input type="submit" value="ОК">
+      </div>
+    </form>
+  </th:block>
+</div>
 <th:block th:fragment="listTest">
   <H3>Список тестов</H3><br>
   <th:block th:each="el : ${allForms}">
