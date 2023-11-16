@@ -25,11 +25,12 @@ public class FormsDaoJsonImpl implements FormsDao {
     private final List<Forms> formsList = new ArrayList<>();
     private final List<Questions> questionsList = new ArrayList<>();
     private final List<Answers> answersList = new ArrayList<>();
-
     Map<Questions, List<Answers>> questionsAndAnswers = new HashMap<>();
     Map<Questions, List<Answers>> userQuestionsAndAnswers = new HashMap<>();
     private final ObjectMapper mapper = new ObjectMapper();
     private Path fileListForms = Path.of("src/main/resources/data/listForms.json");
+    private Path fileListQuestions = Path.of("src/main/resources/data/listQuestions.json");
+    private Path fileListAnswers = Path.of("src/main/resources/data/listAnswers.json");
     private int idCount = 0;
     private int idCountQuestion = 0;
     private int idCountPassing = 0;
@@ -53,8 +54,16 @@ public class FormsDaoJsonImpl implements FormsDao {
         fileExist(path);
         mapper.writeValue(fileListForms.toFile(), formsList);
     }
+    private void saveFileListQuestions(List<Questions> questionsList, Path path) throws IOException {
+        fileExist(path);
+        mapper.writeValue(fileListQuestions.toFile(), questionsList);
+    }
+    private void saveFileListAnswers(List<Answers> AnswersList, Path path) throws IOException {
+        fileExist(path);
+        mapper.writeValue(fileListAnswers.toFile(), AnswersList);
+    }
     @Override
-    public List<Answers> addAnswer(Answers answers) {
+    public List<Answers> addAnswer(Answers answers) throws IOException {
         int max = 0;
         if (answersList.size() == 0) {
             idCountAnswer = 1;
@@ -70,6 +79,7 @@ public class FormsDaoJsonImpl implements FormsDao {
             answers.setId(idCountAnswer);
         }
         answersList.add(answers);
+        saveFileListAnswers(answersList,fileListAnswers);
         return answersList;
     }
     @Override
@@ -102,24 +112,25 @@ public class FormsDaoJsonImpl implements FormsDao {
 
 
     @Override
-    public List<Answers> updateAnswers(int id, String answer, boolean isTrue) {
+    public List<Answers> updateAnswers(int id, String answer, boolean isTrue) throws IOException {
         for (Answers answers : answersList) {
             if (answers.getId() == id) {
                 answers.setAnswer(answer);
                 answers.setTrue(isTrue);
             }
         }
+        saveFileListAnswers(answersList,fileListAnswers);
         return answersList;
     }
     @Override
-    public List<Answers> deleteAnswers(int id) {
+    public List<Answers> deleteAnswers(int id) throws IOException {
         for (int i = 0; i < answersList.size(); i++) {
             if (answersList.get(i).getId()==id) {
                 answersList.remove(i);
                 idCountAnswer = idCountAnswer - 1;
-
             }
         }
+        saveFileListAnswers(answersList,fileListAnswers);
         return answersList;
     }
     @Override
@@ -133,7 +144,7 @@ public class FormsDaoJsonImpl implements FormsDao {
         return element;
     }
     @Override
-    public List<Questions> addQuestion(Questions questions) {
+    public List<Questions> addQuestion(Questions questions) throws IOException {
         int max = 0;
         if (questionsList.size() == 0) {
             idCountQuestion = 1;
@@ -149,7 +160,7 @@ public class FormsDaoJsonImpl implements FormsDao {
             questions.setId(idCountQuestion++);
         }
         questionsList.add(questions);
-        //updatePassing(questions.getIdForm(),questions.getId(), idCountQuestion);
+        saveFileListQuestions(questionsList,fileListQuestions);
         return questionsList;
     }
 
@@ -198,16 +209,17 @@ public class FormsDaoJsonImpl implements FormsDao {
         return questionsList;
     }
     @Override
-    public List<Questions> updateQuestions(int id, String question) {
+    public List<Questions> updateQuestions(int id, String question) throws IOException {
         for (Questions questions : questionsList) {
             if (questions.getId() == id) {
                   questions.setQuestion(question);
             }
         }
+        saveFileListQuestions(questionsList,fileListQuestions);
         return questionsList;
     }
     @Override
-    public List<Questions> deleteQuestion(int id) {
+    public List<Questions> deleteQuestion(int id) throws IOException {
         for (int i = 0; i < questionsList.size(); i++) {
             if (questionsList.get(i).getId()==id) {
                 questionsList.remove(i);
@@ -220,6 +232,8 @@ public class FormsDaoJsonImpl implements FormsDao {
                 k--;
             }
         }
+        saveFileListAnswers(answersList,fileListAnswers);
+        saveFileListQuestions(questionsList,fileListQuestions);
         return questionsList;
     }
 
@@ -312,6 +326,8 @@ public class FormsDaoJsonImpl implements FormsDao {
             }
         }
         saveFileListForms(formsList,fileListForms);
+        saveFileListAnswers(answersList,fileListAnswers);
+        saveFileListQuestions(questionsList,fileListQuestions);
         return formsList;
     }
 
@@ -352,13 +368,18 @@ public class FormsDaoJsonImpl implements FormsDao {
         ans = answersList.stream()
                     .filter(answers -> answers.getId() == id && answers.isTrue())
                     .collect(Collectors.toCollection(ArrayList::new));
-        System.out.println("ans "+ans);
-        int idQuestion = ans.get(0).getIdQuestion();
-        for (int i = 0; i < questionsList.size(); i++) {
-            if (questionsList.get(i).getId()==idQuestion){
-                qst = questionsList.get(i);
+        if(!ans.isEmpty()) {
+            System.out.println("ans " + ans);
+            int idQuestion = ans.get(0).getIdQuestion();
+            for (int i = 0; i < questionsList.size(); i++) {
+                if (questionsList.get(i).getId() == idQuestion) {
+                    qst = questionsList.get(i);
+                }
             }
+        } else {
+            deleteAnswersAns(id);
         }
+        System.out.println("==="+ans);
         System.out.println("::"+questionsAndAnswers);
         questionsAndAnswers.put(qst,ans);
         //questionsAndAnswers.remove(qst);

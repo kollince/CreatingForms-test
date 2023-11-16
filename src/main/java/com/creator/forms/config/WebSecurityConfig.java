@@ -12,11 +12,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.config.annotation.web.configurers.LogoutConfigurer;
-
-
-
-
-
 import static org.springframework.security.config.Customizer.withDefaults;
 
 @Configuration
@@ -32,10 +27,8 @@ public class WebSecurityConfig {
                         .build();
         return new InMemoryUserDetailsManager(user);
     }
-
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-
         http
                 .authorizeHttpRequests((requests) -> requests
                         .requestMatchers("/dashboard/**").hasRole("ADMIN")
@@ -50,7 +43,6 @@ public class WebSecurityConfig {
                 .csrf(withDefaults())
                 .logout(LogoutConfigurer::permitAll)
                 .logout(logout -> logout.logoutSuccessUrl("/"));
-
         return http.build();
     }
 }

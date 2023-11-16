@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.servlet.view.RedirectView;
 
 import java.io.IOException;
 import java.net.URLDecoder;
@@ -59,25 +58,17 @@ public class FormsCreator {
         Forms formsById = formService.getFormsById(id);
         List<Questions> questionsByFormId = formService.listQuestionsByFormId(id);
         List<Answers> answersByFormId = formService.listAnswersByFormId(id);
-        Questions questionsOneFormId = formService.getQuestionOneByFormId(id);
-        //Questions questions = formService.psgListIdFrmIdQst(id);
-//        int countQstId = formService.listNumberForTest(id, numberQst);
         model.addAttribute("formsById", formsById);
         model.addAttribute("questionsByFormId", questionsByFormId);
         model.addAttribute("answersByFormId", answersByFormId);
-        //model.addAttribute("questionsOneFormId", questionsOneFormId);
-
-        //System.out.println("questionsOneFormId: "+questionsOneFormId);
         return "takeTest";
     }
     @GetMapping("/beginTakeTest/{id}/{idQuestion}")
     public String beginTakeTest(@PathVariable(value="id") int idForm, @PathVariable(value="idQuestion") int idQuestion, Model model) {
         Forms formsById = formService.getFormsById(idForm);
-        //Questions qstIdFrmIdQst = formService.psgListIdFrmIdQst(idForm, idQuestion);
         Questions questionsOneFormId = formService.getQuestionOneByFormId(idForm);
         List<Answers> ansListByQuestionId = formService.listAnswersByQuestionId(idQuestion);
         model.addAttribute("formsById", formsById);
-//        model.addAttribute("qstIdFrmIdQst", qstIdFrmIdQst);
         model.addAttribute("questionsOneFormId", questionsOneFormId);
         return "beginTakeTest";
     }
@@ -115,44 +106,19 @@ public class FormsCreator {
         model.addAttribute("questionsByFormId",questionsByFormId);
         return "dashboard/eForm";
     }
-    //Редактор Вопросов
     @GetMapping("dashboard/eQuestion/{formId}/{questionId}")
     public String addQuestions ( @PathVariable(value="formId") int formId,
                                  @PathVariable(value="questionId") int questionId, Model model) {
         Forms fmsListId = formService.getFormsById(formId);
-        List<Questions> qstListByFormId = formService.listQuestionsByFormId(formId);
         Questions qstListId = formService.getQuestionById(questionId);
-//        List<Answers> ansListByFormId = formService.listAnswersByFormId(formId);
         List<Answers> ansListByQuestionId = formService.listAnswersByQuestionId(questionId);
         model.addAttribute("fmsListId", fmsListId);
-//        model.addAttribute("qstListByFormId",qstListByFormId);
-//        model.addAttribute("ansListByFormId",ansListByFormId);
         model.addAttribute("ansListByQuestionId",ansListByQuestionId);
         model.addAttribute("qstListId",qstListId);
         return "dashboard/eQuestion";
     }
-//    @GetMapping("dashboard/addQuestion")
-//    public String addQuestion (Model model) throws IOException {
-//        List<Forms> formsList= formService.listForms();
-//        List<Questions> questionsList = formService.listQuestions();
-//
-//        model.addAttribute("formList", formsList);
-//        model.addAttribute("questionsList", questionsList);
-//        return "dashboard/addQuestion";
-//    }
-//    @GetMapping("dashboard/addAnswer")
-//    public String addAnswer (Model model) throws IOException {
-//        List<Forms> formsList= formService.listForms();
-//        List<Questions> questionsList = formService.listQuestions();
-//        List<Answers> answersList = formService.listAnswers();
-//        model.addAttribute("formList", formsList);
-//        model.addAttribute("questionsList", questionsList);
-//        model.addAttribute("answerList", answersList);
-//        System.out.println(questionsList);
-//        return "dashboard/addAnswer";
-//    }
 @GetMapping("dashboard/deleteAnswer/{idAnswer}")
-public String deleteAnswer(@PathVariable(value="idAnswer") int idAnswer) {
+public String deleteAnswer(@PathVariable(value="idAnswer") int idAnswer) throws IOException {
     int idForm = formService.getAnswersById(idAnswer).getIdForm();
     int idQuestion = formService.getAnswersById(idAnswer).getIdQuestion();
     formService.deleteAnswers(idAnswer);
@@ -160,7 +126,7 @@ public String deleteAnswer(@PathVariable(value="idAnswer") int idAnswer) {
     return "redirect:/dashboard/eQuestion/"+idForm+"/"+idQuestion;
 }
     @GetMapping("dashboard/deleteQuestion/{id}")
-    public String getDeleteQuestion(@PathVariable(value="id") int id) {
+    public String getDeleteQuestion(@PathVariable(value="id") int id) throws IOException {
         int idForm = formService.getQuestionById(id).getIdForm();
         formService.deleteQuestion(id);
         formService.deleteQuestionsAns(id);
@@ -173,57 +139,23 @@ public String deleteAnswer(@PathVariable(value="idAnswer") int idAnswer) {
         formService.deleteQuestionsByFormId(id);
         return "redirect:/dashboard/";
     }
-//    @GetMapping("/edit")
-//    public String editNewForm() {
-//        return "edit";
-//    }
-
-//    @PostMapping("/addForm")
-//    public String add(@RequestParam String name, @RequestParam String description, @RequestParam boolean time) throws IOException {
-//        int lastIndex;
-//        Forms forms = new Forms(0, name, description, time);
-//        formService.addForms(forms);
-//        if (formService.listForms().size() > 0) {
-//            lastIndex = formService.listForms().size()-1;
-//        } else {
-//            lastIndex= 0;
-//        }
-//        return "redirect:/edit/"+formService.listForms().get(lastIndex).getId();
-//    }
     @PostMapping("/dashboard/addForm")
     public String addForm(@RequestParam String name, @RequestParam String description, @RequestParam boolean time) throws IOException {
-        int lastIndex;
         Forms forms = new Forms(0, name, description, time);
         formService.addForms(forms);
-          if (formService.listForms().size() > 0) {
-            lastIndex = formService.listForms().size()-1;
-        } else {
-            lastIndex= 0;
-        }
         return "redirect:/dashboard/";
     }
-
-//    @PostMapping("/dashboard/addQuestion")
-//    public String addQuestionN(@RequestParam int idForm, @RequestParam String question, Model model) {
-//        Questions questions = new Questions(0, idForm, question);
-//        Answers answers = new Answers(0,0,0," ",false);
-//        ansList.add(answers);
-//        formService.addQuestion(questions);
-//        formService.addCorrectQuestions();
-//        return "redirect:/dashboard/";
-//    }
     @PostMapping("/dashboard/addAnswer")
     public String addAnswer(@RequestParam int idForm, @RequestParam int idQuestion,  @RequestParam String answer,
-                            @RequestParam boolean isTrue,Model model) {
+                            @RequestParam boolean isTrue) throws IOException {
         Answers answers = new Answers(0, idForm,idQuestion,answer, isTrue);
         formService.addAnswer(answers);
         formService.addCorrectQuestions(answers, idQuestion);
-        //formService.updateCorrectQuestions(idQuestion,0, idForm, answer, isTrue);
         return "redirect:/dashboard/eQuestion/"+idForm+"/"+idQuestion;
     }
     @PostMapping("/dashboard/addQuestions/{id}")
     public String addQuestion(@RequestParam int idForm, @RequestParam String question,
-                              @PathVariable(value="id") int id, Model model) {
+                              @PathVariable(value="id") int id, Model model) throws IOException {
         Forms fmsEdit = formService.getFormsById(id);
         model.addAttribute("editQuestion", fmsEdit);
         Questions questions = new Questions(0, idForm, question);
@@ -231,16 +163,6 @@ public String deleteAnswer(@PathVariable(value="idAnswer") int idAnswer) {
 
         return "redirect:/dashboard/eForm/"+idForm;
     }
-
-
-//    @PostMapping("/addQuestion")
-//    public String add(@RequestParam int idForm, @RequestParam String question ) throws IOException {
-//        Questions questions = new Questions(0, idForm, question);
-//        formService.addQuestion(questions);
-//        int lastIndex = formsList.size() - 1;
-//
-//        return "redirect:/addQuestions/"+idForm;
-//    }
     @PostMapping("dashboard/updateForm/{id}")
     public String update(@RequestParam String name, @RequestParam String description, @RequestParam boolean time,
                          @PathVariable(value="id") int id) throws IOException {
@@ -249,7 +171,7 @@ public String deleteAnswer(@PathVariable(value="idAnswer") int idAnswer) {
     }
     @PostMapping("dashboard/updateQuestion/{formId}/{questionId}")
     public String updateQuestion(@RequestParam String question, @PathVariable(value="formId") int formId,
-                                 @PathVariable(value="questionId") int questionId) {
+                                 @PathVariable(value="questionId") int questionId) throws IOException {
         formService.updateQuestions(questionId,question);
         formService.updateCorrectQuestions(questionId);
         return "redirect:/dashboard/eQuestion/"+formId+"/"+questionId;
@@ -257,27 +179,25 @@ public String deleteAnswer(@PathVariable(value="idAnswer") int idAnswer) {
     @PostMapping("dashboard/updateAnswer/{formId}/{answerId}")
     public String updateAnswer(@RequestParam String answer, @RequestParam int idQuestion, @RequestParam boolean isTrue,
                                @PathVariable(value="formId") int formId,
-                               @PathVariable(value="answerId") int answerId) {
+                               @PathVariable(value="answerId") int answerId) throws IOException {
         formService.updateAnswers(answerId,answer, isTrue);
         formService.updateCorrectAnswers(answerId);
         return "redirect:/dashboard/eQuestion/"+formId+"/"+idQuestion;
     }
     @PostMapping("/endTakeTest/{formId}")
     public String endTakeTest(@RequestParam("answer") List<Integer> answerList,
-                              @PathVariable(value="formId") int formId, Model model) throws IOException {
+                              @PathVariable(value="formId") int formId) {
         formService.userQuestionsAndAnswers(answerList, formId);
         return "redirect:/endTakeTest/"+formId;
     }
     @PostMapping("/addUser")
-    public String addUserCookies(@RequestParam String user, HttpServletResponse response, Model model) throws IOException {
+    public String addUserCookies(@RequestParam String user, HttpServletResponse response) {
         Cookie cookieUserForms = new Cookie( "useForms", URLEncoder.encode( user, StandardCharsets.UTF_8) );
         cookieUserForms.setMaxAge(24*14*60*60);
         cookieUserForms.setPath("/");
-        //cookieUserForms.setSameSite("Strict");
         cookieUserForms.setSecure(false);
         cookieUserForms.setHttpOnly(true);
         response.addCookie(cookieUserForms);
         return "redirect:/";
     }
-
 }

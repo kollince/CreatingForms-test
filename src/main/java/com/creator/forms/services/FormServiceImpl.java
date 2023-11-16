@@ -28,7 +28,7 @@ public class FormServiceImpl implements FormService {
     }
 
     @Override
-    public List<Answers> addAnswer(Answers answers) {
+    public List<Answers> addAnswer(Answers answers) throws IOException {
         return formsDao.addAnswer(answers);
     }
 
@@ -49,12 +49,12 @@ public class FormServiceImpl implements FormService {
 
 
     @Override
-    public List<Answers> updateAnswers(int id, String answer, boolean isTrue) {
+    public List<Answers> updateAnswers(int id, String answer, boolean isTrue) throws IOException {
         return formsDao.updateAnswers(id,answer,isTrue);
     }
 
     @Override
-    public List<Answers> deleteAnswers(int id) {
+    public List<Answers> deleteAnswers(int id) throws IOException {
         return formsDao.deleteAnswers(id);
     }
 
@@ -64,7 +64,7 @@ public class FormServiceImpl implements FormService {
     }
 
     @Override
-    public List<Questions> addQuestion(Questions questions) {
+    public List<Questions> addQuestion(Questions questions) throws IOException {
         return formsDao.addQuestion(questions);
     }
 
@@ -81,12 +81,12 @@ public class FormServiceImpl implements FormService {
         return formsDao.countQstForTest();
     }
     @Override
-    public List<Questions> updateQuestions(int id, String question) {
+    public List<Questions> updateQuestions(int id, String question) throws IOException {
         return formsDao.updateQuestions(id, question);
     }
 
     @Override
-    public List<Questions> deleteQuestion(int id) {
+    public List<Questions> deleteQuestion(int id) throws IOException {
         return formsDao.deleteQuestion(id);
     }
 
