@@ -27,8 +27,8 @@ public interface FormsDao {
     List<Questions> deleteQuestion(int id);
     Questions getQuestionById(int id);
     List<Forms> addForm (Forms form) throws IOException;
-    List<Forms> updateForm(int id, String name, String description, boolean isForTime);
-    List<Forms> delete(int id);
+    List<Forms> updateForm(int id, String name, String description, boolean isForTime) throws IOException;
+    List<Forms> delete(int id) throws IOException;
     Forms getFormsById(int id);
     List<Forms> listForms() throws IOException;
 //    List<Passing> addPassing(Passing passing);

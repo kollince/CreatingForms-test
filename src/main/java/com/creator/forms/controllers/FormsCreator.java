@@ -168,7 +168,7 @@ public String deleteAnswer(@PathVariable(value="idAnswer") int idAnswer) {
     }
 
     @GetMapping("dashboard/deleteForm/{id}")
-    public String getDelete(@PathVariable(value="id") int id) {
+    public String getDelete(@PathVariable(value="id") int id) throws IOException {
         formService.delete(id);
         formService.deleteQuestionsByFormId(id);
         return "redirect:/dashboard/";

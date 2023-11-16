@@ -1,6 +1,5 @@
 package com.creator.forms.dao;
 
-import ch.qos.logback.classic.util.LogbackMDCAdapter;
 import com.creator.forms.dao.interfaces.FormsDao;
 import com.creator.forms.models.Answers;
 import com.creator.forms.models.Forms;
@@ -30,7 +29,7 @@ public class FormsDaoJsonImpl implements FormsDao {
     Map<Questions, List<Answers>> questionsAndAnswers = new HashMap<>();
     Map<Questions, List<Answers>> userQuestionsAndAnswers = new HashMap<>();
     private final ObjectMapper mapper = new ObjectMapper();
-    final Path FILEPATH = Path.of("src/main/resources/data/listForms.json");
+    private Path fileListForms = Path.of("src/main/resources/data/listForms.json");
     private int idCount = 0;
     private int idCountQuestion = 0;
     private int idCountPassing = 0;
@@ -44,15 +43,15 @@ public class FormsDaoJsonImpl implements FormsDao {
     public FormsDaoJsonImpl() {
 
     }
-    private void fileExist()  {
-        File file = new File(FILEPATH.toUri());
-        try {
-            if (!file.exists()) {
-                file.createNewFile();
-            }
-        } catch (Exception e){
-            System.err.println("file not found");
-        }
+    private void fileExist(Path path) throws IOException {
+       File file = new File(path.toUri());
+       if (!file.exists()) {
+           file.createNewFile();
+       }
+    }
+    private void saveFileListForms(List<Forms> formsList, Path path) throws IOException {
+        fileExist(path);
+        mapper.writeValue(fileListForms.toFile(), formsList);
     }
     @Override
     public List<Answers> addAnswer(Answers answers) {
@@ -139,8 +138,6 @@ public class FormsDaoJsonImpl implements FormsDao {
         if (questionsList.size() == 0) {
             idCountQuestion = 1;
             questions.setId(idCountQuestion++);
-            //updatePassing(questions.getIdForm(),1, idCountQuestion);
-            //addPassing(questions.getIdForm(),idCountQuestion,1);
         } else {
             for (int i = 0; i < questionsList.size(); i++) {
                 max = Math.max(max, questionsList.get(i).getId());
@@ -266,10 +263,8 @@ public class FormsDaoJsonImpl implements FormsDao {
             form.setId(idCount++);
         }
         formsList.add(form);
+        saveFileListForms(formsList,fileListForms);
         return formsList;
-        //fileExist();
-        //mapper.writeValue(FILEPATH.toFile(), form);
-
     }
 
     @Override
@@ -285,7 +280,7 @@ public class FormsDaoJsonImpl implements FormsDao {
     }
 
     @Override
-    public List<Forms> updateForm(int id, String name, String description, boolean isForTime) {
+    public List<Forms> updateForm(int id, String name, String description, boolean isForTime) throws IOException {
         for (Forms forms : formsList) {
             if (forms.getId() == id) {
                 forms.setName(name);
@@ -293,11 +288,12 @@ public class FormsDaoJsonImpl implements FormsDao {
                 forms.setForTime(isForTime);
             }
         }
+        saveFileListForms(formsList,fileListForms);
         return formsList;
     }
 
     @Override
-    public List<Forms> delete(int id) {
+    public List<Forms> delete(int id) throws IOException {
         for (int i = 0; i < formsList.size(); i++) {
             if (formsList.get(i).getId()==id) {
                 formsList.remove(i);
@@ -315,6 +311,7 @@ public class FormsDaoJsonImpl implements FormsDao {
                 }
             }
         }
+        saveFileListForms(formsList,fileListForms);
         return formsList;
     }
 

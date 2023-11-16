@@ -27,8 +27,8 @@ public interface FormService {
     Questions getQuestionById(int id);
     List<Forms> listForms() throws IOException;
     List<Forms> addForms(Forms form) throws IOException;
-    List<Forms> updateForm(int id, String name, String description, boolean isForTime);
-    List<Forms> delete(int id);
+    List<Forms> updateForm(int id, String name, String description, boolean isForTime) throws IOException;
+    List<Forms> delete(int id) throws IOException;
     Forms getFormsById(int id);
     Questions getQuestionOneByFormId(int formId);
     Map<Questions, List<Answers>> addCorrectQuestions(Answers answer, int idQuestion);

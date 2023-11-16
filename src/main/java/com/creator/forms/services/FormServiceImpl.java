@@ -105,12 +105,12 @@ public class FormServiceImpl implements FormService {
     }
 
     @Override
-    public List<Forms> updateForm(int id, String name, String description, boolean isForTime) {
+    public List<Forms> updateForm(int id, String name, String description, boolean isForTime) throws IOException {
        return formsDao.updateForm(id, name, description,isForTime);
     }
 
     @Override
-    public List<Forms> delete(int id) {
+    public List<Forms> delete(int id) throws IOException {
         return formsDao.delete(id);
     }
 
