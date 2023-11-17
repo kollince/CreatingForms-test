@@ -12,6 +12,7 @@ import org.springframework.stereotype.Repository;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.PrintStream;
 import java.nio.file.Path;
 import java.util.*;
 
@@ -376,13 +377,23 @@ public class FormsDaoJsonImpl implements FormsDao {
                     qst = questionsList.get(i);
                 }
             }
+            List<Answers> newAns = answersList.stream()
+                    .filter(Answers::isTrue)
+                    .collect(Collectors.toCollection(ArrayList::new));
+            for (int i = 0; i < questionsList.size(); i++) {
+                for (int j = 0; j < answersList.size(); j++) {
+                    if (questionsList.get(i).getId() == answersList.get(j).getIdQuestion()){
+                        qst = questionsList.get(i);
+                    }
+                }
+            }
+            System.out.println("qst "+qst+" newAns "+ newAns);
+
+            questionsAndAnswers.put(qst,newAns);
         } else {
             deleteAnswersAns(id);
         }
-        System.out.println("==="+ans);
         System.out.println("::"+questionsAndAnswers);
-        questionsAndAnswers.put(qst,ans);
-        //questionsAndAnswers.remove(qst);
         return questionsAndAnswers;
     }
     @Override
