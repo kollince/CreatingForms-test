@@ -13,8 +13,8 @@ import java.util.Map;
 @Repository
 public interface FormsDao {
     List<Answers> addAnswer(Answers answers) throws IOException;
-    List<Answers> listAnswers();
-    List<Answers> listAnswersByFormId(int formId);
+    List<Answers> listAnswers() throws IOException;
+    List<Answers> listAnswersByFormId(int formId) throws IOException;
     List<Answers> listAnswersByQuestionId(int questionId);
     List<Answers> updateAnswers(int id, String answer, boolean isTrue) throws IOException;
     List<Answers> deleteAnswers(int id) throws IOException;
@@ -22,7 +22,7 @@ public interface FormsDao {
     List<Questions> addQuestion(Questions questions) throws IOException;
     List<Questions> listQuestionsByFormId(int formId);
     List<Questions> countQstForTest();
-    List<Questions> listQuestions();
+    List<Questions> listQuestions() throws IOException;
     List<Questions> updateQuestions(int id, String question) throws IOException;
     List<Questions> deleteQuestion(int id) throws IOException;
     Questions getQuestionById(int id);

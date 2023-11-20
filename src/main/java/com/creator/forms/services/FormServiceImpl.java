@@ -33,12 +33,12 @@ public class FormServiceImpl implements FormService {
     }
 
     @Override
-    public List<Answers> listAnswers() {
+    public List<Answers> listAnswers() throws IOException {
         return formsDao.listAnswers();
     }
 
     @Override
-    public List<Answers> listAnswersByFormId(int formId) {
+    public List<Answers> listAnswersByFormId(int formId) throws IOException {
         return formsDao.listAnswersByFormId(formId);
     }
 
@@ -69,7 +69,7 @@ public class FormServiceImpl implements FormService {
     }
 
     @Override
-    public List<Questions> listQuestions() {
+    public List<Questions> listQuestions() throws IOException {
         return formsDao.listQuestions();
     }
     @Override

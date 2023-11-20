@@ -29,6 +29,9 @@ public class FormsCreator {
     private final FormsDao formsDao = new FormsDaoJsonImpl();
     private final FormService formService = new FormServiceImpl(formsDao);
 
+    public FormsCreator() throws IOException {
+    }
+
     @GetMapping("/")
     public String allPhysicsTests(HttpServletRequest request, Model model) throws IOException {
         String user = "Гость";
@@ -50,11 +53,10 @@ public class FormsCreator {
         model.addAttribute("countQst", countQst);
         model.addAttribute("userName", user);
         Map<Questions, List<Answers>> cqs = formService.listCorrectQuestions();
-        System.out.println("CorrectQuestions "+cqs);
         return "index";
     }
     @GetMapping("/takeTest/{id}")
-    public String takeTest(@PathVariable(value="id") int id, Model model) {
+    public String takeTest(@PathVariable(value="id") int id, Model model) throws IOException {
         Forms formsById = formService.getFormsById(id);
         List<Questions> questionsByFormId = formService.listQuestionsByFormId(id);
         List<Answers> answersByFormId = formService.listAnswersByFormId(id);

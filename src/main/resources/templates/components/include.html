@@ -8,11 +8,13 @@
 </head>
 <body>
 <div th:fragment="top">
-  <a href="/">Главная</a> | <th:block sec:authorize="!isAuthenticated()"><a href="/login">Панель управления</a></th:block>
-  <th:block sec:authorize="isAuthenticated()"><a href="/dashboard/">Панель управления</a></th:block> |
+  <a class="navbar-link" href="/">Главная</a> | <th:block sec:authorize="!isAuthenticated()">
+    <a class="navbar-link" href="/login">Панель управления</a></th:block>
+  <th:block sec:authorize="isAuthenticated()"><a class="navbar-link" href="/dashboard/">Панель управления</a></th:block> |
   <th:block sec:authorize="hasAnyRole('ROLE_ADMIN')">
-  <a th:text="Выйти" th:href="'/logout'"></a>
+  <a class="navbar-link" th:text="Выйти" th:href="'/logout'"></a>
 </th:block>
+
   <th:block sec:authorize="!isAuthenticated()"><h5>Добро пожаловать <th:block th:text="${userName}"></th:block>!</h5></th:block>
   <th:block sec:authorize="isAuthenticated()"><h5>Добро пожаловать <th:block sec:authentication="name"></th:block>!</h5></th:block>
   <th:block th:if="${userName == 'Гость'}">
