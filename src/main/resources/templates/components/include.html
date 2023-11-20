@@ -2,46 +2,65 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <script src="/js/bootstrap.min.js"></script>
+
   <!-- Bootstrap CSS -->
   <link th:fragment="css" rel="stylesheet" type="text/css" href="/css/bootstrap.min.css">
 </head>
 <body>
+<!--<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>-->
+<!--<script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.3/dist/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>-->
+<!--<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.1.3/dist/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>-->
 <div th:fragment="top">
-  <a class="navbar-link" href="/">Главная</a> | <th:block sec:authorize="!isAuthenticated()">
-    <a class="navbar-link" href="/login">Панель управления</a></th:block>
-  <th:block sec:authorize="isAuthenticated()"><a class="navbar-link" href="/dashboard/">Панель управления</a></th:block> |
-  <th:block sec:authorize="hasAnyRole('ROLE_ADMIN')">
-  <a class="navbar-link" th:text="Выйти" th:href="'/logout'"></a>
-</th:block>
-
+  <nav class="navbar navbar-expand-md navbar-light bg-light">
+    <a class="navbar-brand" href="/">Главная</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item">
+          <th:block sec:authorize="!isAuthenticated()">
+            <a class="nav-link" href="/login">Панель управления</a>
+          </th:block>
+          <th:block sec:authorize="isAuthenticated()">
+            <a class="nav-link" href="/dashboard/">Панель управления</a>
+          </th:block>
+        </li>
+        <li class="nav-item">
+          <th:block sec:authorize="hasAnyRole('ROLE_ADMIN')">
+            <a class="nav-link" th:text="Выйти" th:href="'/logout'"></a>
+          </th:block>
+        </li>
+      </ul>
+    </div>
+  </nav>
   <th:block sec:authorize="!isAuthenticated()"><h5>Добро пожаловать <th:block th:text="${userName}"></th:block>!</h5></th:block>
   <th:block sec:authorize="isAuthenticated()"><h5>Добро пожаловать <th:block sec:authentication="name"></th:block>!</h5></th:block>
   <th:block th:if="${userName == 'Гость'}">
     <th:block sec:authorize="!isAuthenticated()">
-    <form method="post" th:action="@{'/addUser'}">
-      <div>
-        <label>Введите свою Фамилию и Имя</label>
-        <input type="text" name="user" required>
-      </div>
+    <form class="form-inline" method="post" th:action="@{'/addUser'}">
+      <input style="width: 60rem;" type="text" class="form-control is-invalid mb-2 mr-sm-2" id="nameInput" name="user" placeholder="Введите свою Фамилию и Имя" required>
       <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
-      <div>
-        <input type="submit" value="ОК">
-      </div>
+      <!--        <input type="submit" class="btn btn-primary" value="ОК">-->
+      <button type="submit" class="btn btn-primary mb-2">ОК</button>
     </form>
     </th:block>
   </th:block>
 </div>
 <th:block th:fragment="listTest">
-  <H3>Список тестов</H3><br>
+  <H3>Список тестов по математике</H3><br>
   <th:block th:each="el : ${allForms}">
-    <div>
-      <b><th:block th:text="${el.name}"></th:block></b>
-        <a th:href="@{'/takeTest/'+${el.id}}">Пройти тест</a>
-      <div th:text="${el.description}"></div>
-      <div> На время:
-        <th:block th:if="${el.isForTime} == true">Да</th:block>
-        <th:block th:if="${el.isForTime} == false">Нет</th:block>
+    <div class="card mb-4" style="width: 60rem;">
+      <div class="card-body">
+      <h5 class="card-title"><th:block th:text="${el.name}"></th:block></h5>
+      <div class="card-text" th:text="${el.description}"></div>
+<!--      <div> На время:-->
+<!--        <th:block th:if="${el.isForTime} == true">Да</th:block>-->
+<!--        <th:block th:if="${el.isForTime} == false">Нет</th:block>-->
+<!--      </div>-->
+      <a class="card-link" th:href="@{'/takeTest/'+${el.id}}">Пройти тест</a>
       </div>
     </div>
   </th:block>

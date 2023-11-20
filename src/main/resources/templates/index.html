@@ -2,15 +2,19 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <script src="/js/bootstrap.min.js"></script>
     <!-- Bootstrap CSS -->
     <link th:insert="~{components/include :: css}">
     <title>Тесты по физике</title>
 </head>
 <body>
+<script src="/js/jquery-3.3.1.slim.min.js"></script>
+<script src="/js/popper.min.js"></script>
+<script src="/js/bootstrap.min.js"></script>
 <div class="container">
 <th:block th:insert="~{components/include :: top}"></th:block>
-<H1>Тесты по физике</H1>
+<!--<H1>Тесты по физике</H1>-->
 <th:block th:insert="~{components/include :: listTest}"></th:block>
 </div>
 
