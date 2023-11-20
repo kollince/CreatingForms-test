@@ -370,30 +370,29 @@ public class FormsDaoJsonImpl implements FormsDao {
                     .filter(answers -> answers.getId() == id && answers.isTrue())
                     .collect(Collectors.toCollection(ArrayList::new));
         if(!ans.isEmpty()) {
-            System.out.println("ans " + ans);
+            List<Answers> newAns = answersList.stream()
+                    .filter(Answers::isTrue)
+                    .collect(Collectors.toCollection(ArrayList::new));
+            for (int i = 0; i < newAns.size(); i++) {
+                if (newAns.get(i).getId()==id){
+                    if (ans.get(0).getId() == newAns.get(i).getId()){
+                        newAns.set(i, ans.get(0));
+                    }
+                }
+            }
+            List<Answers> newAns2 = newAns.stream()
+                    .filter(answers -> answers.getIdQuestion()==ans.get(0).getIdQuestion())
+                    .collect(Collectors.toCollection(ArrayList::new));
             int idQuestion = ans.get(0).getIdQuestion();
             for (int i = 0; i < questionsList.size(); i++) {
                 if (questionsList.get(i).getId() == idQuestion) {
                     qst = questionsList.get(i);
                 }
             }
-            List<Answers> newAns = answersList.stream()
-                    .filter(Answers::isTrue)
-                    .collect(Collectors.toCollection(ArrayList::new));
-            for (int i = 0; i < questionsList.size(); i++) {
-                for (int j = 0; j < answersList.size(); j++) {
-                    if (questionsList.get(i).getId() == answersList.get(j).getIdQuestion()){
-                        qst = questionsList.get(i);
-                    }
-                }
-            }
-            System.out.println("qst "+qst+" newAns "+ newAns);
-
-            questionsAndAnswers.put(qst,newAns);
+            questionsAndAnswers.put(qst,newAns2);
         } else {
             deleteAnswersAns(id);
         }
-        System.out.println("::"+questionsAndAnswers);
         return questionsAndAnswers;
     }
     @Override
