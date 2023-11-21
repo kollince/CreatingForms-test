@@ -5,40 +5,52 @@
     <script src="/js/bootstrap.min.js"></script>
     <!-- Bootstrap CSS -->
     <link th:insert="~{components/include :: css}">
-    <title>Пройти тест по физике</title>
+    <title>Пройти тест по математике</title>
 </head>
 <body>
-<th:block th:insert="~{components/include :: top}"></th:block>
-<th:block th:each="formsById : ${formsById}">
-    <H1>Пройти тест "
-        <th:block th:text="${formsById.name}"></th:block>
-        " по физике
-    </H1>
-    <form method="post" th:action="@{'/endTakeTest/'+${formsById.id}}">
-        <div th:text="${formsById.description}"></div>
-        <H5>Вопросы</H5>
-        <ol th:unless="${questionsByFormId.empty}">
-            <th:block th:each="questionsByFormId : ${questionsByFormId}">
-                <li>
-                    <th:block th:text="${questionsByFormId.question}"></th:block>
-                    <div>Выберите правильный ответ (ответов может быть несколько).</div>
-                    <ol>
-                        <th:block th:each="answersByFormId : ${answersByFormId}">
-                            <th:block th:if="${#strings.equals(answersByFormId.idQuestion, questionsByFormId.id)}">
-                                <li><input type="checkbox" th:name="answer"
-                                           th:value="${answersByFormId.id}">
-                                    <th:block th:text="${answersByFormId.answer}"></th:block> |
-                                    <th:block th:text="${answersByFormId.id}"></th:block>
-                                </li>
-                            </th:block>
+<div class="container">
+    <th:block th:insert="~{components/include :: top}"></th:block>
+    <div class="card mb-4" style="width: 60rem;">
+        <div class="card-body">
+            <th:block th:each="formsById : ${formsById}">
+                <H1>Пройти тест "
+                    <th:block th:text="${formsById.name}"></th:block>
+                    " по математике
+                </H1>
+                <form method="post" th:action="@{'/endTakeTest/'+${formsById.id}}">
+                    <div th:text="${formsById.description}"></div>
+                    <H5>Вопросы</H5>
+
+                    <ol th:unless="${questionsByFormId.empty}">
+                        <th:block th:each="questionsByFormId : ${questionsByFormId}">
+                            <li>
+                                <b>
+                                    <th:block th:text="${questionsByFormId.question}"></th:block>
+                                </b>
+                                <div>Выберите правильный ответ (ответов может быть несколько).</div>
+                                <ol>
+                                    <th:block th:each="answersByFormId : ${answersByFormId}">
+                                        <th:block
+                                                th:if="${#strings.equals(answersByFormId.idQuestion, questionsByFormId.id)}">
+                                            <li><input class="form-check-input" type="checkbox" th:name="answer"
+                                                       th:value="${answersByFormId.id}">
+                                                <th:block th:text="${answersByFormId.answer}"></th:block>
+                                                |
+                                                <th:block th:text="${answersByFormId.id}"></th:block>
+                                            </li>
+                                        </th:block>
+                                    </th:block>
+                                </ol>
+                            </li>
                         </th:block>
                     </ol>
-                </li>
+                    <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+                    <button type="submit" class="btn btn-primary">Завершить тест</button>
+                    <!--                <input type="submit" value="Завершить тест">-->
+                </form>
             </th:block>
-        </ol>
-        <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
-        <input type="submit" value="Завершить тест">
-    </form>
-</th:block>
+        </div>
+    </div>
+</div>
 </body>
 </html>

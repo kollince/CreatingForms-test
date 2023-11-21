@@ -8,80 +8,109 @@
     <title>Редактор теста по физике</title>
 </head>
 <body>
-<div th:insert="~{dashboard/fragments/include :: top}"></div>
-<H1>Панель управления / Редактор вопроса к тесту по физике</H1>
-<th:block th:each="qstListId : ${qstListId}">
-    <a th:href="@{'/dashboard/eForm/'+${qstListId.idForm}}"><< Вернуться к редактированию теста</a> |
-    <th:block th:insert="~{dashboard/fragments/include :: linksAddForms}"></th:block>
-    <fieldset>
-        <legend>Редактирование вопроса "<th:block th:text="${qstListId.question}"></th:block>" к тесту по физике "
-            <th:block th:each="fmsListId : ${fmsListId}" th:text="${fmsListId.name}"></th:block>"
-        </legend>
-        <form method="post" th:action="@{'/dashboard/updateQuestion/' + ${qstListId.idForm}+'/'+${qstListId.id}}">
-            <textarea th:text="${qstListId.question}" name="question" type="text" rows="5" required></textarea>
-            <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
-            <div>
-                <input type="submit" value="Изменить">
-            </div>
-        </form>
-    </fieldset>
-    <fieldset>
-        <legend>Добавить ответ к вопросу "<th:block th:text="${qstListId.question}"></th:block>"
-        </legend>
-        <form method="post" th:action="@{'/dashboard/addAnswer'}">
-            <input type="hidden" name="idForm" th:value="${qstListId.idForm}">
-            <input type="hidden" name="idQuestion" th:value="${qstListId.id}">
-            <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
-            <div>
-                <label>Ответ</label>
-                <textarea name="answer" type="text" rows="5" required></textarea>
-            </div>
-            <div>
-                <span>Правильный ответ</span>
-                <label>
-                    <input type="radio" name="isTrue" value="true">Да
-                </label>
-                <label>
-                    <input type="radio" name="isTrue" value="false" checked>Нет
-                </label>
-            </div>
-            <div>
-                <input type="submit" value="Добавить">
-            </div>
-        </form>
-    </fieldset>
-    <fieldset>
-        <legend>Ответы:</legend>
-        <ol th:unless="${ansListByQuestionId.empty}">
-            <li th:each="ansListByQuestionId : ${ansListByQuestionId}">
-                <form method="post"
-                      th:action="@{'/dashboard/updateAnswer/' + ${ansListByQuestionId.idForm} + '/' + ${ansListByQuestionId.id}}">
-                    <div>
-                        <label>Ответ</label>
-                        <textarea th:text="${ansListByQuestionId.answer}" name="answer" type="text" rows="5"
-                                  required></textarea>
-                    </div>
-                    <div>
-                        <span>Правильный ответ</span>
-                        <label>
-                            <input type="radio" name="isTrue" value="on"
-                                   th:checked="(${ansListByQuestionId.isTrue == true})">Да
-                        </label>
-                        <label>
-                            <input type="radio" name="isTrue" value="off"
-                                   th:checked="(${ansListByQuestionId.isTrue == false})">Нет
-                        </label>
-                    </div>
-                    <input type="hidden" name="idQuestion" th:value="${ansListByQuestionId.idQuestion}">
-                    <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
-                    <div>
-                        <input type="submit" value="Изменить">
-                    </div>
-                </form>
-                <a th:href="@{'/dashboard/deleteAnswer/'+${ansListByQuestionId.id}}">Удалить</a>
+<div class="container">
+    <div th:insert="~{dashboard/fragments/include :: top}"></div>
+    <H3>Редактор вопроса к тесту по физике</H3>
+    <th:block th:each="qstListId : ${qstListId}">
+        <ul class="nav nav-pills nav-fill mb-4">
+            <li class="nav-item">
+                <div class="col-sm-4">
+                    <a class="nav-link active" th:href="@{'/dashboard/eForm/'+${qstListId.idForm}}"><<< Вернуться к
+                        редактированию теста <<<</a>
+                </div>
             </li>
-        </ol>
-    </fieldset>
-</th:block>
+        </ul>
+        <div class="card mb-4" style="width: 60rem;">
+            <div class="card-body">
+                <fieldset>
+                    <legend class="card-title">Редактирование вопроса "
+                        <th:block th:text="${qstListId.question}"></th:block>
+                        " к тесту по физике "
+                        <th:block th:each="fmsListId : ${fmsListId}" th:text="${fmsListId.name}"></th:block>
+                        "
+                    </legend>
+                    <form method="post"
+                          th:action="@{'/dashboard/updateQuestion/' + ${qstListId.idForm}+'/'+${qstListId.id}}">
+                        <div class="form-group row mb-4">
+                            <label class="col-sm-2 col-form-label">Вопрос</label>
+                            <div class="col-sm-7">
+                        <textarea class="form-control" th:text="${qstListId.question}" name="question" type="text"
+                                  rows="5"
+                                  required></textarea>
+                                <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+                            </div>
+                        </div>
+                        <div>
+                            <button type="submit" class="btn btn-primary mb-2">Изменить</button>
+                        </div>
+                    </form>
+                </fieldset>
+            </div>
+        </div>
+        <div class="card mb-4" style="width: 60rem;">
+            <div class="card-body">
+                <fieldset>
+                    <legend class="card-title">Добавить ответ к вопросу "<th:block th:text="${qstListId.question}"></th:block>"</legend>
+                    <form method="post" th:action="@{'/dashboard/addAnswer'}">
+                        <input type="hidden" name="idForm" th:value="${qstListId.idForm}">
+                        <input type="hidden" name="idQuestion" th:value="${qstListId.id}">
+                        <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+                        <div class="form-group row mb-4">
+                            <div class="col-sm-7">
+                                <label class="col-sm-2 col-form-label">Ответ</label>
+                                <textarea class="form-control" name="answer" type="text" rows="6" required></textarea>
+                            </div>
+                            <div class="form-group row mb-4">
+                                <legend class="col-form-label col-sm-2 pt-0">Правильный ответ</legend>
+
+                                <div class="col-sm-7">
+                                    <input class="form-check-input" type="radio" name="isTrue" value="true">
+                                    <label>Да</label>
+                                    <input class="form-check-input" type="radio" name="isTrue" value="false" checked>
+                                    <label>Нет</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <button type="submit" class="btn btn-primary mb-2">Добавить</button>
+                        </div>
+                    </form>
+                </fieldset>
+            </div>
+        </div>
+        <fieldset>
+            <legend>Ответы:</legend>
+            <ol th:unless="${ansListByQuestionId.empty}">
+                <li th:each="ansListByQuestionId : ${ansListByQuestionId}">
+                    <form method="post"
+                          th:action="@{'/dashboard/updateAnswer/' + ${ansListByQuestionId.idForm} + '/' + ${ansListByQuestionId.id}}">
+                        <div>
+                            <label>Ответ</label>
+                            <textarea th:text="${ansListByQuestionId.answer}" name="answer" type="text" rows="5"
+                                      required></textarea>
+                        </div>
+                        <div>
+                            <span>Правильный ответ</span>
+                            <label>
+                                <input type="radio" name="isTrue" value="on"
+                                       th:checked="(${ansListByQuestionId.isTrue == true})">Да
+                            </label>
+                            <label>
+                                <input type="radio" name="isTrue" value="off"
+                                       th:checked="(${ansListByQuestionId.isTrue == false})">Нет
+                            </label>
+                        </div>
+                        <input type="hidden" name="idQuestion" th:value="${ansListByQuestionId.idQuestion}">
+                        <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+                        <div>
+                            <input type="submit" value="Изменить">
+                        </div>
+                    </form>
+                    <a th:href="@{'/dashboard/deleteAnswer/'+${ansListByQuestionId.id}}">Удалить</a>
+                </li>
+            </ol>
+        </fieldset>
+    </th:block>
+</div>
 </body>
 </html>
