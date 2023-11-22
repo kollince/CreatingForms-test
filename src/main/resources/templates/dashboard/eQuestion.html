@@ -23,12 +23,7 @@
         <div class="card mb-4" style="width: 60rem;">
             <div class="card-body">
                 <fieldset>
-                    <legend class="card-title">Редактирование вопроса "
-                        <th:block th:text="${qstListId.question}"></th:block>
-                        " к тесту по физике "
-                        <th:block th:each="fmsListId : ${fmsListId}" th:text="${fmsListId.name}"></th:block>
-                        "
-                    </legend>
+                    <legend class="card-title">Редактирование вопроса "<th:block th:text="${qstListId.question}"></th:block>" к тесту по физике "<th:block th:each="fmsListId : ${fmsListId}" th:text="${fmsListId.name}"></th:block>"</legend>
                     <form method="post"
                           th:action="@{'/dashboard/updateQuestion/' + ${qstListId.idForm}+'/'+${qstListId.id}}">
                         <div class="form-group row mb-4">
@@ -55,20 +50,21 @@
                         <input type="hidden" name="idForm" th:value="${qstListId.idForm}">
                         <input type="hidden" name="idQuestion" th:value="${qstListId.id}">
                         <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+
                         <div class="form-group row mb-4">
+                            <label class="col-sm-2 col-form-label">Ответ</label>
                             <div class="col-sm-7">
-                                <label class="col-sm-2 col-form-label">Ответ</label>
                                 <textarea class="form-control" name="answer" type="text" rows="6" required></textarea>
                             </div>
-                            <div class="form-group row mb-4">
-                                <legend class="col-form-label col-sm-2 pt-0">Правильный ответ</legend>
+                        </div>
+                        <div class="form-group row mb-4">
+                            <legend class="col-form-label col-sm-2 pt-0">Правильный ответ</legend>
 
-                                <div class="col-sm-7">
-                                    <input class="form-check-input" type="radio" name="isTrue" value="true">
-                                    <label>Да</label>
-                                    <input class="form-check-input" type="radio" name="isTrue" value="false" checked>
-                                    <label>Нет</label>
-                                </div>
+                            <div class="col-sm-7">
+                                <input class="form-check-input" type="radio" name="isTrue" value="true">
+                                <label>Да</label>
+                                <input class="form-check-input" type="radio" name="isTrue" value="false" checked>
+                                <label>Нет</label>
                             </div>
                         </div>
                         <div>
@@ -78,38 +74,43 @@
                 </fieldset>
             </div>
         </div>
-        <fieldset>
-            <legend>Ответы:</legend>
-            <ol th:unless="${ansListByQuestionId.empty}">
-                <li th:each="ansListByQuestionId : ${ansListByQuestionId}">
-                    <form method="post"
-                          th:action="@{'/dashboard/updateAnswer/' + ${ansListByQuestionId.idForm} + '/' + ${ansListByQuestionId.id}}">
-                        <div>
-                            <label>Ответ</label>
-                            <textarea th:text="${ansListByQuestionId.answer}" name="answer" type="text" rows="5"
-                                      required></textarea>
-                        </div>
-                        <div>
-                            <span>Правильный ответ</span>
-                            <label>
-                                <input type="radio" name="isTrue" value="on"
-                                       th:checked="(${ansListByQuestionId.isTrue == true})">Да
-                            </label>
-                            <label>
-                                <input type="radio" name="isTrue" value="off"
-                                       th:checked="(${ansListByQuestionId.isTrue == false})">Нет
-                            </label>
-                        </div>
-                        <input type="hidden" name="idQuestion" th:value="${ansListByQuestionId.idQuestion}">
-                        <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
-                        <div>
-                            <input type="submit" value="Изменить">
-                        </div>
-                    </form>
-                    <a th:href="@{'/dashboard/deleteAnswer/'+${ansListByQuestionId.id}}">Удалить</a>
-                </li>
-            </ol>
-        </fieldset>
+        <div class="card mb-4" style="width: 60rem;">
+            <div class="card-body">
+                <fieldset>
+                    <legend class="card-title">Ответы:</legend>
+                    <ol th:unless="${ansListByQuestionId.empty}">
+                        <li th:each="ansListByQuestionId : ${ansListByQuestionId}">
+                            <form method="post"
+                                  th:action="@{'/dashboard/updateAnswer/' + ${ansListByQuestionId.idForm} + '/' + ${ansListByQuestionId.id}}">
+                                <div class="form-group row mb-4">
+                                    <label class="col-sm-2 col-form-label">Ответ</label>
+                                    <div class="col-sm-7">
+                                        <textarea class="form-control" th:text="${ansListByQuestionId.answer}" name="answer" type="text" rows="6" required></textarea>
+                                    </div>
+                                </div>
+                                <div class="form-group row mb-4">
+                                    <legend class="col-form-label col-sm-2 pt-0">Правильный ответ</legend>
+                                    <div class="col-sm-7">
+                                        <input type="radio" class="form-check-input" name="isTrue" value="on"
+                                               th:checked="(${ansListByQuestionId.isTrue == true})">
+                                        <label>Да</label>
+                                        <input type="radio" class="form-check-input" name="isTrue" value="off"
+                                               th:checked="(${ansListByQuestionId.isTrue == false})">
+                                        <label>Нет</label>
+                                    </div>
+                                </div>
+                                <input type="hidden" name="idQuestion" th:value="${ansListByQuestionId.idQuestion}">
+                                <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+                                <div>
+                                    <button type="submit" class="btn btn-primary mb-2">Изменить</button>
+                                </div>
+                            </form>
+                            <a class="card-link" th:href="@{'/dashboard/deleteAnswer/'+${ansListByQuestionId.id}}">Удалить</a>
+                        </li>
+                    </ol>
+                </fieldset>
+            </div>
+        </div>
     </th:block>
 </div>
 </body>

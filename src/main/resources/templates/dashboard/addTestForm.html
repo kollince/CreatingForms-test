@@ -6,31 +6,41 @@
     <title>Создание теста</title>
 </head>
 <body>
-<div th:insert="~{dashboard/fragments/include :: top}"></div>
-<H1>Панель управления / Добавить тест</H1>
-<!--<div th:insert="~{dashboard/fragments/include :: linksAddForms}"></div>-->
-<form method="post" th:action="@{'/dashboard/addForm'}">
-  <div>
-    <label>Наименование теста</label>
-    <input type="text" name="name" required>
-  </div>
-  <div>
-    <label>Описание</label>
-    <textarea name="description" type="text" rows="5" required></textarea>
-  </div>
-  <div class="radio">
-    <span>На время</span>
-    <label>
-      <input type="radio" name="time" value="true">Да
-    </label>
-    <label>
-      <input type="radio" name="time" value="false" checked>Нет
-    </label>
-    <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
-  </div>
-  <div>
-    <input type="submit" value="Добавить">
-  </div>
-</form>
+<div class="container">
+    <div th:insert="~{dashboard/fragments/include :: top}"></div>
+    <H3>Добавить тест</H3>
+    <!--<div th:insert="~{dashboard/fragments/include :: linksAddForms}"></div>-->
+    <div class="card mb-4" style="width: 60rem;">
+        <div class="card-body">
+            <form method="post" th:action="@{'/dashboard/addForm'}">
+              <div class="form-group row mb-4">
+                    <label class="col-sm-2 col-form-label">Наименование</label>
+                <div class="col-sm-7">
+                    <input class="form-control" type="text" name="name" required>
+                </div>
+              </div>
+              <div class="form-group row mb-4">
+                    <label class="col-sm-2 col-form-label">Описание</label>
+                <div class="col-sm-7">
+                    <textarea class="form-control" name="description" type="text" rows="5" required></textarea>
+                </div>
+                </div>
+                <div class="form-group row mb-4">
+                  <legend class="col-form-label col-sm-2 pt-0">На время</legend>
+                  <div class="col-sm-7">
+                  <input class="form-check-input" type="radio" name="time" value="true">
+                    <label>Да</label>
+                  <input class="form-check-input" type="radio" name="time" value="false" checked>
+                    <label>Нет</label>
+                  </div>
+                    <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+                </div>
+                <div>
+                  <button type="submit" class="btn btn-primary mb-2">Добавить</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 </body>
 </html>

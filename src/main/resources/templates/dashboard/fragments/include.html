@@ -8,7 +8,7 @@
 </head>
 <body>
 <th:block th:fragment="top">
-    <nav class="navbar navbar-expand-md navbar-light bg-light">
+    <nav class="navbar navbar-expand-md navbar-dark bg-success py-0 px-2 mb-4">
         <a class="navbar-brand" href="/">Главная</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
                 aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -18,31 +18,26 @@
             <ul class="navbar-nav mr-auto">
                 <li class="nav-item">
                     <th:block sec:authorize="!isAuthenticated()">
-                        <a class="nav-link" href="/login">Панель управления</a>
+                        <a class="nav-link text-white" href="/login">Панель управления</a>
                     </th:block>
                     <th:block sec:authorize="isAuthenticated()">
-                        <a class="nav-link" href="/dashboard/">Панель управления</a>
+                        <a class="nav-link text-white" href="/dashboard/">Панель управления</a>
                     </th:block>
                 </li>
                 <li class="nav-item">
                     <th:block sec:authorize="hasAnyRole('ROLE_ADMIN')">
-                        <a class="nav-link" href="/dashboard/addTestForm">Добавить тест</a>
+                        <a class="nav-link text-white" href="/dashboard/addTestForm">Добавить тест</a>
                     </th:block>
                 </li>
                 <li class="nav-item">
                     <th:block sec:authorize="hasAnyRole('ROLE_ADMIN')">
-                        <a class="nav-link" th:text="Выйти" th:href="'/logout'"></a>
+                        <a class="nav-link text-white" th:text="Выйти" th:href="'/logout'"></a>
                     </th:block>
                 </li>
             </ul>
         </div>
+        <div class="mt-2 p-2 mb-2  bg-success border text-white">Администратор: <th:block sec:authentication="name"></th:block></div>
     </nav>
-    <th:block sec:authorize="isAuthenticated()">
-        <h5>Панель управления (Акаунт:
-            <th:block sec:authentication="name"></th:block>
-            )
-        </h5>
-    </th:block>
 </th:block>
 
 <th:block th:fragment="listTest">

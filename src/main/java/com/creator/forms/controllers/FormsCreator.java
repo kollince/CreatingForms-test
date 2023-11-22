@@ -31,9 +31,7 @@ public class FormsCreator {
 
     public FormsCreator() throws IOException {
     }
-
-    @GetMapping("/")
-    public String allPhysicsTests(HttpServletRequest request, Model model) throws IOException {
+    private String getCookie(HttpServletRequest request){
         String user = "Гость";
         Cookie[] cookies = request.getCookies();
         if (cookies != null) {
@@ -47,6 +45,11 @@ public class FormsCreator {
                 }
             }
         }
+        return user;
+    }
+    @GetMapping("/")
+    public String allPhysicsTests(HttpServletRequest request, Model model) throws IOException {
+        String user = getCookie(request);
         List<Forms> fmsAll = formService.listForms();
         List<Questions> countQst = formService.countQstForTest();
         model.addAttribute("allForms", fmsAll);
@@ -56,13 +59,15 @@ public class FormsCreator {
         return "index";
     }
     @GetMapping("/takeTest/{id}")
-    public String takeTest(@PathVariable(value="id") int id, Model model) throws IOException {
+    public String takeTest(@PathVariable(value="id") int id, HttpServletRequest request, Model model) throws IOException {
+        String user = getCookie(request);
         Forms formsById = formService.getFormsById(id);
         List<Questions> questionsByFormId = formService.listQuestionsByFormId(id);
         List<Answers> answersByFormId = formService.listAnswersByFormId(id);
         model.addAttribute("formsById", formsById);
         model.addAttribute("questionsByFormId", questionsByFormId);
         model.addAttribute("answersByFormId", answersByFormId);
+        model.addAttribute("userName", user);
         return "takeTest";
     }
     @GetMapping("/beginTakeTest/{id}/{idQuestion}")
@@ -75,7 +80,8 @@ public class FormsCreator {
         return "beginTakeTest";
     }
     @GetMapping("/endTakeTest/{id}")
-    public String endTakeTest(@PathVariable(value="id") int idForm, Model model) {
+    public String endTakeTest(@PathVariable(value="id") int idForm,HttpServletRequest request, Model model) {
+        String user = getCookie(request);
         int countUserAnswer = formService.getCountUserAnswer();
         int getSizeQuestions = formService.getSizeQuestion();
         model.addAttribute("countUserAnswer", countUserAnswer);
@@ -84,6 +90,7 @@ public class FormsCreator {
         int result = formService.getResult();
         model.addAttribute("form", form);
         model.addAttribute("result", result);
+        model.addAttribute("userName", user);
         return "endTakeTest";
     }
     @GetMapping("dashboard/")
