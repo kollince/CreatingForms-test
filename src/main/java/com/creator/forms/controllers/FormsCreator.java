@@ -56,6 +56,7 @@ public class FormsCreator {
         model.addAttribute("countQst", countQst);
         model.addAttribute("userName", user);
         Map<Questions, List<Answers>> cqs = formService.listCorrectQuestions();
+        System.out.println("listCorrectQuestions "+cqs);
         return "index";
     }
     @GetMapping("/takeTest/{id}")
@@ -68,6 +69,8 @@ public class FormsCreator {
         model.addAttribute("questionsByFormId", questionsByFormId);
         model.addAttribute("answersByFormId", answersByFormId);
         model.addAttribute("userName", user);
+        Map<Questions, List<Answers>> cqs = formService.listCorrectQuestions();
+        model.addAttribute("cqs", cqs);
         return "takeTest";
     }
     @GetMapping("/beginTakeTest/{id}/{idQuestion}")
@@ -83,7 +86,7 @@ public class FormsCreator {
     public String endTakeTest(@PathVariable(value="id") int idForm,HttpServletRequest request, Model model) {
         String user = getCookie(request);
         int countUserAnswer = formService.getCountUserAnswer();
-        int getSizeQuestions = formService.getSizeQuestion();
+        int getSizeQuestions = formService.getSizeQuestion(idForm);
         model.addAttribute("countUserAnswer", countUserAnswer);
         model.addAttribute("getSizeQuestion", getSizeQuestions);
         Forms form = formService.getFormsById(idForm);
@@ -91,6 +94,7 @@ public class FormsCreator {
         model.addAttribute("form", form);
         model.addAttribute("result", result);
         model.addAttribute("userName", user);
+        formService.getResult();
         return "endTakeTest";
     }
     @GetMapping("dashboard/")

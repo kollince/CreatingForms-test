@@ -44,5 +44,5 @@ public interface FormsDao {
     Map<Questions, List<Answers>> userQuestionsAndAnswers(List<Integer> answerList, int formId);
     int getResult();
     int getCountUserAnswer();
-    int getSizeQuestion();
+    int getSizeQuestion(int formId);
 }

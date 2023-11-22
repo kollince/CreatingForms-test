@@ -163,7 +163,7 @@ public class FormServiceImpl implements FormService {
         return formsDao.getCountUserAnswer();
     }
     @Override
-    public int getSizeQuestion() {
-        return formsDao.getSizeQuestion();
+    public int getSizeQuestion(int formId) {
+        return formsDao.getSizeQuestion(formId);
     }
 }
