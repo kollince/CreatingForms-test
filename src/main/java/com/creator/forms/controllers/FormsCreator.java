@@ -56,7 +56,7 @@ public class FormsCreator {
         model.addAttribute("countQst", countQst);
         model.addAttribute("userName", user);
         Map<Questions, List<Answers>> cqs = formService.listCorrectQuestions();
-        System.out.println("listCorrectQuestions "+cqs);
+        //System.out.println("listCorrectQuestions "+cqs);
         return "index";
     }
     @GetMapping("/takeTest/{id}")
@@ -73,15 +73,15 @@ public class FormsCreator {
         model.addAttribute("cqs", cqs);
         return "takeTest";
     }
-    @GetMapping("/beginTakeTest/{id}/{idQuestion}")
-    public String beginTakeTest(@PathVariable(value="id") int idForm, @PathVariable(value="idQuestion") int idQuestion, Model model) {
-        Forms formsById = formService.getFormsById(idForm);
-        Questions questionsOneFormId = formService.getQuestionOneByFormId(idForm);
-        List<Answers> ansListByQuestionId = formService.listAnswersByQuestionId(idQuestion);
-        model.addAttribute("formsById", formsById);
-        model.addAttribute("questionsOneFormId", questionsOneFormId);
-        return "beginTakeTest";
-    }
+//    @GetMapping("/beginTakeTest/{id}/{idQuestion}")
+//    public String beginTakeTest(@PathVariable(value="id") int idForm, @PathVariable(value="idQuestion") int idQuestion, Model model) {
+//        Forms formsById = formService.getFormsById(idForm);
+//        Questions questionsOneFormId = formService.getQuestionOneByFormId(idForm);
+//        List<Answers> ansListByQuestionId = formService.listAnswersByQuestionId(idQuestion);
+//        model.addAttribute("formsById", formsById);
+//        model.addAttribute("questionsOneFormId", questionsOneFormId);
+//        return "beginTakeTest";
+//    }
     @GetMapping("/endTakeTest/{id}")
     public String endTakeTest(@PathVariable(value="id") int idForm,HttpServletRequest request, Model model) {
         String user = getCookie(request);
@@ -112,7 +112,7 @@ public class FormsCreator {
         return "dashboard/addTestForm";
     }
     @GetMapping("dashboard/eForm/{id}")
-    public String edit(@PathVariable(value="id") int id, Model model) {
+    public String edit(@PathVariable(value="id") int id, Model model) throws IOException {
         Forms formId = formService.getFormsById(id);
         List<Questions> questionsByFormId = formService.listQuestionsByFormId(id);
         model.addAttribute("editFormId", formId);

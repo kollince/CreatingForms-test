@@ -73,7 +73,7 @@ public class FormServiceImpl implements FormService {
         return formsDao.listQuestions();
     }
     @Override
-    public List<Questions> listQuestionsByFormId(int formId){
+    public List<Questions> listQuestionsByFormId(int formId) throws IOException {
         return formsDao.listQuestionsByFormId(formId);
     }
     @Override

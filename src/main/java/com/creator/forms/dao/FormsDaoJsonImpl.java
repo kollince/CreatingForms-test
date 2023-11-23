@@ -76,18 +76,18 @@ public class FormsDaoJsonImpl implements FormsDao {
     }
     private void openFileListForms(List<Forms> formsList, Path path) throws IOException {
         fileExist(path);
-//        List<Forms> formsJson = mapper.readValue(path.toFile(), new TypeReference<List<Forms>>() {});
-//        if (formsList.isEmpty()){
-//            formsList.addAll(formsJson);
-//
-//        }
+        List<Forms> formsJson = mapper.readValue(path.toFile(), new TypeReference<List<Forms>>() {});
+        if (formsList.isEmpty()){
+            formsList.addAll(formsJson);
+
+        }
     }
     private void openFileListQuestions(List<Questions> questionsList, Path path) throws IOException {
         fileExist(path);
-//        List<Questions> questionsJson = mapper.readValue(path.toFile(), new TypeReference<List<Questions>>() {});
-//        if (questionsList.isEmpty()){
-//            questionsList.addAll(questionsJson);
-//        }
+        List<Questions> questionsJson = mapper.readValue(path.toFile(), new TypeReference<List<Questions>>() {});
+        if (questionsList.isEmpty()){
+            questionsList.addAll(questionsJson);
+        }
     }
     private List<Answers> filterAnswers(int idQuestion){
         return answersList.stream().filter(answers -> answers.getIdQuestion() == idQuestion && answers.isTrue())
@@ -95,14 +95,14 @@ public class FormsDaoJsonImpl implements FormsDao {
     }
     private void openFileListAnswers(List<Answers> answersList, Path path) throws IOException {
         fileExist(path);
-//        List<Answers> answersJson = mapper.readValue(path.toFile(), new TypeReference<List<Answers>>() {});
-//        if(answersList.isEmpty()){
-//           answersList.addAll(answersJson);
-//            for (int i = 0; i < questionsList.size(); i++) {
-//                List<Answers> filterAnswers = filterAnswers(questionsList.get(i).getId());
-//                questionsAndAnswers.put(questionsList.get(i), filterAnswers);
-//            }
-//        }
+        List<Answers> answersJson = mapper.readValue(path.toFile(), new TypeReference<List<Answers>>() {});
+        if(answersList.isEmpty()){
+           answersList.addAll(answersJson);
+            for (int i = 0; i < questionsList.size(); i++) {
+                List<Answers> filterAnswers = filterAnswers(questionsList.get(i).getId());
+                questionsAndAnswers.put(questionsList.get(i), filterAnswers);
+            }
+        }
     }
     @Override
     public List<Answers> addAnswer(Answers answers) throws IOException {
@@ -126,7 +126,7 @@ public class FormsDaoJsonImpl implements FormsDao {
     }
     @Override
     public List<Answers> listAnswers() throws IOException {
-        openFileListAnswers(answersList, fileListAnswers);
+//        openFileListAnswers(answersList, fileListAnswers);
         for (Answers answer : answersList) {
             if (answersList.size() < idCountAnswer) {
                 idCountAnswer = answersList.size()+1;
@@ -206,7 +206,7 @@ public class FormsDaoJsonImpl implements FormsDao {
     }
 
     @Override
-    public List<Questions> listQuestionsByFormId(int formId) {
+    public List<Questions> listQuestionsByFormId(int formId) throws IOException {
         List<Questions> qstByFormId = questionsList.stream()
                 .filter(questions -> questions.getIdForm() == formId)
                 .collect(Collectors.toCollection(ArrayList::new));
@@ -216,6 +216,7 @@ public class FormsDaoJsonImpl implements FormsDao {
                 break;
             }
         }
+//        userQuestionsAndAnswers.remove(listQuestionsByFormId(formId),listAnswersByFormId(formId));
         return qstByFormId;
     }
 
@@ -242,7 +243,7 @@ public class FormsDaoJsonImpl implements FormsDao {
 
     @Override
     public List<Questions> listQuestions() throws IOException {
-        openFileListQuestions(questionsList, fileListQuestions);
+//        openFileListQuestions(questionsList, fileListQuestions);
         for (Questions questions : questionsList) {
             if (questionsList.size() < idCountQuestion) {
                 idCountQuestion = questionsList.size()+1;
@@ -325,7 +326,7 @@ public class FormsDaoJsonImpl implements FormsDao {
 
     @Override
     public List<Forms> listForms() throws IOException {
-        openFileListForms(formsList, fileListForms);
+//        openFileListForms(formsList, fileListForms);
         for (Forms forms : formsList) {
             if (formsList.size() < idCount) {
                 idCount = formsList.size()+1;
@@ -496,8 +497,6 @@ public class FormsDaoJsonImpl implements FormsDao {
 
     @Override
     public Map<Questions, List<Answers>> userQuestionsAndAnswers(List<Integer> answer, int formId) {
-        result=0;
-        countUserAnswer=0;
         List<Answers> newAnswers = new ArrayList<>();
         for (Integer integer : answer) {
             for (Answers answers : answersList) {
@@ -506,26 +505,29 @@ public class FormsDaoJsonImpl implements FormsDao {
                 }
             }
         }
-        List<Answers> ans;
+        List<Questions> questionsForByFormId = questionsList.stream()
+                .filter(q -> q.getIdForm() == formId)
+                .collect(Collectors.toCollection(ArrayList::new));
+        List<Answers> ans = null;
+        if (userQuestionsAndAnswers.size()>0){
+            userQuestionsAndAnswers.clear();
+        }
         for (int i = 0; i < newAnswers.size(); i++) {
-            for (int j = 0; j < questionsList.size(); j++) {
-                if (questionsList.get(j).getId()==newAnswers.get(i).getIdQuestion()){
+            for (int j = 0; j < questionsForByFormId.size(); j++) {
+                if (questionsForByFormId.get(j).getId()==newAnswers.get(i).getIdQuestion()){
                     int finalI = j;
                     ans = newAnswers.stream()
-                            .filter(answers -> answers.getIdQuestion() == questionsList.get(finalI).getId())
+                            .filter(answers -> answers.getIdQuestion() == questionsForByFormId.get(finalI).getId())
                             .collect(Collectors.toCollection(ArrayList::new));
-                    userQuestionsAndAnswers.put(questionsList.get(j),ans);
+                    userQuestionsAndAnswers.put(questionsForByFormId.get(j),ans);
                 }
             }
         }
-        List<Questions> countQstByFormId = questionsList.stream().filter(questions -> questions.getIdForm() == formId)
-                .collect(Collectors.toCollection(ArrayList::new));
-        Map<Questions, List<Answers>> filteredMap = questionsAndAnswers.entrySet()
+        Map<Questions, List<Answers>> filteredCorrectMapAnswers = questionsAndAnswers.entrySet()
                 .stream().filter(questions -> questions.getKey().getIdForm()==formId)
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
-
-        countQst = countQstByFormId.size();
-        for (Map.Entry<Questions, List<Answers>> entry : filteredMap.entrySet()) {
+        countQst = filteredCorrectMapAnswers.size();
+        for (Map.Entry<Questions, List<Answers>> entry : filteredCorrectMapAnswers.entrySet()) {
             Questions question = entry.getKey();
             List<Answers> correctAnswers = entry.getValue();
             for (Map.Entry<Questions, List<Answers>> otherEntry : userQuestionsAndAnswers.entrySet()) {

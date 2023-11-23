@@ -20,7 +20,7 @@ public interface FormsDao {
     List<Answers> deleteAnswers(int id) throws IOException;
     Answers getAnswersById(int id);
     List<Questions> addQuestion(Questions questions) throws IOException;
-    List<Questions> listQuestionsByFormId(int formId);
+    List<Questions> listQuestionsByFormId(int formId) throws IOException;
     List<Questions> countQstForTest();
     List<Questions> listQuestions() throws IOException;
     List<Questions> updateQuestions(int id, String question) throws IOException;
