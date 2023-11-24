@@ -40,7 +40,7 @@ public class FormsDaoJsonImpl implements FormsDao {
     private Path fileListAnswers = Path.of("src/main/resources/data/listAnswers.json");
     private int idCount = 0;
     private int idCountQuestion = 0;
-    private int idCountPassing = 0;
+   // private int idCountPassing = 0;
     private int idCountAnswer = 0;
     private int idAnswer = 0;
     private int idCountUserAnswer = 0;
@@ -74,12 +74,33 @@ public class FormsDaoJsonImpl implements FormsDao {
         fileExist(path);
         mapper.writeValue(fileListAnswers.toFile(), AnswersList);
     }
+    private void counterFormsReadFile(List<Forms> formsJson){
+        int max = 0;
+        for (Forms forms : formsJson) {
+            max = Math.max(max, forms.getId());
+            idCount = max + 1;
+        }
+    }
+    private void counterQuestionsReadFile(List<Questions> questionsJson){
+        int max = 0;
+        for (Questions questions : questionsJson) {
+            max = Math.max(max, questions.getId());
+            idCountQuestion = max + 1;
+        }
+    }
+    private void counterAnswersReadFile(List<Answers> answersJson){
+        int max = 0;
+        for (Answers answers : answersJson) {
+            max = Math.max(max, answers.getId());
+            idCountAnswer = max;
+        }
+    }
     private void openFileListForms(List<Forms> formsList, Path path) throws IOException {
         fileExist(path);
         List<Forms> formsJson = mapper.readValue(path.toFile(), new TypeReference<List<Forms>>() {});
         if (formsList.isEmpty()){
             formsList.addAll(formsJson);
-
+            counterFormsReadFile(formsJson);
         }
     }
     private void openFileListQuestions(List<Questions> questionsList, Path path) throws IOException {
@@ -87,6 +108,7 @@ public class FormsDaoJsonImpl implements FormsDao {
         List<Questions> questionsJson = mapper.readValue(path.toFile(), new TypeReference<List<Questions>>() {});
         if (questionsList.isEmpty()){
             questionsList.addAll(questionsJson);
+            counterQuestionsReadFile(questionsJson);
         }
     }
     private List<Answers> filterAnswers(int idQuestion){
@@ -102,6 +124,7 @@ public class FormsDaoJsonImpl implements FormsDao {
                 List<Answers> filterAnswers = filterAnswers(questionsList.get(i).getId());
                 questionsAndAnswers.put(questionsList.get(i), filterAnswers);
             }
+            counterAnswersReadFile(answersJson);
         }
     }
     @Override
@@ -433,6 +456,7 @@ public class FormsDaoJsonImpl implements FormsDao {
                 }
             }
             questionsAndAnswers.put(qst,newAns2);
+            questionsAndAnswers.remove(qst);
         } else {
             deleteAnswersAns(id);
         }
@@ -522,6 +546,7 @@ public class FormsDaoJsonImpl implements FormsDao {
                     userQuestionsAndAnswers.put(questionsForByFormId.get(j),ans);
                 }
             }
+
         }
         Map<Questions, List<Answers>> filteredCorrectMapAnswers = questionsAndAnswers.entrySet()
                 .stream().filter(questions -> questions.getKey().getIdForm()==formId)

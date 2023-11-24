@@ -73,9 +73,7 @@
     <th:block th:each="el : ${allForms}">
         <div class="card mb-4" style="width: 60rem;">
             <div class="card-body">
-                <h5 class="card-title">
-                    <th:block th:text="${el.name}"></th:block>
-                </h5>
+                <h5 class="card-title"><th:block th:text="${el.name}"></th:block></h5>
                 <div class="card-text" th:text="${el.description}"></div>
                 <!--      <div> На время:-->
                 <!--        <th:block th:if="${el.isForTime} == true">Да</th:block>-->

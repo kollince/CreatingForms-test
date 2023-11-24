@@ -13,10 +13,10 @@
     <div class="card mb-4" style="width: 60rem;">
         <div class="card-body">
             <th:block th:each="formsById : ${formsById}">
-                <H3>Пройти тест "<th:block th:text="${formsById.name}"></th:block>" по математике</H3>
+                <H3 class="card-title">Пройти тест "<th:block th:text="${formsById.name}"></th:block>" по математике</H3>
+                <div class="card-text" th:text="${formsById.description}"></div>
+                <H5>Вопросы</H5>
                 <form method="post" th:action="@{'/endTakeTest/'+${formsById.id}}">
-                    <div th:text="${formsById.description}"></div>
-                    <H5>Вопросы</H5>
                     <ol th:unless="${questionsByFormId.empty}">
                         <th:block th:each="questionsByFormId : ${questionsByFormId}">
                             <li>
@@ -42,10 +42,8 @@
                     </ol>
                     <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
                     <button type="submit" class="btn btn-primary">Завершить тест</button>
-                    <!--                <input type="submit" value="Завершить тест">-->
                 </form>
             </th:block>
-            <th:block th:text="${cqs}"></th:block>
         </div>
     </div>
 </div>
