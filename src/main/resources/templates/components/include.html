@@ -74,7 +74,12 @@
         <div class="card mb-4" style="width: 60rem;">
             <div class="card-body">
                 <h5 class="card-title"><th:block th:text="${el.name}"></th:block></h5>
+<!--                <div style="display: inline-block; text-align: left;">-->
+                <div th:unless="${el.image.empty}" style="float: left; padding: 0 10px 10px 0;">
+                    <img th:src="@{'/images/'+${el.image}}" th:alt="${el.image}"   width="100px" class="img-thumbnail">
+                </div>
                 <div class="card-text" th:text="${el.description}"></div>
+<!--                </div>-->
                 <!--      <div> На время:-->
                 <!--        <th:block th:if="${el.isForTime} == true">Да</th:block>-->
                 <!--        <th:block th:if="${el.isForTime} == false">Нет</th:block>-->

@@ -617,11 +617,17 @@ public class FormsDaoJsonImpl implements FormsDao {
         if (!dir.exists()) {
             FileUtils.forceMkdir(dir);
         }
-        byte[] bytes = image.getBytes();
-        BufferedOutputStream stream =
-                new BufferedOutputStream(new FileOutputStream(pathImages+image.getOriginalFilename()));
-        System.out.println("bytes "+ image.getOriginalFilename());
-        stream.write(bytes);
-        stream.close();
+        if (image != null && !image.isEmpty()) {
+            try {
+                byte[] bytes = image.getBytes();
+                BufferedOutputStream stream =
+                        new BufferedOutputStream(new FileOutputStream(pathImages + image.getOriginalFilename()));
+                System.out.println("bytes " + image.getOriginalFilename());
+                stream.write(bytes);
+                stream.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 }
