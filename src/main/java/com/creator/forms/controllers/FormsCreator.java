@@ -10,12 +10,16 @@ import com.creator.forms.services.interfaces.FormService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartException;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.net.URLDecoder;
@@ -23,13 +27,14 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
-
+//@AllArgsConstructor
+//@NoArgsConstructor
 @Controller
-public class FormsCreator {
+public class FormsCreator{
     private final FormsDao formsDao = new FormsDaoJsonImpl();
     private final FormService formService = new FormServiceImpl(formsDao);
-
     public FormsCreator() throws IOException {
+
     }
     private String getCookie(HttpServletRequest request){
         String user = "Гость";
@@ -154,8 +159,16 @@ public String deleteAnswer(@PathVariable(value="idAnswer") int idAnswer) throws 
         return "redirect:/dashboard/";
     }
     @PostMapping("/dashboard/addForm")
-    public String addForm(@RequestParam String name, @RequestParam String description, @RequestParam boolean time) throws IOException {
-        Forms forms = new Forms(0, name, description, time);
+    public String addForm(@RequestParam String name, @RequestParam String description,  @RequestParam MultipartFile image, @RequestParam boolean time) throws IOException {
+        Forms forms = new Forms(0, name, description, image.getOriginalFilename(), time);
+        try {
+            formService.addImage(image);
+        } catch (MultipartException e){
+            System.out.println(e);
+        }
+        System.out.println(image.getOriginalFilename());
+
+
         formService.addForms(forms);
         return "redirect:/dashboard/";
     }

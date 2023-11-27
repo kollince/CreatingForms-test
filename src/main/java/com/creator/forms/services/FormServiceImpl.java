@@ -7,6 +7,7 @@ import com.creator.forms.models.Questions;
 import com.creator.forms.services.interfaces.FormService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
@@ -165,5 +166,8 @@ public class FormServiceImpl implements FormService {
     @Override
     public int getSizeQuestion(int formId) {
         return formsDao.getSizeQuestion(formId);
+    }
+    public void addImage(MultipartFile image) throws IOException {
+        formsDao.addImage(image);
     }
 }

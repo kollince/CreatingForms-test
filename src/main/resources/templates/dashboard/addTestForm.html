@@ -12,7 +12,7 @@
     <!--<div th:insert="~{dashboard/fragments/include :: linksAddForms}"></div>-->
     <div class="card mb-4" style="width: 60rem;">
         <div class="card-body">
-            <form method="post" th:action="@{'/dashboard/addForm'}">
+            <form method="post" th:action="@{'/dashboard/addForm'}" enctype="multipart/form-data">
               <div class="form-group row mb-4">
                     <label class="col-sm-2 col-form-label">Наименование</label>
                 <div class="col-sm-7">
@@ -24,6 +24,12 @@
                 <div class="col-sm-7">
                     <textarea class="form-control" name="description" type="text" rows="5" required></textarea>
                 </div>
+                  <div class="form-group row mt-4 mb-4">
+                      <label class="col-sm-2 col-form-label">Выбор изображения</label>
+                      <div class="col-sm-7">
+                          <input type="file" name="image" class="custom-file-input">
+                      </div>
+                   </div>
                 </div>
                 <div class="form-group row mb-4">
                   <legend class="col-form-label col-sm-2 pt-0">На время</legend>

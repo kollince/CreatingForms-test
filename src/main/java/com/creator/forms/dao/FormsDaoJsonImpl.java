@@ -11,13 +11,16 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
+import org.apache.tomcat.util.http.fileupload.FileUtils;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Repository;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.PrintStream;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.text.Normalizer;
 import java.util.*;
 
@@ -38,6 +41,7 @@ public class FormsDaoJsonImpl implements FormsDao {
     private Path fileListForms = Path.of("src/main/resources/data/listForms.json");
     private Path fileListQuestions = Path.of("src/main/resources/data/listQuestions.json");
     private Path fileListAnswers = Path.of("src/main/resources/data/listAnswers.json");
+    private String pathImages = "src/main/resources/static/images/";
     private int idCount = 0;
     private int idCountQuestion = 0;
    // private int idCountPassing = 0;
@@ -97,11 +101,16 @@ public class FormsDaoJsonImpl implements FormsDao {
     }
     private void openFileListForms(List<Forms> formsList, Path path) throws IOException {
         fileExist(path);
-        List<Forms> formsJson = mapper.readValue(path.toFile(), new TypeReference<List<Forms>>() {});
-        if (formsList.isEmpty()){
-            formsList.addAll(formsJson);
-            counterFormsReadFile(formsJson);
+        try {
+            List<Forms> formsJson = mapper.readValue(path.toFile(), new TypeReference<List<Forms>>() {});
+            if (formsList.isEmpty()){
+                formsList.addAll(formsJson);
+                counterFormsReadFile(formsJson);
+            }
+        } catch (Exception e){
+            System.out.println(e);
         }
+
     }
     private void openFileListQuestions(List<Questions> questionsList, Path path) throws IOException {
         fileExist(path);
@@ -342,6 +351,22 @@ public class FormsDaoJsonImpl implements FormsDao {
             }
             form.setId(idCount++);
         }
+//        if (form.getImage().isEmpty()) {
+//
+//        }
+//        byte[] bytes = form.getImage().getBytes();
+//        InputStream inputStream = new ByteArrayInputStream(bytes);
+//        Path path = Paths.get(pathImages, form.getImage());
+//        Files.copy(inputStream, path, StandardCopyOption.REPLACE_EXISTING);
+        //int dotIndex = .getFileName().toString().lastIndexOf('.');
+       // fileWithoutExtension = path.getFileName().toString().substring(0, dotIndex);
+
+//        byte[] bytes = form.getImage().getBytes();
+//        BufferedOutputStream stream =
+//                new BufferedOutputStream(new FileOutputStream(form.getImage().getOriginalFilename()));
+//        stream.write(bytes);
+//        stream.close();
+
         formsList.add(form);
         saveFileListForms(formsList,fileListForms);
         return formsList;
@@ -583,5 +608,20 @@ public class FormsDaoJsonImpl implements FormsDao {
     public int getSizeQuestion(int formId){
         return questionsList.stream().filter(q -> q.getIdForm() == formId)
                             .collect(Collectors.toCollection(ArrayList::new)).size();
+    }
+
+    @Override
+    public void addImage(MultipartFile image) throws IOException {
+        File directory = new File(pathImages);
+        File dir = new File(directory.toURI());
+        if (!dir.exists()) {
+            FileUtils.forceMkdir(dir);
+        }
+        byte[] bytes = image.getBytes();
+        BufferedOutputStream stream =
+                new BufferedOutputStream(new FileOutputStream(pathImages+image.getOriginalFilename()));
+        System.out.println("bytes "+ image.getOriginalFilename());
+        stream.write(bytes);
+        stream.close();
     }
 }

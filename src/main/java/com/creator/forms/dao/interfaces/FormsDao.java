@@ -4,6 +4,7 @@ import com.creator.forms.models.Answers;
 import com.creator.forms.models.Forms;
 import com.creator.forms.models.Questions;
 import org.springframework.stereotype.Repository;
+import org.springframework.web.multipart.MultipartFile;
 
 
 import java.io.IOException;
@@ -45,4 +46,6 @@ public interface FormsDao {
     int getResult();
     int getCountUserAnswer();
     int getSizeQuestion(int formId);
+
+    void addImage(MultipartFile image) throws IOException;
 }

@@ -4,6 +4,7 @@ import com.creator.forms.models.Answers;
 import com.creator.forms.models.Forms;
 import com.creator.forms.models.Questions;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
@@ -42,4 +43,6 @@ public interface FormService {
     int getResult();
     int getCountUserAnswer();
     int getSizeQuestion(int formId);
+
+    void addImage(MultipartFile image) throws IOException;
 }

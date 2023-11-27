@@ -14,7 +14,16 @@
         <div class="card-body">
             <th:block th:each="formsById : ${formsById}">
                 <H3 class="card-title">Пройти тест "<th:block th:text="${formsById.name}"></th:block>" по математике</H3>
+                <center>
+                <div class="card" style="width: 450px;">
+                    <div class="card-body">
+                <th:block th:unless="${formsById.image.empty}">
+                    <img th:src="@{'/images/'+${formsById.image}}" th:alt="${formsById.image}" height="400px" class="mt-3 mb-4 rounded float-left">
+                </th:block>
                 <div class="card-text" th:text="${formsById.description}"></div>
+                    </div>
+                </div>
+                </center>
                 <H5>Вопросы</H5>
                 <form method="post" th:action="@{'/endTakeTest/'+${formsById.id}}">
                     <ol th:unless="${questionsByFormId.empty}">
