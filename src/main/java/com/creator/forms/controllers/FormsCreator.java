@@ -161,15 +161,7 @@ public String deleteAnswer(@PathVariable(value="idAnswer") int idAnswer) throws 
     @PostMapping("/dashboard/addForm")
     public String addForm(@RequestParam String name, @RequestParam String description,  @RequestParam MultipartFile image, @RequestParam boolean time) throws IOException {
         Forms forms = new Forms(0, name, description, image.getOriginalFilename(), time);
-        try {
-            formService.addImage(image);
-        } catch (MultipartException e){
-            System.out.println(e);
-        }
-        System.out.println(image.getOriginalFilename());
-
-
-        formService.addForms(forms);
+        formService.addForms(forms, image);
         return "redirect:/dashboard/";
     }
     @PostMapping("/dashboard/addAnswer")
@@ -191,9 +183,9 @@ public String deleteAnswer(@PathVariable(value="idAnswer") int idAnswer) throws 
         return "redirect:/dashboard/eForm/"+idForm;
     }
     @PostMapping("dashboard/updateForm/{id}")
-    public String update(@RequestParam String name, @RequestParam String description, @RequestParam boolean time,
+    public String update(@RequestParam String name, @RequestParam String description, @RequestParam MultipartFile image, @RequestParam boolean time,
                          @PathVariable(value="id") int id) throws IOException {
-        formService.updateForm(id, name, description, time);
+        formService.updateForm(id, name, description, time, image);
         return "redirect:/dashboard/eForm/"+id;
     }
     @PostMapping("dashboard/updateQuestion/{formId}/{questionId}")

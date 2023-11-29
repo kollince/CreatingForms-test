@@ -17,7 +17,7 @@
             <div class="card-body">
                 <fieldset>
                     <legend class="card-title">Редактирование наименования и описания теста</legend>
-                    <form method="post" th:action="@{'/dashboard/updateForm/' + ${el.id}}">
+                    <form method="post" th:action="@{'/dashboard/updateForm/' + ${el.id}}" enctype="multipart/form-data">
                         <div class="form-group row mb-4">
                             <label class="col-sm-2 col-form-label">Наименование</label>
                             <div class="col-sm-7">
@@ -29,6 +29,12 @@
                             <div class="col-sm-7">
                                 <textarea class="form-control" th:text="${el.description}" name="description"
                                           type="text" rows="6" required></textarea>
+                            </div>
+                        </div>
+                        <div class="form-group row mb-4">
+                            <label class="col-sm-2 col-form-label">Выбор изображения</label>
+                            <div class="col-sm-7">
+                                <input type="file" name="image" class="custom-file-input">
                             </div>
                         </div>
                         <div class="form-group row mb-4">

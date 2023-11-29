@@ -27,8 +27,8 @@ public interface FormService {
     List<Questions> deleteQuestion(int id) throws IOException;
     Questions getQuestionById(int id);
     List<Forms> listForms() throws IOException;
-    List<Forms> addForms(Forms form) throws IOException;
-    List<Forms> updateForm(int id, String name, String description, boolean isForTime) throws IOException;
+    List<Forms> addForms(Forms form, MultipartFile image) throws IOException;
+    List<Forms> updateForm(int id, String name, String description, boolean isForTime, MultipartFile image) throws IOException;
     List<Forms> delete(int id) throws IOException;
     Forms getFormsById(int id);
     Questions getQuestionOneByFormId(int formId);
@@ -43,6 +43,4 @@ public interface FormService {
     int getResult();
     int getCountUserAnswer();
     int getSizeQuestion(int formId);
-
-    void addImage(MultipartFile image) throws IOException;
 }

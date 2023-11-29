@@ -4,27 +4,23 @@ import com.creator.forms.dao.interfaces.FormsDao;
 import com.creator.forms.models.Answers;
 import com.creator.forms.models.Forms;
 import com.creator.forms.models.Questions;
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.type.ResolvedType;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.tomcat.util.http.fileupload.FileUtils;
-import org.springframework.http.ResponseEntity;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Repository;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
-import java.text.Normalizer;
 import java.util.*;
 
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 @Repository
@@ -336,7 +332,7 @@ public class FormsDaoJsonImpl implements FormsDao {
     }
 
     @Override
-    public List<Forms> addForm(Forms form) throws IOException {
+    public List<Forms> addForm(Forms form, MultipartFile image) throws IOException {
         int max = 0;
         if (formsList.size() == 0) {
             idCount = 1;
@@ -366,7 +362,7 @@ public class FormsDaoJsonImpl implements FormsDao {
 //                new BufferedOutputStream(new FileOutputStream(form.getImage().getOriginalFilename()));
 //        stream.write(bytes);
 //        stream.close();
-
+        addImage(image);
         formsList.add(form);
         saveFileListForms(formsList,fileListForms);
         return formsList;
@@ -386,12 +382,15 @@ public class FormsDaoJsonImpl implements FormsDao {
     }
 
     @Override
-    public List<Forms> updateForm(int id, String name, String description, boolean isForTime) throws IOException {
+    public List<Forms> updateForm(int id, String name, String description, boolean isForTime, MultipartFile image) throws IOException {
         for (Forms forms : formsList) {
             if (forms.getId() == id) {
+                delImage(forms.getImage());
                 forms.setName(name);
                 forms.setDescription(description);
+                forms.setImage(image.getOriginalFilename());
                 forms.setForTime(isForTime);
+                addImage(image);
             }
         }
         saveFileListForms(formsList,fileListForms);
@@ -402,6 +401,7 @@ public class FormsDaoJsonImpl implements FormsDao {
     public List<Forms> delete(int id) throws IOException {
         for (int i = 0; i < formsList.size(); i++) {
             if (formsList.get(i).getId()==id) {
+                delImage(formsList.get(i).getImage());
                 formsList.remove(i);
                 for (int j = 0; j < questionsList.size(); j++) {
                     if (questionsList.get(j).getIdForm() == id) {
@@ -610,9 +610,9 @@ public class FormsDaoJsonImpl implements FormsDao {
                             .collect(Collectors.toCollection(ArrayList::new)).size();
     }
 
-    @Override
     public void addImage(MultipartFile image) throws IOException {
-        File directory = new File(pathImages);
+        File directory = new ClassPathResource("static/images/").getFile();
+        //File directory = new File(pathImages);
         File dir = new File(directory.toURI());
         if (!dir.exists()) {
             FileUtils.forceMkdir(dir);
@@ -621,13 +621,26 @@ public class FormsDaoJsonImpl implements FormsDao {
             try {
                 byte[] bytes = image.getBytes();
                 BufferedOutputStream stream =
-                        new BufferedOutputStream(new FileOutputStream(pathImages + image.getOriginalFilename()));
-                System.out.println("bytes " + image.getOriginalFilename());
+                        new BufferedOutputStream(new FileOutputStream(directory.getAbsoluteFile() +File.separator + image.getOriginalFilename()));
+//                BufferedOutputStream stream =
+//                        new BufferedOutputStream(new FileOutputStream("images/" + File.separator + image.getOriginalFilename()));
+                System.out.println("bytes " + directory.getAbsoluteFile());
                 stream.write(bytes);
                 stream.close();
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
+    }
+    public void delImage(String nameImage) throws IOException {
+        Path file = Paths.get(pathImages+""+nameImage);
+        String msgDelImage;
+        if (Files.exists(file) && !Files.isDirectory(file)) {
+            Files.delete(file);
+            msgDelImage = "Изображение \""+ file.getFileName()+ "\" удалено";
+        } else {
+            msgDelImage = "Ошибка! "+ file.getFileName() +"\" не найдено";
+        }
+
     }
 }

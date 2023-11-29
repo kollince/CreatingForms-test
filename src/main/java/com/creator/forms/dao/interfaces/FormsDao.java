@@ -27,8 +27,8 @@ public interface FormsDao {
     List<Questions> updateQuestions(int id, String question) throws IOException;
     List<Questions> deleteQuestion(int id) throws IOException;
     Questions getQuestionById(int id);
-    List<Forms> addForm (Forms form) throws IOException;
-    List<Forms> updateForm(int id, String name, String description, boolean isForTime) throws IOException;
+    List<Forms> addForm (Forms form, MultipartFile image) throws IOException;
+    List<Forms> updateForm(int id, String name, String description, boolean isForTime, MultipartFile image) throws IOException;
     List<Forms> delete(int id) throws IOException;
     Forms getFormsById(int id);
     List<Forms> listForms() throws IOException;
@@ -46,6 +46,4 @@ public interface FormsDao {
     int getResult();
     int getCountUserAnswer();
     int getSizeQuestion(int formId);
-
-    void addImage(MultipartFile image) throws IOException;
 }

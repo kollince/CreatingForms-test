@@ -101,13 +101,13 @@ public class FormServiceImpl implements FormService {
         return formsDao.listForms();
     }
     @Override
-    public List<Forms> addForms(Forms form) throws IOException {
-        return formsDao.addForm(form);
+    public List<Forms> addForms(Forms form, MultipartFile image) throws IOException {
+        return formsDao.addForm(form, image);
     }
 
     @Override
-    public List<Forms> updateForm(int id, String name, String description, boolean isForTime) throws IOException {
-       return formsDao.updateForm(id, name, description,isForTime);
+    public List<Forms> updateForm(int id, String name, String description, boolean isForTime, MultipartFile image) throws IOException {
+       return formsDao.updateForm(id, name, description, isForTime, image);
     }
 
     @Override
@@ -167,7 +167,5 @@ public class FormServiceImpl implements FormService {
     public int getSizeQuestion(int formId) {
         return formsDao.getSizeQuestion(formId);
     }
-    public void addImage(MultipartFile image) throws IOException {
-        formsDao.addImage(image);
-    }
+
 }
