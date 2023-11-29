@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.*;
+import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -35,9 +36,11 @@ public class FormsDaoJsonImpl implements FormsDao {
     Map<Questions, List<Answers>> userQuestionsAndAnswers = new HashMap<>();
     private final ObjectMapper mapper = new ObjectMapper();
     private Path fileListForms = Path.of("src/main/resources/data/listForms.json");
+    private Path fileForms = Path.of("data/listForms.json");
     private Path fileListQuestions = Path.of("src/main/resources/data/listQuestions.json");
     private Path fileListAnswers = Path.of("src/main/resources/data/listAnswers.json");
-    private String pathImages = "src/main/resources/static/images/";
+    private Path pathImages = Path.of("src/main/resources/static/images/").toAbsolutePath();
+    //private Path pathImages = Path.of("static/images/");
     private int idCount = 0;
     private int idCountQuestion = 0;
    // private int idCountPassing = 0;
@@ -51,17 +54,25 @@ public class FormsDaoJsonImpl implements FormsDao {
 
 //    public FormsDaoJsonImpl() {
 //    }
+
     public FormsDaoJsonImpl() throws IOException {
         openFileListForms(formsList, fileListForms);
         openFileListQuestions(questionsList,fileListQuestions);
         openFileListAnswers(answersList,fileListAnswers);
     }
+//    private void fileExist(Path path) throws IOException {
+//       File file = new File(path.toUri());
+//       if (!file.exists()) {
+//           file.createNewFile();
+//       }
+//    }
     private void fileExist(Path path) throws IOException {
-       File file = new File(path.toUri());
-       if (!file.exists()) {
-           file.createNewFile();
-       }
+        File file = new File(path.toAbsolutePath().toUri());
+        if (!file.exists()) {
+            file.createNewFile();
+        }
     }
+
     private void saveFileListForms(List<Forms> formsList, Path path) throws IOException {
         fileExist(path);
         mapper.writeValue(fileListForms.toFile(), formsList);
@@ -96,7 +107,9 @@ public class FormsDaoJsonImpl implements FormsDao {
         }
     }
     private void openFileListForms(List<Forms> formsList, Path path) throws IOException {
+        //fileExist(fileForms);
         fileExist(path);
+
         try {
             List<Forms> formsJson = mapper.readValue(path.toFile(), new TypeReference<List<Forms>>() {});
             if (formsList.isEmpty()){
@@ -611,9 +624,9 @@ public class FormsDaoJsonImpl implements FormsDao {
     }
 
     public void addImage(MultipartFile image) throws IOException {
-        File directory = new ClassPathResource("static/images/").getFile();
-        //File directory = new File(pathImages);
-        File dir = new File(directory.toURI());
+        //File directory = new ClassPathResource(pathImages).getFile();
+        //File directory = new File(pathImages.toUri());
+        File dir = new File(pathImages.toUri());
         if (!dir.exists()) {
             FileUtils.forceMkdir(dir);
         }
@@ -621,10 +634,10 @@ public class FormsDaoJsonImpl implements FormsDao {
             try {
                 byte[] bytes = image.getBytes();
                 BufferedOutputStream stream =
-                        new BufferedOutputStream(new FileOutputStream(directory.getAbsoluteFile() +File.separator + image.getOriginalFilename()));
+                        new BufferedOutputStream(new FileOutputStream(dir + File.separator + image.getOriginalFilename()));
 //                BufferedOutputStream stream =
 //                        new BufferedOutputStream(new FileOutputStream("images/" + File.separator + image.getOriginalFilename()));
-                System.out.println("bytes " + directory.getAbsoluteFile());
+                System.out.println("bytes " + dir +File.separator+ image.getOriginalFilename());
                 stream.write(bytes);
                 stream.close();
             } catch (Exception e) {
@@ -633,7 +646,9 @@ public class FormsDaoJsonImpl implements FormsDao {
         }
     }
     public void delImage(String nameImage) throws IOException {
-        Path file = Paths.get(pathImages+""+nameImage);
+        //File directory = new ClassPathResource(pathImages).getFile();
+        Path file = Paths.get(pathImages+File.separator+nameImage).toAbsolutePath();
+        System.out.println(file);
         String msgDelImage;
         if (Files.exists(file) && !Files.isDirectory(file)) {
             Files.delete(file);
