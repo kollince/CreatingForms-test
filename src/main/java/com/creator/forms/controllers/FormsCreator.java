@@ -173,25 +173,25 @@ public String deleteAnswer(@PathVariable(value="idAnswer") int idAnswer) throws 
         return "redirect:/dashboard/eQuestion/"+idForm+"/"+idQuestion;
     }
     @PostMapping("/dashboard/addQuestions/{id}")
-    public String addQuestion(@RequestParam int idForm, @RequestParam String question,
+    public String addQuestion(@RequestParam int idForm, @RequestParam String question, @RequestParam MultipartFile image,
                               @PathVariable(value="id") int id, Model model) throws IOException {
         Forms fmsEdit = formService.getFormsById(id);
         model.addAttribute("editQuestion", fmsEdit);
-        Questions questions = new Questions(0, idForm, question);
-        formService.addQuestion(questions);
+        Questions questions = new Questions(0, idForm, question, image.getOriginalFilename());
+        formService.addQuestion(questions, image);
 
         return "redirect:/dashboard/eForm/"+idForm;
     }
     @PostMapping("dashboard/updateForm/{id}")
     public String update(@RequestParam String name, @RequestParam String description, @RequestParam MultipartFile image, @RequestParam boolean time,
-                         @PathVariable(value="id") int id) throws IOException {
-        formService.updateForm(id, name, description, time, image);
+                         @RequestParam boolean del, @PathVariable(value="id") int id) throws IOException {
+         formService.updateForm(id, name, description, time, image, del);
         return "redirect:/dashboard/eForm/"+id;
     }
     @PostMapping("dashboard/updateQuestion/{formId}/{questionId}")
-    public String updateQuestion(@RequestParam String question, @PathVariable(value="formId") int formId,
-                                 @PathVariable(value="questionId") int questionId) throws IOException {
-        formService.updateQuestions(questionId,question);
+    public String updateQuestion(@RequestParam String question, @RequestParam MultipartFile image, @PathVariable(value="formId") int formId,
+                                 @RequestParam boolean del, @PathVariable(value="questionId") int questionId) throws IOException {
+        formService.updateQuestions(questionId,question, image, del);
         formService.updateCorrectQuestions(questionId);
         return "redirect:/dashboard/eQuestion/"+formId+"/"+questionId;
     }

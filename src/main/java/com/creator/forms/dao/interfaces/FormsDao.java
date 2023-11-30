@@ -20,15 +20,15 @@ public interface FormsDao {
     List<Answers> updateAnswers(int id, String answer, boolean isTrue) throws IOException;
     List<Answers> deleteAnswers(int id) throws IOException;
     Answers getAnswersById(int id);
-    List<Questions> addQuestion(Questions questions) throws IOException;
+    List<Questions> addQuestion(Questions questions,  MultipartFile image) throws IOException;
     List<Questions> listQuestionsByFormId(int formId) throws IOException;
     List<Questions> countQstForTest();
     List<Questions> listQuestions() throws IOException;
-    List<Questions> updateQuestions(int id, String question) throws IOException;
+    List<Questions> updateQuestions(int id, String question, MultipartFile image, boolean isDelImage) throws IOException;
     List<Questions> deleteQuestion(int id) throws IOException;
     Questions getQuestionById(int id);
     List<Forms> addForm (Forms form, MultipartFile image) throws IOException;
-    List<Forms> updateForm(int id, String name, String description, boolean isForTime, MultipartFile image) throws IOException;
+    List<Forms> updateForm(int id, String name, String description, boolean isForTime, MultipartFile image, boolean isDelImage) throws IOException;
     List<Forms> delete(int id) throws IOException;
     Forms getFormsById(int id);
     List<Forms> listForms() throws IOException;

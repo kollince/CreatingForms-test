@@ -65,8 +65,8 @@ public class FormServiceImpl implements FormService {
     }
 
     @Override
-    public List<Questions> addQuestion(Questions questions) throws IOException {
-        return formsDao.addQuestion(questions);
+    public List<Questions> addQuestion(Questions questions, MultipartFile image) throws IOException {
+        return formsDao.addQuestion(questions, image);
     }
 
     @Override
@@ -82,8 +82,8 @@ public class FormServiceImpl implements FormService {
         return formsDao.countQstForTest();
     }
     @Override
-    public List<Questions> updateQuestions(int id, String question) throws IOException {
-        return formsDao.updateQuestions(id, question);
+    public List<Questions> updateQuestions(int id, String question, MultipartFile image, boolean isDelImage) throws IOException {
+        return formsDao.updateQuestions(id, question, image, isDelImage);
     }
 
     @Override
@@ -106,8 +106,8 @@ public class FormServiceImpl implements FormService {
     }
 
     @Override
-    public List<Forms> updateForm(int id, String name, String description, boolean isForTime, MultipartFile image) throws IOException {
-       return formsDao.updateForm(id, name, description, isForTime, image);
+    public List<Forms> updateForm(int id, String name, String description, boolean isForTime, MultipartFile image, boolean isDelImage) throws IOException {
+       return formsDao.updateForm(id, name, description, isForTime, image, isDelImage);
     }
 
     @Override

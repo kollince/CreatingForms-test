@@ -226,7 +226,7 @@ public class FormsDaoJsonImpl implements FormsDao {
         return element;
     }
     @Override
-    public List<Questions> addQuestion(Questions questions) throws IOException {
+    public List<Questions> addQuestion(Questions questions, MultipartFile image) throws IOException {
         int max = 0;
         if (questionsList.size() == 0) {
             idCountQuestion = 1;
@@ -241,6 +241,7 @@ public class FormsDaoJsonImpl implements FormsDao {
             }
             questions.setId(idCountQuestion++);
         }
+        addImage(image);
         questionsList.add(questions);
         saveFileListQuestions(questionsList,fileListQuestions);
         return questionsList;
@@ -293,10 +294,19 @@ public class FormsDaoJsonImpl implements FormsDao {
         return questionsList;
     }
     @Override
-    public List<Questions> updateQuestions(int id, String question) throws IOException {
+    public List<Questions> updateQuestions(int id, String question, MultipartFile image, boolean isDelImage) throws IOException {
         for (Questions questions : questionsList) {
             if (questions.getId() == id) {
-                  questions.setQuestion(question);
+                if(!image.isEmpty()) {
+                    delImage(questions.getImage());
+                    addImage(image);
+                    questions.setImage(image.getOriginalFilename());
+                }
+                if (isDelImage){
+                    delImage(questions.getImage());
+                    questions.setImage("");
+                }
+                questions.setQuestion(question);
             }
         }
         saveFileListQuestions(questionsList,fileListQuestions);
@@ -350,7 +360,6 @@ public class FormsDaoJsonImpl implements FormsDao {
         if (formsList.size() == 0) {
             idCount = 1;
             form.setId(idCount++);
-
          } else {
             for (int i = 0; i < formsList.size(); i++) {
                 max = Math.max(max, formsList.get(i).getId());
@@ -395,15 +404,21 @@ public class FormsDaoJsonImpl implements FormsDao {
     }
 
     @Override
-    public List<Forms> updateForm(int id, String name, String description, boolean isForTime, MultipartFile image) throws IOException {
+    public List<Forms> updateForm(int id, String name, String description, boolean isForTime, MultipartFile image, boolean isDelImage) throws IOException {
         for (Forms forms : formsList) {
             if (forms.getId() == id) {
-                delImage(forms.getImage());
+                if (!image.isEmpty()){
+                    delImage(forms.getImage());
+                    addImage(image);
+                    forms.setImage(image.getOriginalFilename());
+                }
+                if (isDelImage){
+                    delImage(forms.getImage());
+                    forms.setImage("");
+                }
                 forms.setName(name);
                 forms.setDescription(description);
-                forms.setImage(image.getOriginalFilename());
                 forms.setForTime(isForTime);
-                addImage(image);
             }
         }
         saveFileListForms(formsList,fileListForms);

@@ -5,12 +5,12 @@
     <script src="/js/bootstrap.min.js"></script>
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" type="text/css" href="/css/bootstrap.min.css">
-    <title>Редактор теста по физике</title>
+    <title>Редактор теста по математике</title>
 </head>
 <body>
 <div class="container">
     <div th:insert="~{dashboard/fragments/include :: top}"></div>
-    <H3>Редактор вопроса к тесту по физике</H3>
+    <H3>Редактор вопроса к тесту по математике</H3>
     <th:block th:each="qstListId : ${qstListId}">
         <ul class="nav nav-pills nav-fill mb-4">
             <li class="nav-item">
@@ -24,15 +24,30 @@
             <div class="card-body">
                 <fieldset>
                     <legend class="card-title">Редактирование вопроса "<th:block th:text="${qstListId.question}"></th:block>" к тесту по физике "<th:block th:each="fmsListId : ${fmsListId}" th:text="${fmsListId.name}"></th:block>"</legend>
-                    <form method="post"
-                          th:action="@{'/dashboard/updateQuestion/' + ${qstListId.idForm}+'/'+${qstListId.id}}">
+                    <form method="post" th:action="@{'/dashboard/updateQuestion/' + ${qstListId.idForm}+'/'+${qstListId.id}}" enctype="multipart/form-data">
                         <div class="form-group row mb-4">
                             <label class="col-sm-2 col-form-label">Вопрос</label>
                             <div class="col-sm-7">
-                        <textarea class="form-control" th:text="${qstListId.question}" name="question" type="text"
-                                  rows="5"
-                                  required></textarea>
+                        <textarea class="form-control" th:text="${qstListId.question}" name="question" type="text" rows="6" required></textarea>
                                 <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+                            </div>
+                            <div th:unless="${qstListId.image.empty}" class="align-top" style="float: right; width: 110px; height: 156px;">
+                                <img th:src="@{'/images/'+${qstListId.image}}" th:alt="${qstListId.image}"  height="156px" class="rounded float-right">
+                            </div>
+                        </div>
+                        <div class="form-group row mb-4">
+                            <label class="col-sm-2 col-form-label">Выбор изображения</label>
+                            <div class="col-sm-7">
+                                <input type="file" name="image" class="custom-file-input">
+                            </div>
+                        </div>
+                        <div class="form-group row mb-4">
+                            <legend class="col-form-label col-sm-2 pt-0">Удалить изображение</legend>
+                            <div class="col-sm-7">
+                                <input class="form-check-input" type="radio" name="del" value="on">
+                                <label class="form-check-label">Да</label>
+                                <input class="form-check-input" type="radio" name="del" value="off" checked="checked">
+                                <label class="form-check-label">Нет</label>
                             </div>
                         </div>
                         <div>

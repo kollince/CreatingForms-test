@@ -6,7 +6,8 @@
     <script src="/js/bootstrap.min.js"></script>
 
     <!-- Bootstrap CSS -->
-    <link th:fragment="css" rel="stylesheet" type="text/css" href="/css/bootstrap.min.css">
+<!--    <link th:fragment="css" rel="stylesheet" type="text/css" href="/css/bootstrap.min.css">-->
+    <link th:fragment="css" rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.1.3/dist/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
 </head>
 <body>
 <!--<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>-->
@@ -68,28 +69,9 @@
         </th:block>
     </th:block>
 </div>
-<th:block th:fragment="listTest">
-    <H3 class="pt-3">Список тестов по математике</H3><br>
-    <th:block th:each="el : ${allForms}">
-        <div class="card mb-4" style="width: 60rem;">
-            <div class="card-body">
-                <h5 class="card-title"><th:block th:text="${el.name}"></th:block></h5>
-<!--                <div style="display: inline-block; text-align: left;">-->
-                <div th:unless="${el.image.empty}" style="float: left; padding: 0 10px 10px 0;">
-                    <img th:src="@{'/images/'+${el.image}}" th:alt="${el.image}"   width="100px" class="img-thumbnail">
-                </div>
-                <div class="card-text" th:text="${el.description}"></div>
-<!--                </div>-->
-                <!--      <div> На время:-->
-                <!--        <th:block th:if="${el.isForTime} == true">Да</th:block>-->
-                <!--        <th:block th:if="${el.isForTime} == false">Нет</th:block>-->
-                <!--      </div>-->
-                <a class="card-link" th:href="@{'/takeTest/'+${el.id}}">Пройти тест</a>
-            </div>
-        </div>
-    </th:block>
-    <img src="/images/orig.jpg" alt="orig.jpg" width="100px" class="img-thumbnail">
-</th:block>
+<!--<th:block th:fragment="listTest">-->
+
+<!--</th:block>-->
 <div th:fragment="questionsByFormId">
     <ol>
         <div th:each="el : ${questionsByFormId}">

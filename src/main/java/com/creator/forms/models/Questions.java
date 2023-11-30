@@ -11,4 +11,5 @@ public class Questions {
     private int id;
     private int idForm;
     private String question;
+    private String image;
 }
