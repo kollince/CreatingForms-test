@@ -10,7 +10,7 @@
 <body>
 <div class="container">
     <th:block th:insert="~{components/include :: top}"></th:block>
-    <div class="card mb-4" style="width: 60rem;">
+    <div class="card mb-4">
         <div class="card-body">
             <H2>Результаты теста "<th:block th:text="${form.getName()}"></th:block>" по математике</H2>
             <th:block th:if="${result == 100}"><h4>Поздравляем, тест успешно пройден!</h4></th:block>

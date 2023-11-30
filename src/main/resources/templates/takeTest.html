@@ -14,7 +14,7 @@
 
 <div class="container">
     <th:block th:insert="~{components/include :: top}"></th:block>
-    <div class="card mb-4" style="width: 60rem;">
+    <div class="card mb-4">
         <div class="card-body">
             <th:block th:each="formsById : ${formsById}">
                 <H3 class="card-title">Пройти тест "<th:block th:text="${formsById.name}"></th:block>" по математике</H3>
@@ -34,16 +34,12 @@
                                 <b>
                                     <th:block th:text="${questionsByFormId.question}"></th:block>
                                 </b>
-                                <div th:unless="${questionsByFormId.image.empty}" class="align-middle pt-3" style="float: right; width: 200px; height: 200px;">
+                                <!-- trigger modal -->
+                                <div data-toggle="modal" th:data-target="'#m'+${questionsByFormId.id}" th:unless="${questionsByFormId.image.empty}" class="align-middle pt-3" style="float: right; width: 200px; height: 200px;">
                                   <img th:src="@{'/images/'+${questionsByFormId.image}}" th:alt="${questionsByFormId.image}"  height="156px" class="rounded float-right">
                                 </div>
-                                <!-- Button trigger modal -->
-                                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#imageModal">
-                                    Launch demo modal
-                                </button>
-
                                 <!-- Modal -->
-                                <div class="modal fade" id="imageModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal fade" th:id="'m'+${questionsByFormId.id}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                     <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
                                         <div class="modal-content">
                                             <div class="modal-header">
@@ -52,8 +48,8 @@
                                                     <span aria-hidden="true">&times;</span>
                                                 </button>
                                             </div>
-                                            <div class="modal-body text-center">
-                                                <a data-toggle="modal" data-target="#imageModal" href="#imageModal" ><img th:src="@{'/images/'+${questionsByFormId.image}}" th:alt="${questionsByFormId.image}"  height="700px" class="float-xl-none"></a>
+                                            <div data-toggle="modal" class="modal-body text-center">
+                                                <img  th:src="@{'/images/'+${questionsByFormId.image}}" th:alt="${questionsByFormId.image}"  width="600px" class="float-xl-none">
                                             </div>
                                             <div class="modal-footer">
                                                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
