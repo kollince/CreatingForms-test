@@ -100,24 +100,23 @@
     <div class="card mb-4" style="width: 60rem;">
         <div class="card-body">
             <h3 class="card-title">Список тестов</h3>
-            <ol class="font-weight-bold" th:unless="${fmsList.empty}">
+            <ol th:unless="${fmsList.empty}">
                 <th:block th:each="fmsList : ${fmsList}">
                     <li>
-                        <th:block th:text="${fmsList.name}"></th:block>
-                        <br>
+                        <div th:text="${fmsList.name}" class="font-weight-bold"></div>
                         <div class="card-text" th:text="${fmsList.description}"></div>
                         <a class="card-link" th:href="@{'/dashboard/eForm/'+${fmsList.id}}">Редактировать</a>
                         <a class="card-link" th:href="@{'/dashboard/deleteForm/'+${fmsList.id}}">Удалить</a>
                     </li>
                     <ol th:unless="${qstList.empty}">
-                        <b>Вопросы:</b>
+                        <div class="font-weight-bold">Вопросы:</div>
                         <th:block th:each="qstList : ${qstList}">
                             <th:block th:if="${#strings.equals(fmsList.id, qstList.idForm)}">
                                 <li>
                                     <th:block th:text="${qstList.question}"></th:block>
                                 </li>
                                 <ol th:unless="${ansList.empty}">
-                                    <b>Ответы:</b>
+                                    <div class="font-weight-bold">Ответы:</div>
                                     <th:block th:each="ansList : ${ansList}">
                                         <th:block
                                                 th:if="${#strings.equals(ansList.idQuestion, qstList.id) && #strings.equals(fmsList.id, qstList.idForm)}">
