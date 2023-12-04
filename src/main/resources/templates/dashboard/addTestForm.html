@@ -14,33 +14,34 @@
     <div class="card mb-2">
         <div class="card-body">
             <form method="post" th:action="@{'/dashboard/addForm'}" enctype="multipart/form-data">
-              <div class="form-group row mb-4">
+                <div class="form-group row mb-4">
                     <label class="col-sm-2 col-form-label">Наименование</label>
-                <div class="col-sm-7">
-                    <input class="form-control" type="text" name="name" required>
-                </div>
-              </div>
-              <div class="form-group row mb-4">
-                    <label class="col-sm-2 col-form-label">Описание</label>
-                <div class="col-sm-7">
-                    <textarea class="form-control" name="description" type="text" rows="5" required></textarea>
-                </div>
-                  <div class="form-group row mt-4 mb-4">
-                      <label class="col-sm-2 col-form-label">Выбор изображения</label>
-                      <div class="col-sm-7">
-                          <input type="file" name="image" class="custom-file-input">
-                      </div>
-                   </div>
+                    <div class="col-sm-7">
+                        <input class="form-control" type="text" name="name" required>
+                    </div>
                 </div>
                 <div class="form-group row mb-4">
-                  <legend class="col-form-label col-sm-2 pt-0">На время</legend>
-                  <div class="col-sm-7">
-                  <input class="form-check-input" type="radio" name="time" value="true">
-                    <label>Да</label>
-                  <input class="form-check-input" type="radio" name="time" value="false" checked>
-                    <label>Нет</label>
-                  </div>
-                    <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+                    <label class="col-sm-2 col-form-label">Описание</label>
+                    <div class="col-sm-7">
+                        <textarea class="form-control" name="description" type="text" rows="6" required></textarea>
+                    </div>
+                </div>
+                <div class="form-group row mb-4">
+                    <label class="col-sm-2 col-form-label">Выбор изображения</label>
+                    <div class="col-sm">
+                        <input type="file" name="image" class="form-control-file">
+                    </div>
+                </div>
+
+                <div class="form-group row mb-4">
+                    <legend class="col-form-label col-sm-2 pt-0">На время</legend>
+                    <div class="col-sm-9">
+                        <input id="on" class="form-check-input ml-0" type="radio" name="time" value="true">
+                        <label class="form-check-label ml-3" for="on">Да</label>
+                        <input id="off" class="form-check-input ml-1" type="radio" name="time" value="false" checked>
+                        <label class="form-check-label ml-4" for="off">Нет</label>
+                        <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+                    </div>
                 </div>
                 <div>
                   <button type="submit" class="btn btn-primary mb-2">Добавить</button>

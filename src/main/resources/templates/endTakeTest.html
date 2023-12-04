@@ -10,14 +10,14 @@
 <th:block th:insert="~{components/include :: scripts}"></th:block>
 <div class="container">
     <th:block th:insert="~{components/include :: top}"></th:block>
-    <div class="card mb-2">
+    <div class="card mb-3">
         <div class="card-body">
-            <H2>Результаты теста "<th:block th:text="${form.getName()}"></th:block>" по математике</H2>
-            <th:block th:if="${result == 100}"><h4>Поздравляем, тест успешно пройден!</h4></th:block>
-            <th:block th:if="${result != 100}"><h4>В следующий раз будет лучше!</h4></th:block>
-            <div>Из <th:block th:text="${getSizeQuestion}"></th:block> вопросов зачтено <th:block th:text="${countUserAnswer}"></th:block>
+            <H2 class="pb-3">Результаты теста &laquo;<th:block th:text="${form.getName()}"></th:block>&raquo; по математике</H2>
+            <th:block th:if="${result == 100}"><h3 class="pb-3">Поздравляем, тест успешно пройден!</h3></th:block>
+            <th:block th:if="${result != 100}"><h3 class="pb-3">В следующий раз будет лучше!</h3></th:block>
+            <h3 class="pb-3">Из <th:block th:text="${getSizeQuestion}"></th:block> вопросов зачтено <th:block th:text="${countUserAnswer}"></th:block>
                 (<th:block th:utext="${result}"></th:block>%)
-            </div>
+            </h3>
         </div>
     </div>
     <th:block th:insert="~{components/include :: bottom}"></th:block>

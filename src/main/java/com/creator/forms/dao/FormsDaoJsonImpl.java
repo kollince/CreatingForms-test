@@ -43,7 +43,6 @@ public class FormsDaoJsonImpl implements FormsDao {
     //private Path pathImages = Path.of("static/images/");
     private int idCount = 0;
     private int idCountQuestion = 0;
-   // private int idCountPassing = 0;
     private int idCountAnswer = 0;
     private int idAnswer = 0;
     private int idCountUserAnswer = 0;
