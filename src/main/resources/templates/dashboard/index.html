@@ -2,15 +2,19 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
 <head>
     <meta charset="UTF-8">
-    <script src="/js/bootstrap.min.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- <script src="/js/bootstrap.min.js"></script>-->
     <!-- Bootstrap CSS -->
+<!--    <link th:insert="~{dashboard/fragments/include :: css}">-->
     <link th:insert="~{components/include :: css}">
     <title>Панель управления</title>
 </head>
 <body>
+<th:block th:insert="~{components/include :: scripts}"></th:block>
 <div class="container">
-<th:block th:insert="~{dashboard/fragments/include :: top}"></th:block>
-<th:block th:insert="~{dashboard/fragments/include :: mapForms}"></th:block>
+    <th:block th:insert="~{components/include :: top}"></th:block>
+    <th:block th:insert="~{dashboard/fragments/include :: mapForms}"></th:block>
+    <th:block th:insert="~{components/include :: bottom}"></th:block>
 </div>
 </body>
 </html>

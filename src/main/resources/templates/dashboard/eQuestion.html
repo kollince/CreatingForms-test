@@ -2,14 +2,14 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
 <head>
     <meta charset="UTF-8">
-    <script src="/js/bootstrap.min.js"></script>
     <!-- Bootstrap CSS -->
-    <link rel="stylesheet" type="text/css" href="/css/bootstrap.min.css">
+    <link th:insert="~{components/include :: css}">
     <title>Редактор теста по математике</title>
 </head>
 <body>
+<th:block th:insert="~{components/include :: scripts}"></th:block>
 <div class="container">
-    <div th:insert="~{dashboard/fragments/include :: top}"></div>
+    <th:block th:insert="~{components/include :: top}"></th:block>
     <H3>Редактор вопроса к тесту по математике</H3>
     <th:block th:each="qstListId : ${qstListId}">
         <ul class="nav nav-pills nav-fill mb-4">
@@ -20,10 +20,10 @@
                 </div>
             </li>
         </ul>
-        <div class="card mb-4" style="width: 60rem;">
+        <div class="card mb-4">
             <div class="card-body">
                 <fieldset>
-                    <legend class="card-title">Редактирование вопроса "<th:block th:text="${qstListId.question}"></th:block>" к тесту по физике "<th:block th:each="fmsListId : ${fmsListId}" th:text="${fmsListId.name}"></th:block>"</legend>
+                    <legend class="card-title">Редактирование вопроса &laquo;<th:block th:text="${qstListId.question}"></th:block>&raquo; к тесту по математике &laquo;<th:block th:each="fmsListId : ${fmsListId}" th:text="${fmsListId.name}"></th:block>&raquo;</legend>
                     <form method="post" th:action="@{'/dashboard/updateQuestion/' + ${qstListId.idForm}+'/'+${qstListId.id}}" enctype="multipart/form-data">
                         <div class="form-group row mb-4">
                             <label class="col-sm-2 col-form-label">Вопрос</label>
@@ -57,10 +57,10 @@
                 </fieldset>
             </div>
         </div>
-        <div class="card mb-4" style="width: 60rem;">
+        <div class="card mb-4">
             <div class="card-body">
                 <fieldset>
-                    <legend class="card-title">Добавить ответ к вопросу "<th:block th:text="${qstListId.question}"></th:block>"</legend>
+                    <legend class="card-title">Добавить ответ к вопросу &laquo;<th:block th:text="${qstListId.question}"></th:block>&raquo;</legend>
                     <form method="post" th:action="@{'/dashboard/addAnswer'}">
                         <input type="hidden" name="idForm" th:value="${qstListId.idForm}">
                         <input type="hidden" name="idQuestion" th:value="${qstListId.id}">
@@ -89,7 +89,7 @@
                 </fieldset>
             </div>
         </div>
-        <div class="card mb-4" style="width: 60rem;">
+        <div class="card mb-2">
             <div class="card-body">
                 <fieldset>
                     <legend class="card-title">Ответы:</legend>
@@ -127,6 +127,7 @@
             </div>
         </div>
     </th:block>
+    <th:block th:insert="~{components/include :: bottom}"></th:block>
 </div>
 </body>
 </html>

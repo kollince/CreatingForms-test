@@ -2,15 +2,15 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
 <head>
     <meta charset="UTF-8">
-    <script src="/js/bootstrap.min.js"></script>
     <!-- Bootstrap CSS -->
     <link th:insert="~{components/include :: css}">
     <title>Результаты теста по математике</title>
 </head>
 <body>
+<th:block th:insert="~{components/include :: scripts}"></th:block>
 <div class="container">
     <th:block th:insert="~{components/include :: top}"></th:block>
-    <div class="card mb-4">
+    <div class="card mb-2">
         <div class="card-body">
             <H2>Результаты теста "<th:block th:text="${form.getName()}"></th:block>" по математике</H2>
             <th:block th:if="${result == 100}"><h4>Поздравляем, тест успешно пройден!</h4></th:block>
@@ -18,9 +18,9 @@
             <div>Из <th:block th:text="${getSizeQuestion}"></th:block> вопросов зачтено <th:block th:text="${countUserAnswer}"></th:block>
                 (<th:block th:utext="${result}"></th:block>%)
             </div>
-
         </div>
     </div>
+    <th:block th:insert="~{components/include :: bottom}"></th:block>
 </div>
 </body>
 </html>

@@ -6,11 +6,12 @@
     <title>Создание теста</title>
 </head>
 <body>
+<th:block th:insert="~{components/include :: scripts}"></th:block>
 <div class="container">
-    <div th:insert="~{dashboard/fragments/include :: top}"></div>
+    <th:block th:insert="~{components/include :: top}"></th:block>
     <H3>Добавить тест</H3>
     <!--<div th:insert="~{dashboard/fragments/include :: linksAddForms}"></div>-->
-    <div class="card mb-4" style="width: 60rem;">
+    <div class="card mb-2">
         <div class="card-body">
             <form method="post" th:action="@{'/dashboard/addForm'}" enctype="multipart/form-data">
               <div class="form-group row mb-4">
@@ -47,6 +48,7 @@
             </form>
         </div>
     </div>
+    <th:block th:insert="~{components/include :: bottom}"></th:block>
 </div>
 </body>
 </html>

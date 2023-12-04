@@ -2,22 +2,23 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
 <head>
     <meta charset="UTF-8">
-    <script src="/js/bootstrap.min.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <!-- Bootstrap CSS -->
-    <link rel="stylesheet" type="text/css" href="/css/bootstrap.min.css">
-    <title>Редактор теста по физике</title>
+    <link th:insert="~{components/include :: css}">
+    <title>Редактор теста по математике</title>
 </head>
 <body>
+<th:block th:insert="~{components/include :: scripts}"></th:block>
 <div class="container">
-    <div th:insert="~{dashboard/fragments/include :: top}"></div>
+    <th:block th:insert="~{components/include :: top}"></th:block>
     <H4>Редактор теста по математике</H4>
-    <!--<div th:insert="~{dashboard/fragments/include :: linksAddForms}"></div>-->
     <th:block th:each="el : ${editFormId}">
-        <div class="card mb-4" style="width: 60rem;">
+        <div class="card mb-4">
             <div class="card-body">
                 <fieldset>
                     <legend class="card-title">Редактирование наименования и описания теста</legend>
-                    <form method="post" th:action="@{'/dashboard/updateForm/' + ${el.id}}" enctype="multipart/form-data">
+                    <form method="post" th:action="@{'/dashboard/updateForm/' + ${el.id}}"
+                          enctype="multipart/form-data">
                         <div class="form-group row mb-4">
                             <label class="col-sm-2 col-form-label">Наименование</label>
                             <div class="col-sm-7">
@@ -30,8 +31,10 @@
                                 <textarea class="form-control" th:text="${el.description}" name="description"
                                           type="text" rows="6" required></textarea>
                             </div>
-                            <div th:unless="${el.image.empty}" class="align-top" style="float: right; width: 110px; height: 156px;">
-                                <img th:src="@{'/images/'+${el.image}}" th:alt="${el.image}"  height="156px" class="rounded float-right">
+                            <div th:unless="${el.image.empty}" class="align-top"
+                                 style="float: right; width: 110px; height: 156px;">
+                                <img th:src="@{'/images/'+${el.image}}" th:alt="${el.image}" height="156px"
+                                     class="rounded float-right">
                             </div>
                         </div>
                         <div class="form-group row mb-4">
@@ -68,18 +71,20 @@
                 </fieldset>
             </div>
         </div>
-        <div class="card mb-4" style="width: 60rem;">
+        <div class="card mb-4">
             <div class="card-body">
                 <fieldset>
-                    <legend class="card-title">Добавить вопрос к тесту "<th:block th:text="${editFormId.name}"></th:block>"
+                    <legend class="card-title">Добавить вопрос к тесту &laquo;<th:block
+                            th:text="${editFormId.name}"></th:block>&raquo;
                     </legend>
-                    <form method="post" th:action="@{'/dashboard/addQuestions/' + ${editFormId.id}}" enctype="multipart/form-data">
+                    <form method="post" th:action="@{'/dashboard/addQuestions/' + ${editFormId.id}}"
+                          enctype="multipart/form-data">
                         <div class="form-group row mb-4">
                             <label class="col-sm-2 col-form-label">Вопрос</label>
-                        <div class="col-sm-7">
-                            <textarea class="form-control" name="question" type="text" rows="6" required></textarea>
-                            <input type="hidden" name="idForm" th:value="${editFormId.id}">
-                        </div>
+                            <div class="col-sm-7">
+                                <textarea class="form-control" name="question" type="text" rows="6" required></textarea>
+                                <input type="hidden" name="idForm" th:value="${editFormId.id}">
+                            </div>
                         </div>
                         <div class="form-group row mb-4">
                             <label class="col-sm-2 col-form-label">Выбор изображения</label>
@@ -94,7 +99,7 @@
                 </fieldset>
             </div>
         </div>
-        <div class="card mb-4" style="width: 60rem;">
+        <div class="card mb-2">
             <div class="card-body">
                 <fieldset>
                     <legend class="card-title">Вопросы:</legend>
@@ -102,19 +107,22 @@
                         <li th:each="questionsByFormId : ${questionsByFormId}">
                             <th:block th:text="${questionsByFormId.question}"></th:block>
                             <div th:unless="${questionsByFormId.image.empty}">
-                            <img th:src="@{'/images/'+${questionsByFormId.image}}" th:alt="${questionsByFormId.image}"  width="80px" class="rounded float-left pt-3 mb-0">
+                                <img th:src="@{'/images/'+${questionsByFormId.image}}"
+                                     th:alt="${questionsByFormId.image}" width="80px"
+                                     class="rounded float-left pt-3 mb-0">
                             </div>
                             <div>
-                            <a class="card-link" th:href="@{'/dashboard/eQuestion/'+${editFormId.id}+'/'+${questionsByFormId.id}}">Редактировать</a>
-                            <a class="card-link" th:href="@{'/dashboard/deleteQuestion/'+${questionsByFormId.id}}">Удалить</a>
+                                <a class="card-link"
+                                   th:href="@{'/dashboard/eQuestion/'+${editFormId.id}+'/'+${questionsByFormId.id}}">Редактировать</a>
+                                <a class="card-link" th:href="@{'/dashboard/deleteQuestion/'+${questionsByFormId.id}}">Удалить</a>
                             </div>
                         </li>
                     </ol>
                 </fieldset>
             </div>
         </div>
-
     </th:block>
+    <th:block th:insert="~{components/include :: bottom}"></th:block>
 </div>
 </body>
 </html>
