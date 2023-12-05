@@ -35,12 +35,16 @@ public class FormsDaoJsonImpl implements FormsDao {
     Map<Questions, List<Answers>> questionsAndAnswers = new HashMap<>();
     Map<Questions, List<Answers>> userQuestionsAndAnswers = new HashMap<>();
     private final ObjectMapper mapper = new ObjectMapper();
+    private Path dataPath = Path.of("target/classes/data/").toAbsolutePath();
     private Path fileListForms = Path.of("src/main/resources/data/listForms.json");
     private Path fileForms = Path.of("data/listForms.json");
     private Path fileListQuestions = Path.of("src/main/resources/data/listQuestions.json");
-    private Path fileListAnswers = Path.of("src/main/resources/data/listAnswers.json");
-    private Path pathImages = Path.of("src/main/resources/static/images/").toAbsolutePath();
-    //private Path pathImages = Path.of("static/images/");
+    private Path fileListAnswers = Path.of("src/main/resources/data/listAnswers.json").toAbsolutePath();
+    //private Path fileListAnswers = Path.of("data/listAnswers.json");
+    private Path fileListAnswersTest = Paths.get(dataPath+File.separator+"listAnswers.json");
+
+    //private Path pathImages = Path.of("src/main/resources/static/images/").toAbsolutePath();
+    private Path pathImages = Path.of("static/images/").toAbsolutePath();
     private int idCount = 0;
     private int idCountQuestion = 0;
     private int idCountAnswer = 0;
@@ -107,6 +111,8 @@ public class FormsDaoJsonImpl implements FormsDao {
     }
     private void openFileListForms(List<Forms> formsList, Path path) throws IOException {
         //fileExist(fileForms);
+        System.out.println(fileListAnswersTest);
+        System.out.println(pathImages);
         fileExist(path);
 
         try {
