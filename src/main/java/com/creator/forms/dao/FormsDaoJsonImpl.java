@@ -40,7 +40,8 @@ public class FormsDaoJsonImpl implements FormsDao {
     private Path fileListQuestions = Path.of("target/classes/data/listQuestions.json");
     //private Path fileListAnswers = Path.of("src/main/resources/data/listAnswers.json");
     private Path fileListAnswers = Path.of("target/classes/data/listAnswers.json");
-    private String pathImages = "/static/images";
+    private String pathImages = "/images";
+    private String pathFile = System.getProperty("user.home")+File.separator+"images";
     //private String pathImages = "src/main/resources/static/images";
 
     boolean debug;
@@ -100,8 +101,12 @@ public class FormsDaoJsonImpl implements FormsDao {
             idCountAnswer = max;
         }
     }
-
     private void openFileListForms(List<Forms> formsList, Path path) throws IOException {
+        System.out.println(Paths.get(System.getProperty("java.io.tmpdir")+File.separator+"images"));
+        System.out.println(Paths.get(System.getProperty("user.home")));
+        System.out.println(pathImages);
+        //Path rootDir = this.rootLocation.resolve(pathImages);
+        //System.out.println(rootDir);
         fileExist(path);
         try {
             List<Forms> formsJson = mapper.readValue(path.toFile(), new TypeReference<List<Forms>>() {});
