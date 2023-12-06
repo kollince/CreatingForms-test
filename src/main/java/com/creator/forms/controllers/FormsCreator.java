@@ -22,6 +22,7 @@ import org.springframework.web.multipart.MultipartException;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
@@ -33,7 +34,7 @@ import java.util.Map;
 public class FormsCreator{
     private final FormsDao formsDao = new FormsDaoJsonImpl();
     private final FormService formService = new FormServiceImpl(formsDao);
-    public FormsCreator() throws IOException {
+    public FormsCreator() throws IOException, URISyntaxException {
 
     }
     private String getCookie(HttpServletRequest request){
@@ -152,14 +153,14 @@ public String deleteAnswer(@PathVariable(value="idAnswer") int idAnswer) throws 
     }
 
     @GetMapping("dashboard/deleteForm/{id}")
-    public String getDelete(@PathVariable(value="id") int id) throws IOException {
+    public String getDelete(@PathVariable(value="id") int id) throws IOException, URISyntaxException {
         formService.delete
                 (id);
         formService.deleteQuestionsByFormId(id);
         return "redirect:/dashboard/";
     }
     @PostMapping("/dashboard/addForm")
-    public String addForm(@RequestParam String name, @RequestParam String description,  @RequestParam MultipartFile image, @RequestParam boolean time) throws IOException {
+    public String addForm(@RequestParam String name, @RequestParam String description,  @RequestParam MultipartFile image, @RequestParam boolean time) throws IOException, URISyntaxException {
         Forms forms = new Forms(0, name, description, image.getOriginalFilename(), time);
         formService.addForms(forms, image);
         return "redirect:/dashboard/";
@@ -174,7 +175,7 @@ public String deleteAnswer(@PathVariable(value="idAnswer") int idAnswer) throws 
     }
     @PostMapping("/dashboard/addQuestions/{id}")
     public String addQuestion(@RequestParam int idForm, @RequestParam String question, @RequestParam MultipartFile image,
-                              @PathVariable(value="id") int id, Model model) throws IOException {
+                              @PathVariable(value="id") int id, Model model) throws IOException, URISyntaxException {
         Forms fmsEdit = formService.getFormsById(id);
         model.addAttribute("editQuestion", fmsEdit);
         Questions questions = new Questions(0, idForm, question, image.getOriginalFilename());
@@ -184,13 +185,13 @@ public String deleteAnswer(@PathVariable(value="idAnswer") int idAnswer) throws 
     }
     @PostMapping("dashboard/updateForm/{id}")
     public String update(@RequestParam String name, @RequestParam String description, @RequestParam MultipartFile image, @RequestParam boolean time,
-                         @RequestParam boolean del, @PathVariable(value="id") int id) throws IOException {
+                         @RequestParam boolean del, @PathVariable(value="id") int id) throws IOException, URISyntaxException {
          formService.updateForm(id, name, description, time, image, del);
         return "redirect:/dashboard/eForm/"+id;
     }
     @PostMapping("dashboard/updateQuestion/{formId}/{questionId}")
     public String updateQuestion(@RequestParam String question, @RequestParam MultipartFile image, @PathVariable(value="formId") int formId,
-                                 @RequestParam boolean del, @PathVariable(value="questionId") int questionId) throws IOException {
+                                 @RequestParam boolean del, @PathVariable(value="questionId") int questionId) throws IOException, URISyntaxException {
         formService.updateQuestions(questionId,question, image, del);
         formService.updateCorrectQuestions(questionId);
         return "redirect:/dashboard/eQuestion/"+formId+"/"+questionId;

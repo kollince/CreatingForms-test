@@ -6,17 +6,14 @@ import com.creator.forms.models.Forms;
 import com.creator.forms.models.Questions;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import org.apache.tomcat.util.http.fileupload.FileUtils;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Repository;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.*;
-import java.nio.file.FileSystems;
+import java.net.URISyntaxException;
+
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -25,26 +22,29 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Repository
+
 @AllArgsConstructor
+
 @Getter
 @Setter
 public class FormsDaoJsonImpl implements FormsDao {
-    private final List<Forms> formsList = new ArrayList<>();
+   private final List<Forms> formsList = new ArrayList<>();
     private final List<Questions> questionsList = new ArrayList<>();
     private final List<Answers> answersList = new ArrayList<>();
     Map<Questions, List<Answers>> questionsAndAnswers = new HashMap<>();
     Map<Questions, List<Answers>> userQuestionsAndAnswers = new HashMap<>();
     private final ObjectMapper mapper = new ObjectMapper();
-    private Path dataPath = Path.of("target/classes/data/").toAbsolutePath();
-    private Path fileListForms = Path.of("src/main/resources/data/listForms.json");
-    private Path fileForms = Path.of("data/listForms.json");
-    private Path fileListQuestions = Path.of("src/main/resources/data/listQuestions.json");
-    private Path fileListAnswers = Path.of("src/main/resources/data/listAnswers.json").toAbsolutePath();
-    //private Path fileListAnswers = Path.of("data/listAnswers.json");
-    private Path fileListAnswersTest = Paths.get(dataPath+File.separator+"listAnswers.json");
+    //private Path fileListForms = Path.of("src/main/resources/data/listForms.json");
+    private Path fileListForms = Path.of("target/classes/data/listForms.json");
+    //private Path fileListQuestions = Path.of("src/main/resources/data/listQuestions.json");
+    private Path fileListQuestions = Path.of("target/classes/data/listQuestions.json");
+    //private Path fileListAnswers = Path.of("src/main/resources/data/listAnswers.json");
+    private Path fileListAnswers = Path.of("target/classes/data/listAnswers.json");
+    private String pathImages = "/static/images";
+    //private String pathImages = "src/main/resources/static/images";
 
-    //private Path pathImages = Path.of("src/main/resources/static/images/").toAbsolutePath();
-    private Path pathImages = Path.of("static/images/").toAbsolutePath();
+    boolean debug;
+
     private int idCount = 0;
     private int idCountQuestion = 0;
     private int idCountAnswer = 0;
@@ -54,21 +54,12 @@ public class FormsDaoJsonImpl implements FormsDao {
     private int result = 0;
     private int countQst;
 
-
-//    public FormsDaoJsonImpl() {
-//    }
-
     public FormsDaoJsonImpl() throws IOException {
         openFileListForms(formsList, fileListForms);
         openFileListQuestions(questionsList,fileListQuestions);
         openFileListAnswers(answersList,fileListAnswers);
     }
-//    private void fileExist(Path path) throws IOException {
-//       File file = new File(path.toUri());
-//       if (!file.exists()) {
-//           file.createNewFile();
-//       }
-//    }
+
     private void fileExist(Path path) throws IOException {
         File file = new File(path.toAbsolutePath().toUri());
         if (!file.exists()) {
@@ -109,12 +100,9 @@ public class FormsDaoJsonImpl implements FormsDao {
             idCountAnswer = max;
         }
     }
-    private void openFileListForms(List<Forms> formsList, Path path) throws IOException {
-        //fileExist(fileForms);
-        System.out.println(fileListAnswersTest);
-        System.out.println(pathImages);
-        fileExist(path);
 
+    private void openFileListForms(List<Forms> formsList, Path path) throws IOException {
+        fileExist(path);
         try {
             List<Forms> formsJson = mapper.readValue(path.toFile(), new TypeReference<List<Forms>>() {});
             if (formsList.isEmpty()){
@@ -171,8 +159,7 @@ public class FormsDaoJsonImpl implements FormsDao {
         return answersList;
     }
     @Override
-    public List<Answers> listAnswers() throws IOException {
-//        openFileListAnswers(answersList, fileListAnswers);
+    public List<Answers> listAnswers() {
         for (Answers answer : answersList) {
             if (answersList.size() < idCountAnswer) {
                 idCountAnswer = answersList.size()+1;
@@ -183,7 +170,7 @@ public class FormsDaoJsonImpl implements FormsDao {
     }
 
     @Override
-    public List<Answers> listAnswersByFormId(int formId) throws IOException {
+    public List<Answers> listAnswersByFormId(int formId) {
         return answersList.stream()
                 .filter(answers -> answers.getIdForm() == formId)
                 .collect(Collectors.toCollection(ArrayList::new));
@@ -231,7 +218,7 @@ public class FormsDaoJsonImpl implements FormsDao {
         return element;
     }
     @Override
-    public List<Questions> addQuestion(Questions questions, MultipartFile image) throws IOException {
+    public List<Questions> addQuestion(Questions questions, MultipartFile image) throws IOException, URISyntaxException {
         int max = 0;
         if (questionsList.size() == 0) {
             idCountQuestion = 1;
@@ -253,7 +240,7 @@ public class FormsDaoJsonImpl implements FormsDao {
     }
 
     @Override
-    public List<Questions> listQuestionsByFormId(int formId) throws IOException {
+    public List<Questions> listQuestionsByFormId(int formId) {
         List<Questions> qstByFormId = questionsList.stream()
                 .filter(questions -> questions.getIdForm() == formId)
                 .collect(Collectors.toCollection(ArrayList::new));
@@ -289,8 +276,7 @@ public class FormsDaoJsonImpl implements FormsDao {
     }
 
     @Override
-    public List<Questions> listQuestions() throws IOException {
-//        openFileListQuestions(questionsList, fileListQuestions);
+    public List<Questions> listQuestions() {
         for (Questions questions : questionsList) {
             if (questionsList.size() < idCountQuestion) {
                 idCountQuestion = questionsList.size()+1;
@@ -299,7 +285,7 @@ public class FormsDaoJsonImpl implements FormsDao {
         return questionsList;
     }
     @Override
-    public List<Questions> updateQuestions(int id, String question, MultipartFile image, boolean isDelImage) throws IOException {
+    public List<Questions> updateQuestions(int id, String question, MultipartFile image, boolean isDelImage) throws IOException, URISyntaxException {
         for (Questions questions : questionsList) {
             if (questions.getId() == id) {
                 if(!image.isEmpty()) {
@@ -360,7 +346,7 @@ public class FormsDaoJsonImpl implements FormsDao {
     }
 
     @Override
-    public List<Forms> addForm(Forms form, MultipartFile image) throws IOException {
+    public List<Forms> addForm(Forms form, MultipartFile image) throws IOException, URISyntaxException {
         int max = 0;
         if (formsList.size() == 0) {
             idCount = 1;
@@ -374,21 +360,7 @@ public class FormsDaoJsonImpl implements FormsDao {
             }
             form.setId(idCount++);
         }
-//        if (form.getImage().isEmpty()) {
-//
-//        }
-//        byte[] bytes = form.getImage().getBytes();
-//        InputStream inputStream = new ByteArrayInputStream(bytes);
-//        Path path = Paths.get(pathImages, form.getImage());
-//        Files.copy(inputStream, path, StandardCopyOption.REPLACE_EXISTING);
-        //int dotIndex = .getFileName().toString().lastIndexOf('.');
-       // fileWithoutExtension = path.getFileName().toString().substring(0, dotIndex);
 
-//        byte[] bytes = form.getImage().getBytes();
-//        BufferedOutputStream stream =
-//                new BufferedOutputStream(new FileOutputStream(form.getImage().getOriginalFilename()));
-//        stream.write(bytes);
-//        stream.close();
         addImage(image);
         formsList.add(form);
         saveFileListForms(formsList,fileListForms);
@@ -396,20 +368,17 @@ public class FormsDaoJsonImpl implements FormsDao {
     }
 
     @Override
-    public List<Forms> listForms() throws IOException {
-//        openFileListForms(formsList, fileListForms);
+    public List<Forms> listForms() {
         for (Forms forms : formsList) {
             if (formsList.size() < idCount) {
                 idCount = formsList.size()+1;
             }
         }
         return formsList;
-//        return mapper.readValue(FILEPATH.toFile(), new TypeReference<>() {
-//        });
     }
 
     @Override
-    public List<Forms> updateForm(int id, String name, String description, boolean isForTime, MultipartFile image, boolean isDelImage) throws IOException {
+    public List<Forms> updateForm(int id, String name, String description, boolean isForTime, MultipartFile image, boolean isDelImage) throws IOException, URISyntaxException {
         for (Forms forms : formsList) {
             if (forms.getId() == id) {
                 if (!image.isEmpty()){
@@ -431,7 +400,7 @@ public class FormsDaoJsonImpl implements FormsDao {
     }
 
     @Override
-    public List<Forms> delete(int id) throws IOException {
+    public List<Forms> delete(int id) throws IOException, URISyntaxException {
         for (int i = 0; i < formsList.size(); i++) {
             if (formsList.get(i).getId()==id) {
                 delImage(formsList.get(i).getImage());
@@ -590,7 +559,7 @@ public class FormsDaoJsonImpl implements FormsDao {
         List<Questions> questionsForByFormId = questionsList.stream()
                 .filter(q -> q.getIdForm() == formId)
                 .collect(Collectors.toCollection(ArrayList::new));
-        List<Answers> ans = null;
+        List<Answers> ans;
         if (userQuestionsAndAnswers.size()>0){
             userQuestionsAndAnswers.clear();
         }
@@ -643,10 +612,9 @@ public class FormsDaoJsonImpl implements FormsDao {
                             .collect(Collectors.toCollection(ArrayList::new)).size();
     }
 
-    public void addImage(MultipartFile image) throws IOException {
-        //File directory = new ClassPathResource(pathImages).getFile();
-        //File directory = new File(pathImages.toUri());
-        File dir = new File(pathImages.toUri());
+    public void addImage(MultipartFile image) throws IOException, URISyntaxException {
+        Path ps = Paths.get(Objects.requireNonNull(this.getClass().getResource(pathImages)).toURI());
+        File dir = new File(ps.toUri());
         if (!dir.exists()) {
             FileUtils.forceMkdir(dir);
         }
@@ -655,8 +623,6 @@ public class FormsDaoJsonImpl implements FormsDao {
                 byte[] bytes = image.getBytes();
                 BufferedOutputStream stream =
                         new BufferedOutputStream(new FileOutputStream(dir + File.separator + image.getOriginalFilename()));
-//                BufferedOutputStream stream =
-//                        new BufferedOutputStream(new FileOutputStream("images/" + File.separator + image.getOriginalFilename()));
                 System.out.println("bytes " + dir +File.separator+ image.getOriginalFilename());
                 stream.write(bytes);
                 stream.close();
@@ -665,16 +631,11 @@ public class FormsDaoJsonImpl implements FormsDao {
             }
         }
     }
-    public void delImage(String nameImage) throws IOException {
-        //File directory = new ClassPathResource(pathImages).getFile();
-        Path file = Paths.get(pathImages+File.separator+nameImage).toAbsolutePath();
-        System.out.println(file);
-        String msgDelImage;
+    public void delImage(String nameImage) throws IOException, URISyntaxException {
+        Path ps = Paths.get(Objects.requireNonNull(this.getClass().getResource(pathImages)).toURI());
+        Path file = Paths.get(ps+File.separator+nameImage).toAbsolutePath();
         if (Files.exists(file) && !Files.isDirectory(file)) {
             Files.delete(file);
-            msgDelImage = "Изображение \""+ file.getFileName()+ "\" удалено";
-        } else {
-            msgDelImage = "Ошибка! "+ file.getFileName() +"\" не найдено";
         }
 
     }

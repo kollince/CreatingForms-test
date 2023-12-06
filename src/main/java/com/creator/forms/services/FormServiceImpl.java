@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Map;
 
@@ -65,7 +66,7 @@ public class FormServiceImpl implements FormService {
     }
 
     @Override
-    public List<Questions> addQuestion(Questions questions, MultipartFile image) throws IOException {
+    public List<Questions> addQuestion(Questions questions, MultipartFile image) throws IOException, URISyntaxException {
         return formsDao.addQuestion(questions, image);
     }
 
@@ -82,7 +83,7 @@ public class FormServiceImpl implements FormService {
         return formsDao.countQstForTest();
     }
     @Override
-    public List<Questions> updateQuestions(int id, String question, MultipartFile image, boolean isDelImage) throws IOException {
+    public List<Questions> updateQuestions(int id, String question, MultipartFile image, boolean isDelImage) throws IOException, URISyntaxException {
         return formsDao.updateQuestions(id, question, image, isDelImage);
     }
 
@@ -101,17 +102,17 @@ public class FormServiceImpl implements FormService {
         return formsDao.listForms();
     }
     @Override
-    public List<Forms> addForms(Forms form, MultipartFile image) throws IOException {
+    public List<Forms> addForms(Forms form, MultipartFile image) throws IOException, URISyntaxException {
         return formsDao.addForm(form, image);
     }
 
     @Override
-    public List<Forms> updateForm(int id, String name, String description, boolean isForTime, MultipartFile image, boolean isDelImage) throws IOException {
+    public List<Forms> updateForm(int id, String name, String description, boolean isForTime, MultipartFile image, boolean isDelImage) throws IOException, URISyntaxException {
        return formsDao.updateForm(id, name, description, isForTime, image, isDelImage);
     }
 
     @Override
-    public List<Forms> delete(int id) throws IOException {
+    public List<Forms> delete(int id) throws IOException, URISyntaxException {
         return formsDao.delete(id);
     }
 
