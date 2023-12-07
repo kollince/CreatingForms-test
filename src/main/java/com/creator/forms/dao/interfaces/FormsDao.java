@@ -33,8 +33,6 @@ public interface FormsDao {
     List<Forms> delete(int id) throws IOException, URISyntaxException;
     Forms getFormsById(int id);
     List<Forms> listForms() throws IOException;
-//    List<Passing> addPassing(Passing passing);
-//    List<Passing> deletePassing(int id);
     Questions getQuestionOneByFormId(int formId);
     Map<Questions, List<Answers>> addCorrectQuestions(Answers answer, int idQuestion);
     Map<Questions, List<Answers>> updateCorrectAnswers(int id);

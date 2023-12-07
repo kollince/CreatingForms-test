@@ -10,15 +10,12 @@ import com.creator.forms.services.interfaces.FormService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.multipart.MultipartException;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -28,8 +25,7 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
-//@AllArgsConstructor
-//@NoArgsConstructor
+
 @Controller
 public class FormsCreator{
     private final FormsDao formsDao = new FormsDaoJsonImpl();
@@ -79,15 +75,6 @@ public class FormsCreator{
         model.addAttribute("cqs", cqs);
         return "takeTest";
     }
-//    @GetMapping("/beginTakeTest/{id}/{idQuestion}")
-//    public String beginTakeTest(@PathVariable(value="id") int idForm, @PathVariable(value="idQuestion") int idQuestion, Model model) {
-//        Forms formsById = formService.getFormsById(idForm);
-//        Questions questionsOneFormId = formService.getQuestionOneByFormId(idForm);
-//        List<Answers> ansListByQuestionId = formService.listAnswersByQuestionId(idQuestion);
-//        model.addAttribute("formsById", formsById);
-//        model.addAttribute("questionsOneFormId", questionsOneFormId);
-//        return "beginTakeTest";
-//    }
     @GetMapping("/endTakeTest/{id}")
     public String endTakeTest(@PathVariable(value="id") int idForm,HttpServletRequest request, Model model) {
         String user = getCookie(request);

@@ -56,20 +56,18 @@
     <th:block th:if="${userName == 'Гость'}">
         <th:block sec:authorize="!isAuthenticated()">
             <form class="form-inline" method="post" th:action="@{'/addUser'}">
-                <table style="width: 60rem;" class="table mb-3">
-                    <tbody>
-                    <tr>
-                        <td>
-                            <input type="text" class="form-control sm-7 is-invalid mb-2 mr-sm-2" id="nameInput"
+                <div class="container">
+                    <div class="row">
+                        <div class="col-s-4">
+                            <input type="text" size="40" class="form-control  is-invalid" id="nameInput"
                                    name="user" placeholder="Введите свою Фамилию и Имя" required>
                             <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
-                        </td>
-                        <td>
+                        </div>
+                        <div class="col-s-2 pl-2">
                             <button type="submit" class="btn btn-primary mb-2">ОК</button>
-                        </td>
-                    </tr>
-                    </tbody>
-                </table>
+                        </div>
+                    </div>
+                </div>
             </form>
         </th:block>
     </th:block>
