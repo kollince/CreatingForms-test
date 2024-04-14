@@ -19,6 +19,7 @@ public interface FormService {
     List<Answers> listAnswersByQuestionId(int questionId);
     List<Answers> updateAnswers(int id, String answer, boolean isTrue) throws IOException;
     List<Answers> deleteAnswers(int id) throws IOException;
+    List<String> getIncorrectQuestionsUser();
     Answers getAnswersById(int id);
     List<Questions> addQuestion(Questions questions, MultipartFile image) throws IOException, URISyntaxException;
     List<Questions> listQuestions() throws IOException;
@@ -41,6 +42,7 @@ public interface FormService {
     Map<Questions, List<Answers>> deleteAnswersAns(int id);
     Map<Questions, List<Answers>> deleteQuestionsByFormId(int id);
     Map<Questions, List<Answers>> userQuestionsAndAnswers(List<Integer> answerList, int formId);
+    boolean getIsValidCheckboxMark();
     int getResult();
     int getCountUserAnswer();
     int getSizeQuestion(int formId);

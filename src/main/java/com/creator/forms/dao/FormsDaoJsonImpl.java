@@ -31,6 +31,7 @@ public class FormsDaoJsonImpl implements FormsDao {
    private final List<Forms> formsList = new ArrayList<>();
     private final List<Questions> questionsList = new ArrayList<>();
     private final List<Answers> answersList = new ArrayList<>();
+    private final List<String> inCorrectQuestionsUser = new ArrayList<>();
     Map<Questions, List<Answers>> questionsAndAnswers = new HashMap<>();
     Map<Questions, List<Answers>> userQuestionsAndAnswers = new HashMap<>();
     private final ObjectMapper mapper = new ObjectMapper();
@@ -48,6 +49,7 @@ public class FormsDaoJsonImpl implements FormsDao {
     private int countUserAnswer = 0;
     private int result = 0;
     private int countQst;
+    private boolean isValidCheckboxMark;
 
     public FormsDaoJsonImpl() throws IOException {
         openFileListForms(formsList, fileListForms);
@@ -549,6 +551,7 @@ public class FormsDaoJsonImpl implements FormsDao {
 
     @Override
     public Map<Questions, List<Answers>> userQuestionsAndAnswers(List<Integer> answer, int formId) {
+        inCorrectQuestionsUser.clear();
         List<Answers> newAnswers = new ArrayList<>();
         for (Integer integer : answer) {
             for (Answers answers : answersList) {
@@ -580,6 +583,7 @@ public class FormsDaoJsonImpl implements FormsDao {
                 .stream().filter(questions -> questions.getKey().getIdForm()==formId)
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
         countQst = filteredCorrectMapAnswers.size();
+        isValidCheckboxMark = userQuestionsAndAnswers.size() == questionsAndAnswers.size();
         for (Map.Entry<Questions, List<Answers>> entry : filteredCorrectMapAnswers.entrySet()) {
             Questions question = entry.getKey();
             List<Answers> correctAnswers = entry.getValue();
@@ -590,11 +594,21 @@ public class FormsDaoJsonImpl implements FormsDao {
                     if (correctAnswers.equals(userAnswers)) {
                         countUserAnswer++;
                         result = countUserAnswer*100/countQst;
+                    } else {
+                        inCorrectQuestionsUser.add(question.getQuestion());
                     }
                 }
             }
         }
         return userQuestionsAndAnswers;
+    }
+    @Override
+    public boolean getIsValidCheckboxMark(){
+        return isValidCheckboxMark;
+    }
+    @Override
+    public List<String> getIncorrectQuestionsUser(){
+        return inCorrectQuestionsUser;
     }
     @Override
     public int getResult(){

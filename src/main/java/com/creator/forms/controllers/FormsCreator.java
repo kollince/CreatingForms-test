@@ -10,6 +10,7 @@ import com.creator.forms.services.interfaces.FormService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.SneakyThrows;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -80,12 +81,17 @@ public class FormsCreator{
         String user = getCookie(request);
         int countUserAnswer = formService.getCountUserAnswer();
         int getSizeQuestions = formService.getSizeQuestion(idForm);
+        boolean getIsValidCheckboxMark = formService.getIsValidCheckboxMark();
+        List<String> getIncorrectQuestionsUser = formService.getIncorrectQuestionsUser();
         model.addAttribute("countUserAnswer", countUserAnswer);
         model.addAttribute("getSizeQuestion", getSizeQuestions);
+        model.addAttribute("incorrectQuestions", getIncorrectQuestionsUser);
+        model.addAttribute("isValidCheckboxMark", getIsValidCheckboxMark);
         Forms form = formService.getFormsById(idForm);
         int result = formService.getResult();
         model.addAttribute("form", form);
         model.addAttribute("result", result);
+        System.out.println(result);
         model.addAttribute("userName", user);
         formService.getResult();
         return "endTakeTest";
@@ -191,6 +197,7 @@ public String deleteAnswer(@PathVariable(value="idAnswer") int idAnswer) throws 
         formService.updateCorrectAnswers(answerId);
         return "redirect:/dashboard/eQuestion/"+formId+"/"+idQuestion;
     }
+    @SneakyThrows
     @PostMapping("/endTakeTest/{formId}")
     public String endTakeTest(@RequestParam("answer") List<Integer> answerList,
                               @PathVariable(value="formId") int formId) {

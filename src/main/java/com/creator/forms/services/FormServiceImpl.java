@@ -156,6 +156,12 @@ public class FormServiceImpl implements FormService {
     public Map<Questions, List<Answers>> userQuestionsAndAnswers(List<Integer> answerList, int formId) {
         return formsDao.userQuestionsAndAnswers(answerList, formId);
     }
+
+    @Override
+    public boolean getIsValidCheckboxMark() {
+        return formsDao.getIsValidCheckboxMark();
+    }
+
     @Override
     public int getResult() {
         return formsDao.getResult();
@@ -168,5 +174,10 @@ public class FormServiceImpl implements FormService {
     public int getSizeQuestion(int formId) {
         return formsDao.getSizeQuestion(formId);
     }
+    @Override
+    public List<String> getIncorrectQuestionsUser(){
+        return formsDao.getIncorrectQuestionsUser();
+    }
+
 
 }
