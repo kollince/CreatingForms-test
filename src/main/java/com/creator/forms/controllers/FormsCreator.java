@@ -10,14 +10,11 @@ import com.creator.forms.services.interfaces.FormService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import lombok.SneakyThrows;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.DefaultHandlerExceptionResolver;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -91,7 +88,6 @@ public class FormsCreator{
         int result = formService.getResult();
         model.addAttribute("form", form);
         model.addAttribute("result", result);
-        System.out.println(result);
         model.addAttribute("userName", user);
         formService.getResult();
         return "endTakeTest";
@@ -197,11 +193,15 @@ public String deleteAnswer(@PathVariable(value="idAnswer") int idAnswer) throws 
         formService.updateCorrectAnswers(answerId);
         return "redirect:/dashboard/eQuestion/"+formId+"/"+idQuestion;
     }
-    @SneakyThrows
+
     @PostMapping("/endTakeTest/{formId}")
-    public String endTakeTest(@RequestParam("answer") List<Integer> answerList,
+    public String endTakeTest(@RequestParam(value="answer", required=false) List<Integer> answerList,
                               @PathVariable(value="formId") int formId) {
-        formService.userQuestionsAndAnswers(answerList, formId);
+        try {
+            formService.userQuestionsAndAnswers(answerList, formId);
+        } catch (NullPointerException e){
+            return "redirect:/endTakeTest/"+formId;
+        }
         return "redirect:/endTakeTest/"+formId;
     }
     @PostMapping("/addUser")
