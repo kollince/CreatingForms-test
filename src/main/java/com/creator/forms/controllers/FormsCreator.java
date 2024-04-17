@@ -149,8 +149,8 @@ public String deleteAnswer(@PathVariable(value="idAnswer") int idAnswer) throws 
         return "redirect:/dashboard/";
     }
     @PostMapping("/dashboard/addForm")
-    public String addForm(@RequestParam String name, @RequestParam String description,  @RequestParam MultipartFile image, @RequestParam boolean time) throws IOException, URISyntaxException {
-        Forms forms = new Forms(0, name, description, image.getOriginalFilename(), time);
+    public String addForm(@RequestParam String name, @RequestParam String description,  @RequestParam MultipartFile image) throws IOException, URISyntaxException {
+        Forms forms = new Forms(0, name, description, image.getOriginalFilename(),false);
         formService.addForms(forms, image);
         return "redirect:/dashboard/";
     }
@@ -173,9 +173,9 @@ public String deleteAnswer(@PathVariable(value="idAnswer") int idAnswer) throws 
         return "redirect:/dashboard/eForm/"+idForm;
     }
     @PostMapping("dashboard/updateForm/{id}")
-    public String update(@RequestParam String name, @RequestParam String description, @RequestParam MultipartFile image, @RequestParam boolean time,
+    public String update(@RequestParam String name, @RequestParam String description, @RequestParam MultipartFile image,
                          @RequestParam boolean del, @PathVariable(value="id") int id) throws IOException, URISyntaxException {
-         formService.updateForm(id, name, description, time, image, del);
+         formService.updateForm(id, name, description, false, image, del);
         return "redirect:/dashboard/eForm/"+id;
     }
     @PostMapping("dashboard/updateQuestion/{formId}/{questionId}")

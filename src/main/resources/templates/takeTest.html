@@ -19,10 +19,10 @@
                     <div class="row">
                         <div class="col-4 px-auto">
                             <!-- trigger modal -->
-                            <div data-toggle="modal" th:data-target="'#m'+${formsById.id}" th:unless="${formsById.image.empty}" style="cursor: pointer;">
+                            <div data-toggle="modal" th:data-target="'#m1'+${formsById.id}" th:unless="${formsById.image.empty}" style="cursor: pointer;">
                                 <img th:src="@{'/images/'+${formsById.image}}" th:alt="${formsById.image}" width="330px" class="mt-1 mb-2 rounded float-left">
                             </div>
-                            <div class="modal fade" th:id="'m'+${formsById.id}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal fade" th:id="'m1'+${formsById.id}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                 <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
                                     <div class="modal-content">
                                         <div class="modal-header">
@@ -72,7 +72,7 @@
                                     </div>
                                     <div class="col-3">
                                         <!-- trigger modal -->
-                                        <div class="" data-toggle="modal" th:data-target="'#m'+${questionsByFormId.id}" th:unless="${questionsByFormId.image.empty}" style="cursor: pointer; width: 200px; height: 200px;  display: flex; margin: auto; flex-flow: row wrap; align-items: center; justify-content: center;">
+                                        <div data-toggle="modal" th:data-target="'#m'+${questionsByFormId.id}" th:unless="${questionsByFormId.image.empty}" style="cursor: pointer; width: 200px; height: 200px;  display: flex; margin: auto; flex-flow: row wrap; align-items: center; justify-content: center;">
                                             <img th:src="@{'/images/'+${questionsByFormId.image}}" th:alt="${questionsByFormId.image}" height="156px" class="rounded align-items-center">
                                         </div>
                                         <!-- Modal -->

@@ -33,16 +33,16 @@
                     </div>
                 </div>
 
-                <div class="form-group row mb-4">
-                    <legend class="col-form-label col-sm-2 pt-0">На время</legend>
-                    <div class="col-sm-9">
-                        <input id="on" class="form-check-input ml-0" type="radio" name="time" value="true">
-                        <label class="form-check-label ml-3" for="on">Да</label>
-                        <input id="off" class="form-check-input ml-1" type="radio" name="time" value="false" checked>
-                        <label class="form-check-label ml-4" for="off">Нет</label>
-                        <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
-                    </div>
-                </div>
+<!--                <div class="form-group row mb-4">-->
+<!--                    <legend class="col-form-label col-sm-2 pt-0">На время</legend>-->
+<!--                    <div class="col-sm-9">-->
+<!--                        <input id="on" class="form-check-input ml-0" type="radio" name="time" value="true">-->
+<!--                        <label class="form-check-label ml-3" for="on">Да</label>-->
+<!--                        <input id="off" class="form-check-input ml-1" type="radio" name="time" value="false" checked>-->
+<!--                        <label class="form-check-label ml-4" for="off">Нет</label>-->
+<!--                    </div>-->
+<!--                </div>-->
+                <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
                 <div>
                   <button type="submit" class="btn btn-primary mb-2">Добавить</button>
                 </div>
