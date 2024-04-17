@@ -14,29 +14,33 @@
         <div class="card-body">
             <H2 class="pb-3">Результаты теста &laquo;<th:block th:text="${form.getName()}"></th:block>&raquo; по математике</H2>
             <th:block th:if="${isValidCheckboxMark == false}"><H2 class="pb-3 text-danger">Вы ответили не на все вопросы!</H2></th:block>
-            <a class="card-link" href="javascript:history.back()">Назад</a>
+            <a class="card-link" th:if="${isValidCheckboxMark == false}" href="javascript:history.back()">Назад</a>
             <th:block th:if="${result == 100}"><h3 class="pb-3">Поздравляем, тест успешно пройден!</h3></th:block>
             <th:block th:if="${isValidCheckboxMark == true}">
             <th:block th:if="${result != 100}"><h3 class="pb-3">В следующий раз будет лучше!</h3></th:block>
-            <h3 class="pb-3">Из <th:block th:text="${getSizeQuestion}"></th:block> вопросов зачтено <th:block th:text="${countUserAnswer}"></th:block>
-                (<th:block th:utext="${result}"></th:block>%)
-            </h3>
+            <h4 class="pb-3">Из <th:block th:text="${getSizeQuestion}"></th:block> вопросов зачтено <th:block th:text="${countUserAnswer}"></th:block>
+                (<th:block th:utext="${result}"></th:block>%).
+            </h4>
             <h5 class="pb-3" th:unless="${incorrectQuestions.empty}">Список вопросов, на которые даны не правильные ответы: </h5>
-            <div class="font-weight-bold">
+            <div class="font-weight-normal">
                 <ol th:unless="${incorrectQuestions.empty}">
                     <th:block th:each="incorrectQuestions : ${incorrectQuestions}">
                         <li class="container mb-2 px-3 py-2">
                             <div class="row font-weight-normal">
                                 <div class="col-9">
-                                    <b>
                                         <th:block th:text="${incorrectQuestions}"></th:block>
-                                    </b>
                                 </div>
                             </div>
                         </li>
                     </th:block>
                 </ol>
             </div>
+                <th:block th:if="${result != 100}">
+                    <a class="card-link"  th:href="@{'/takeTest/'+${form.getId()}}">Вернуться к тесту</a>
+                </th:block>
+                <th:block th:if="${result == 100}">
+                    <a class="card-link" href="/">К списку тестов</a>
+                </th:block>
             </th:block>
         </div>
     </div>
