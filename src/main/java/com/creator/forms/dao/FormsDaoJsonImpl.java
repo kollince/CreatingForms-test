@@ -548,10 +548,11 @@ public class FormsDaoJsonImpl implements FormsDao {
         questionsAndAnswers = newMap;
         return questionsAndAnswers;
     }
-
     @Override
     public Map<Questions, List<Answers>> userQuestionsAndAnswers(List<Integer> answer, int formId) {
         inCorrectQuestionsUser.clear();
+        isValidCheckboxMark = false;
+
         List<Answers> newAnswers = new ArrayList<>();
         for (Integer integer : answer) {
             for (Answers answers : answersList) {
@@ -577,13 +578,16 @@ public class FormsDaoJsonImpl implements FormsDao {
                     userQuestionsAndAnswers.put(questionsForByFormId.get(j),ans);
                 }
             }
-
         }
         Map<Questions, List<Answers>> filteredCorrectMapAnswers = questionsAndAnswers.entrySet()
                 .stream().filter(questions -> questions.getKey().getIdForm()==formId)
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
         countQst = filteredCorrectMapAnswers.size();
-        isValidCheckboxMark = userQuestionsAndAnswers.size() == questionsAndAnswers.size();
+        var listQuestionByFormId = listCorrectQuestions().entrySet().stream().filter(question -> question.getKey().getIdForm()==formId)
+                        .collect(Collectors.toCollection(ArrayList::new));
+
+//        isValidCheckboxMark = userQuestionsAndAnswers.size() == listQuestionByFormId.size();
+        isValidCheckboxMarkSet(userQuestionsAndAnswers.size(), listQuestionByFormId.size());
         for (Map.Entry<Questions, List<Answers>> entry : filteredCorrectMapAnswers.entrySet()) {
             Questions question = entry.getKey();
             List<Answers> correctAnswers = entry.getValue();
@@ -602,12 +606,18 @@ public class FormsDaoJsonImpl implements FormsDao {
         }
         return userQuestionsAndAnswers;
     }
+
+    private void isValidCheckboxMarkSet(int userSize, int questionsSizeByFormId) {
+        isValidCheckboxMark = userSize == questionsSizeByFormId;
+    }
+
     @Override
     public boolean getIsValidCheckboxMark(){
         return isValidCheckboxMark;
     }
     @Override
     public List<String> getIncorrectQuestionsUser(){
+        Collections.sort(inCorrectQuestionsUser);
         return inCorrectQuestionsUser;
     }
     @Override
